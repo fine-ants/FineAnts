@@ -6,10 +6,10 @@
 
 ## 팀원 소개
 
-|                                                         프론트엔드                                                          |                                                          프론트엔드                                                          |                                                           프론트엔드                                                           |                                                                       백엔드                                                                       |
-|:----------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------:|
-| <a href="https://github.com/bakhacode"><img src = "https://avatars.githubusercontent.com/u/114852081?v=4" width="120px;"> | <a href="https://github.com/Kakamotobi"><img src = "https://avatars.githubusercontent.com/u/79886384?v=4" width="120px;"> | <a href="https://github.com/altmit"><img src = "https://avatars.githubusercontent.com/u/41321198?v=4" width="120px;"> | <a href="https://github.com/yonghwankim-dev?tab=repositories"><img src = "https://avatars.githubusercontent.com/u/33227831?v=4" width="120px;"> |                                         |                                         |
-|                                          [**박하**](https://github.com/bakhacode)                                          |                                         [**카카모토비**](https://github.com/Kakamotobi)                                         |                                         [**Jay**](https://github.com/altmit)                                          |                                         [**네모네모**](https://github.com/yonghwankim-dev?tab=repositories)                                         |
+|                                                        프론트엔드                                                         |                                                        프론트엔드                                                         |                                                      프론트엔드                                                       |                                                                     백엔드                                                                      |
+| :-----------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------: | --- | --- |
+| <a href="https://github.com/bakhacode"><img src = "https://avatars.githubusercontent.com/u/114852081?v=4" width="120px;"> | <a href="https://github.com/Kakamotobi"><img src = "https://avatars.githubusercontent.com/u/79886384?v=4" width="120px;"> | <a href="https://github.com/altmit"><img src = "https://avatars.githubusercontent.com/u/41321198?v=4" width="120px;"> | <a href="https://github.com/yonghwankim-dev?tab=repositories"><img src = "https://avatars.githubusercontent.com/u/33227831?v=4" width="120px;"> |     |     |
+|                                         [**박하**](https://github.com/bakhacode)                                          |                                      [**카카모토비**](https://github.com/Kakamotobi)                                      |                                         [**Jay**](https://github.com/altmit)                                          |                                       [**네모네모**](https://github.com/yonghwankim-dev?tab=repositories)                                       |
 
 ## 브랜치 협업 전략
 
@@ -18,9 +18,9 @@
 - `dev-fe` : 프론트 엔드 개발 브랜치
 - `dev-be` : 백엔드 개발 브랜치
 - 일반 브랜치
-    - {브랜치타입}/#{이슈번호}-{목적}
-    - ex) feat/#1-login
-    - ex) docs/#2-readme
+  - {브랜치타입}/#{이슈번호}-{목적}
+  - ex) feat/#1-login
+  - ex) docs/#2-readme
 
 ## 템플릿
 
@@ -65,47 +65,52 @@
 ```
 
 ### 커밋 템플릿
+
 ```
-{커밋 타입} #{이슈 번호}: {커밋 제목}
+#{이슈 번호} {커밋 타입}: {커밋 제목}
 
 - {커밋 본문} (선택 사항)
 
 ex.
-feat #1: add new feature
+#1 feat: add new feature
 
 - 새로운 기능을 추가하였습니다.
 ```
 
-### 커밋 타입 카테고리
-`feat` : 새로운 기능 추가 
+### 커밋 타입
 
-`fix` : 버그 수정 
+`feat` : 새로운 기능 추가
 
-`refactor` : 코드 리팩토링 
+`fix` : 버그 수정
 
-`test` : 테스트 코드 
+`refactor` : 코드 리팩토링
 
-`docs` : 문서 수정 
+`test` : 테스트 코드
 
-`style` : 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우 
+`docs` : 문서 수정
 
-`design` : CSS 등 사용자 UI 디자인 변경 
+`style` : 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우
 
-`chore` : 빌드 업무 수정, 패키지 매니저 수정 → 패키지 설치, 개발 환경 세팅 
+`design` : CSS 등 사용자 UI 디자인 변경
 
-`merge` : merge 
+`chore` : 빌드 업무 수정, 패키지 매니저 수정 → 패키지 설치, 개발 환경 세팅
 
-`rename` : 디렉토리 및 파일명 변경 
+`merge` : merge
 
-`comment` : 주석 추가 혹은 오타 수정 
+`rename` : 디렉토리 및 파일명 변경
 
-`add` : 의존성 추가 
+`comment` : 주석 추가 혹은 오타 수정
+
+`add` : 의존성 추가
 
 ## 코딩 컨벤션
+
 ### 프론트엔드
+
 - 추가예정
 
 ### 백엔드
+
 - 네이버 코딩 컨벤션 사용
 - 체크 스타일 사용
 
