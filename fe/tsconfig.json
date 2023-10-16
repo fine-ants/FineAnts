@@ -4,6 +4,7 @@
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
+    "esModuleInterop": true,
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -23,6 +24,7 @@
     /* Path Alias */
     "baseUrl": "./src",
     "paths": {
+      "@api/*": ["api/*"],
       "@assets/*": ["assets/*"]
     }
   },
