@@ -4,15 +4,15 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import PublicOnlyRoute from "./PublicOnlyRoute";
-
-type User = {}; // TODO: 다른 파일로 이동
+import { User } from "api/auth";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default (user: User | undefined) =>
   createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
-        <Route element={<PublicOnlyRoute user={user} />}>
-          {/* <Route path={Routes.DASHBOARD} element={<DashboardPage />} /> */}
+        <Route element={<ProtectedRoute user={user} />}>
+          {/* <Route index path={Routes.DASHBOARD} element={<DashboardPage />} /> */}
 
           {/* <Route path="/profile"> */}
           {/* <Route path={Routes.PROFILEEDIT} element={<ProfileEditPage />} /> */}
@@ -26,7 +26,7 @@ export default (user: User | undefined) =>
         </Route>
 
         <Route element={<PublicOnlyRoute user={user} />}>
-          {/* <Route path={Routes.SIGNIN} element={<SignInPage />}/> */}
+          {/* <Route index path={Routes.SIGNIN} element={<SignInPage />}/> */}
           {/* <Route path={Routes.SIGNUP} element={<SignUpPage />}/> */}
         </Route>
 
