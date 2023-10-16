@@ -17,7 +17,7 @@ export type User = {
   imageUrl: string;
 };
 
-export type OAuthProvider = "kakao";
+export type OAuthProvider = "google" | "naver" | "kakao";
 
 type AccessTokenData = {
   accessToken: string;
