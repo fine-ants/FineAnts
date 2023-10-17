@@ -45,7 +45,7 @@ spring:
 
 logging:
   level:
-    codesquard: debug
+    codesquad: debug
 ---
 
 spring:

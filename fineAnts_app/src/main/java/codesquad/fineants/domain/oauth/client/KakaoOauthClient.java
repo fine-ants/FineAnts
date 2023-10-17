@@ -82,6 +82,7 @@ public class KakaoOauthClient extends OauthClient {
 	public OauthUserProfileResponse createOauthUserProfileResponse(Map<String, Object> attributes) {
 		Map<String, Object> kakaoAccount = (Map<String, Object>)attributes.get("kakao_account");
 		Map<String, Object> profile = (Map<String, Object>)kakaoAccount.get("profile");
+		log.info("profile={}", profile);
 		String email = (String)kakaoAccount.get("email");
 		String profileImage = (String)profile.get("profile_image_url");
 		return new OauthUserProfileResponse(email, profileImage);

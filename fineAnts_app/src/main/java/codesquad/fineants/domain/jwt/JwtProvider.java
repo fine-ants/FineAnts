@@ -87,7 +87,7 @@ public class JwtProvider {
 		}
 	}
 
-	public AuthMember extractPrincipal(String token) {
+	public AuthMember extractAuthMember(String token) {
 		Claims claims = Jwts.parserBuilder()
 			.setSigningKey(jwtProperties.getKey())
 			.build()

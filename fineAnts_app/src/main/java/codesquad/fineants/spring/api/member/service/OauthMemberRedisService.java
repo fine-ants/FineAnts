@@ -1,4 +1,4 @@
-package codesquad.fineants.spring.api.redis;
+package codesquad.fineants.spring.api.member.service;
 
 import java.util.Objects;
 import java.util.Set;

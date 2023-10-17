@@ -9,18 +9,19 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class OauthLoginMemberResponse {
+public class OauthMemberResponse {
+	private Long id;
 	private String nickname;
 	private String email;
 	private String profileUrl;
 
-	public static OauthLoginMemberResponse from(Member member) {
-		return new OauthLoginMemberResponse(member.getNickname(), member.getEmail(), member.getProfileUrl());
+	public static OauthMemberResponse from(Member member) {
+		return new OauthMemberResponse(member.getId(), member.getNickname(), member.getEmail(), member.getProfileUrl());
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s, %s(nickname=%s, email=%s, profileUrl=%s)", "로그인 회원정보 응답",
-			this.getClass().getSimpleName(), nickname, email, profileUrl);
+		return String.format("%s, %s(id=%d, nickname=%s, email=%s, profileUrl=%s)", "로그인 회원정보 응답",
+			this.getClass().getSimpleName(), id, nickname, email, profileUrl);
 	}
 }

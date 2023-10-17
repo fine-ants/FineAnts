@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.fineants.domain.jwt.Jwt;
 import codesquad.fineants.domain.jwt.JwtProvider;
@@ -15,11 +16,11 @@ import codesquad.fineants.domain.oauth.repository.OauthClientRepository;
 import codesquad.fineants.domain.oauth.response.OauthAccessTokenResponse;
 import codesquad.fineants.domain.oauth.response.OauthMemberLoginResponse;
 import codesquad.fineants.domain.oauth.response.OauthUserProfileResponse;
-import codesquad.fineants.spring.api.redis.OauthMemberRedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class MemberService {
@@ -32,6 +33,7 @@ public class MemberService {
 		log.info("provider : {}, code : {}", provider, code);
 
 		OauthUserProfileResponse userProfileResponse = getOauthUserProfileResponse(provider, code, redirectUrl);
+		log.info("userProfileResponse : {}", userProfileResponse);
 
 		Optional<Member> optionalMember = getLoginMember(provider, userProfileResponse);
 
@@ -60,11 +62,11 @@ public class MemberService {
 
 		OauthAccessTokenResponse accessTokenResponse =
 			oauthClient.exchangeAccessTokenByAuthorizationCode(authorizationCode, redirectUrl);
-		log.debug("{}", accessTokenResponse);
+		log.info("{}", accessTokenResponse);
 
 		OauthUserProfileResponse userProfileResponse =
 			oauthClient.getUserProfileByAccessToken(accessTokenResponse);
-		log.debug("{}", userProfileResponse);
+		log.info("{}", userProfileResponse);
 		return userProfileResponse;
 	}
 

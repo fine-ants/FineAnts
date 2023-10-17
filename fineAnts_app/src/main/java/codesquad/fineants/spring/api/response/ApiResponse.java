@@ -9,12 +9,14 @@ import lombok.Getter;
 @Getter
 public class ApiResponse<T> {
 
-	private final int statusCode;
+	private final int code;
+	private final String status;
 	private final String message;
 	private final T data;
 
-	public ApiResponse(HttpStatus status, String message, T data) {
-		this.statusCode = status.value();
+	public ApiResponse(HttpStatus httpStatus, String message, T data) {
+		this.code = httpStatus.value();
+		this.status = httpStatus.getReasonPhrase();
 		this.message = message;
 		this.data = data;
 	}
@@ -45,8 +47,9 @@ public class ApiResponse<T> {
 
 	@Override
 	public String toString() {
-		return String.format("%s, %s(statusCode=%d, message=%s)", "API 공통 응답", this.getClass().getSimpleName(),
-			statusCode,
+		return String.format("%s, %s(code=%d, status=%s, message=%s)", "API 공통 응답", this.getClass().getSimpleName(),
+			code,
+			status,
 			message);
 	}
 }
