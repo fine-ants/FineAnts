@@ -1,4 +1,4 @@
-package codesquad.fineants.spring.api.oauth.response;
+package codesquad.fineants.domain.oauth.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

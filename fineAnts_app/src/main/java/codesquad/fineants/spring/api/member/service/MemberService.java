@@ -2,6 +2,7 @@ package codesquad.fineants.spring.api.member.service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -9,11 +10,11 @@ import codesquad.fineants.domain.jwt.Jwt;
 import codesquad.fineants.domain.jwt.JwtProvider;
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.member.MemberRepository;
-import codesquad.fineants.spring.api.oauth.client.OauthClient;
-import codesquad.fineants.spring.api.oauth.repository.OauthClientRepository;
-import codesquad.fineants.spring.api.oauth.response.OauthAccessTokenResponse;
-import codesquad.fineants.spring.api.oauth.response.OauthMemberLoginResponse;
-import codesquad.fineants.spring.api.oauth.response.OauthUserProfileResponse;
+import codesquad.fineants.domain.oauth.client.OauthClient;
+import codesquad.fineants.domain.oauth.repository.OauthClientRepository;
+import codesquad.fineants.domain.oauth.response.OauthAccessTokenResponse;
+import codesquad.fineants.domain.oauth.response.OauthMemberLoginResponse;
+import codesquad.fineants.domain.oauth.response.OauthUserProfileResponse;
 import codesquad.fineants.spring.api.redis.OauthMemberRedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class MemberService {
 		Member member = optionalMember.orElseGet(() -> {
 			Member newMember = Member.builder()
 				.email(userProfileResponse.getEmail())
-				.nickname("일개미1234")
+				.nickname(generateRandomNickname())
 				.provider(provider)
 				.profileUrl(userProfileResponse.getProfileImage())
 				.build();
@@ -69,6 +70,13 @@ public class MemberService {
 
 	private Optional<Member> getLoginMember(String provider, OauthUserProfileResponse userProfileResponse) {
 		String email = userProfileResponse.getEmail();
-		return memberRepository.findMemberByEmailAAndProvider(email, provider);
+		return memberRepository.findMemberByEmailAndProvider(email, provider);
+	}
+
+	private String generateRandomNickname() {
+		String randomPart = UUID.randomUUID().toString()
+			.replaceAll("-", "")
+			.substring(0, 8);
+		return "일개미" + randomPart;
 	}
 }

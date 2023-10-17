@@ -1,10 +1,10 @@
-package codesquad.fineants.spring.api.oauth.repository;
+package codesquad.fineants.domain.oauth.repository;
 
 import java.util.Map;
 
+import codesquad.fineants.domain.oauth.client.OauthClient;
 import codesquad.fineants.spring.api.errors.errorcode.OauthErrorCode;
 import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
-import codesquad.fineants.spring.api.oauth.client.OauthClient;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

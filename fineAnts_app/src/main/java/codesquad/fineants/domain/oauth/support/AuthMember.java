@@ -1,4 +1,4 @@
-package codesquad.fineants.spring.api.oauth.support;
+package codesquad.fineants.domain.oauth.support;
 
 import java.util.Optional;
 

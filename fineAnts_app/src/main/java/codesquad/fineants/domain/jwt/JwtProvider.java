@@ -8,10 +8,10 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import codesquad.fineants.domain.member.Member;
+import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.spring.api.errors.errorcode.JwtErrorCode;
 import codesquad.fineants.spring.api.errors.exception.BadRequestException;
 import codesquad.fineants.spring.api.errors.exception.ForBiddenException;
-import codesquad.fineants.spring.api.oauth.support.AuthMember;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

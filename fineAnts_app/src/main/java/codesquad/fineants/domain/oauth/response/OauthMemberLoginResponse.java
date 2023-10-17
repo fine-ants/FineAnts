@@ -1,13 +1,11 @@
-package codesquad.fineants.spring.api.oauth.response;
+package codesquad.fineants.domain.oauth.response;
 
 import codesquad.fineants.domain.jwt.Jwt;
 import codesquad.fineants.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class OauthMemberLoginResponse {

@@ -1,4 +1,4 @@
-package codesquad.fineants.spring.api.oauth.support;
+package codesquad.fineants.domain.oauth.support;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

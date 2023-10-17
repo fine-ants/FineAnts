@@ -1,4 +1,4 @@
-package codesquad.fineants.spring.api.oauth.properties;
+package codesquad.fineants.domain.oauth.properties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,9 +6,9 @@ import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
-import codesquad.fineants.spring.api.oauth.client.KakaoOauthClient;
-import codesquad.fineants.spring.api.oauth.client.NaverOauthClient;
-import codesquad.fineants.spring.api.oauth.client.OauthClient;
+import codesquad.fineants.domain.oauth.client.KakaoOauthClient;
+import codesquad.fineants.domain.oauth.client.NaverOauthClient;
+import codesquad.fineants.domain.oauth.client.OauthClient;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
