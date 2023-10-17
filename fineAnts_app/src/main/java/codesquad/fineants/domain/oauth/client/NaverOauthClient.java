@@ -11,10 +11,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import codesquad.fineants.domain.oauth.properties.OauthProperties;
-import codesquad.fineants.domain.oauth.response.OauthAccessTokenResponse;
-import codesquad.fineants.domain.oauth.response.OauthUserProfileResponse;
 import codesquad.fineants.spring.api.errors.errorcode.OauthErrorCode;
 import codesquad.fineants.spring.api.errors.exception.BadRequestException;
+import codesquad.fineants.spring.api.member.response.OauthAccessTokenResponse;
+import codesquad.fineants.spring.api.member.response.OauthUserProfileResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

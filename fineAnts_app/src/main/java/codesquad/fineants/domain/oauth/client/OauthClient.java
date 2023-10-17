@@ -6,8 +6,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import codesquad.fineants.domain.oauth.response.OauthAccessTokenResponse;
-import codesquad.fineants.domain.oauth.response.OauthUserProfileResponse;
+import codesquad.fineants.spring.api.member.response.OauthAccessTokenResponse;
+import codesquad.fineants.spring.api.member.response.OauthUserProfileResponse;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,5 +1,7 @@
 package codesquad.fineants.spring.filter;
 
+import static codesquad.fineants.spring.filter.JwtAuthorizationFilter.*;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +18,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import codesquad.fineants.domain.jwt.JwtProvider;
-import codesquad.fineants.domain.oauth.support.AuthenticationContext;
 import codesquad.fineants.spring.api.errors.errorcode.ErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.JwtErrorCode;
 import codesquad.fineants.spring.api.errors.exception.FineAntsException;
@@ -29,25 +29,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JwtAuthorizationFilter extends OncePerRequestFilter {
+public class LogoutFilter extends OncePerRequestFilter {
 
-	public static final String AUTHORIZATION = "Authorization";
-	public static final String BEARER = "Bearer";
-	private static final AntPathMatcher pathMatcher = new AntPathMatcher();
-	private static final List<String> excludeUrlPatterns = List.of(
-		"/api/auth/**/signup",
-		"/api/auth/**/login",
-		"/api/auth/refresh/token",
-		"/api/auth/logout");
-	private final JwtProvider jwtProvider;
-	private final AuthenticationContext authenticationContext;
-	private final ObjectMapper objectMapper;
 	private final OauthMemberRedisService redisService;
+	private final ObjectMapper objectMapper;
+
+	private static final AntPathMatcher pathMatcher = new AntPathMatcher();
+	private static final List<String> excludeUrlPatterns = List.of("/api/**");
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) {
 		return excludeUrlPatterns.stream()
-			.anyMatch(pattern -> pathMatcher.match(pattern, request.getRequestURI()));
+			.anyMatch(pattern -> pathMatcher.match(pattern, request.getRequestURI()))
+			&& !pathMatcher.match("/api/auth/logout", request.getRequestURI());
 	}
 
 	@Override
@@ -60,9 +54,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 		try {
 			String token = extractJwt(request).orElseThrow(
 				() -> new UnAuthorizationException(JwtErrorCode.EMPTY_TOKEN));
-			jwtProvider.validateToken(token);
 			redisService.validateAlreadyLogout(token);
-			authenticationContext.setAuthMember(jwtProvider.extractAuthMember(token));
 		} catch (FineAntsException e) {
 			setErrorResponse(response, e.getErrorCode());
 			return;

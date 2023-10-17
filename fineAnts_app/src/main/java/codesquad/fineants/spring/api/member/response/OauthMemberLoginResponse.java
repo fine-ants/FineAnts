@@ -1,4 +1,4 @@
-package codesquad.fineants.domain.oauth.response;
+package codesquad.fineants.spring.api.member.response;
 
 import codesquad.fineants.domain.jwt.Jwt;
 import codesquad.fineants.domain.member.Member;

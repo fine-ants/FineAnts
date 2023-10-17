@@ -1,4 +1,4 @@
-package codesquad.fineants.domain.oauth.response;
+package codesquad.fineants.spring.api.member.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

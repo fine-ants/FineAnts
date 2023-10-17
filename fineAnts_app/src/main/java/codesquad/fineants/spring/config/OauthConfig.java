@@ -19,5 +19,4 @@ public class OauthConfig {
 	public InMemoryOauthClientRepository inMemoryOauthProviderRepository() {
 		return new InMemoryOauthClientRepository(oauthProperties.createOauthClientMap());
 	}
-
 }

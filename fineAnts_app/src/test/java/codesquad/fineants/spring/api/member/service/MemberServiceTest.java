@@ -22,9 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquad.fineants.domain.oauth.client.OauthClient;
 import codesquad.fineants.domain.oauth.repository.OauthClientRepository;
-import codesquad.fineants.domain.oauth.response.OauthAccessTokenResponse;
-import codesquad.fineants.domain.oauth.response.OauthMemberLoginResponse;
-import codesquad.fineants.domain.oauth.response.OauthUserProfileResponse;
+import codesquad.fineants.spring.api.member.response.OauthAccessTokenResponse;
+import codesquad.fineants.spring.api.member.response.OauthMemberLoginResponse;
+import codesquad.fineants.spring.api.member.response.OauthUserProfileResponse;
 
 @ActiveProfiles("test")
 @SpringBootTest

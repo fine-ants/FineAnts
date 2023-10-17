@@ -1,4 +1,4 @@
-package codesquad.fineants.domain.oauth.response;
+package codesquad.fineants.spring.api.member.response;
 
 import codesquad.fineants.domain.jwt.Jwt;
 import lombok.AccessLevel;
@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class OauthRefreshResponse {
+public class OauthMemberRefreshResponse {
 	private String accessToken;
 
-	public static OauthRefreshResponse from(Jwt jwt) {
-		return new OauthRefreshResponse(jwt.getAccessToken());
+	public static OauthMemberRefreshResponse from(Jwt jwt) {
+		return new OauthMemberRefreshResponse(jwt.getAccessToken());
 	}
 
 	@Override
