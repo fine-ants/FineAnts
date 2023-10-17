@@ -23,32 +23,26 @@ export function NavWrapper({ links, style, children }: Props) {
 export function NavList({
   children,
   style,
-  ...props
 }: {
   children: React.ReactNode;
-  style?: React.CSSProperties;
+  style: React.CSSProperties;
 }) {
-  return (
-    <ul style={style} {...props}>
-      {children}
-    </ul>
-  );
+  return <ul style={style}>{children}</ul>;
 }
 
-export function NavItem({
-  link,
-  style,
-  ...props
-}: {
-  link: { name: string; url: string };
-  style?: React.CSSProperties;
-}) {
+export function NavItem({ style }: { style: React.CSSProperties }) {
+  const { links } = React.useContext(NavContext);
+
   return (
-    <li key={link.url} {...props}>
-      <a style={style} href={link.url}>
-        {link.name}
-      </a>
-    </li>
+    <>
+      {links.map((link: { name: string; url: string }) => (
+        <li key={link.url}>
+          <a style={style} href={link.url}>
+            {link.name}
+          </a>
+        </li>
+      ))}
+    </>
   );
 }
 

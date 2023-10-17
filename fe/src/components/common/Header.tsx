@@ -16,15 +16,9 @@ export default function Header() {
       <StyledHeader>
         <HeaderLeft>
           <StyledBrandIdentity>FineAnts</StyledBrandIdentity>
-          <NavWrapper links={headerNavLinks}>
+          <NavWrapper style={navStyles} links={headerNavLinks}>
             <NavWrapper.NavList style={navListStyle}>
-              {headerNavLinks.map((link) => (
-                <NavWrapper.NavItem
-                  style={navItemStyle}
-                  key={link.url}
-                  link={link}
-                />
-              ))}
+              <NavWrapper.NavItem style={navItemStyle} />
             </NavWrapper.NavList>
           </NavWrapper>
         </HeaderLeft>
@@ -65,6 +59,10 @@ const StyledBrandIdentity = styled.div`
   font-size: 40px;
   font-weight: bold;
 `;
+
+const navStyles = {
+  backgroundColor: "#ffffff",
+};
 
 const navListStyle = {
   display: "flex",
