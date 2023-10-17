@@ -30,10 +30,13 @@ export default function DashboardPage() {
             <SubText>+ 10%</SubText>
           </TotalSubContentWrapper>
         </CurrentValueContainer>
-        <CurrentValueChartContainer>
-          <PieChart />
-          <LineChart />
-        </CurrentValueChartContainer>
+        <CurrentChartContainer>
+          <DateRangeSelector>1D 1W 1M 1Q 1Y All</DateRangeSelector>
+          <ChartContainer>
+            <PieChart />
+            <LineChart />
+          </ChartContainer>
+        </CurrentChartContainer>
       </Main>
       <Footer />
     </StyledDashboardPage>
@@ -108,15 +111,33 @@ const SubText = styled.div`
   height: 100%;
 `;
 
-const CurrentValueChartContainer = styled.div`
-  width: 1440px;
-  height: 436px;
-  padding: 0 80px;
+const CurrentChartContainer = styled.div`
+  width: 1202px;
+  height: 428px;
   display: flex;
-  gap: 54px;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
   position: absolute;
-  z-index:;
   bottom: 72px;
+  padding: 0 80px;
+  z-index: 3;
+`;
+
+const DateRangeSelector = styled.div`
+  width: 256px;
+  height: 32px;
+  margin-left: auto;
+  background-color: #d6d3d3;
+`;
+
+const ChartContainer = styled.div`
+  height: 384px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 54px;
 `;
 
 const PieChart = styled.div`
