@@ -1,15 +1,23 @@
 import TVTickerTapeWidget from "../TradingViewWidgets/TVTickerTape";
-import { NavWrapper } from "../Nav";
+import { NavBar } from "../NavBar";
 import styled from "styled-components";
 import Search from "../Search";
 import UserControls from "../common/UserControls";
 import Routes from "router/Routes";
 
 export default function Header() {
-  const headerNavLinks = [
-    { name: "Portfolio", url: Routes.PORTFOLIO },
-    { name: "Watchlist", url: Routes.WATCHLIST },
-    { name: "Indices", url: Routes.INDICES },
+  const navItemList = [
+    <div
+      style={navItemStyle}
+      onClick={() => console.log("포트폴리오 Dropdown 요소가 들어갈자리")}>
+      Portfolio
+    </div>,
+    <a style={navItemStyle} href={Routes.WATCHLIST}>
+      Watchlist
+    </a>,
+    <a style={navItemStyle} href={Routes.INDICES}>
+      Indices
+    </a>,
   ];
 
   return (
@@ -17,11 +25,11 @@ export default function Header() {
       <StyledHeader>
         <HeaderLeft>
           <StyledBrandIdentity>FineAnts</StyledBrandIdentity>
-          <NavWrapper style={navStyles} links={headerNavLinks}>
-            <NavWrapper.NavList style={navListStyle}>
-              <NavWrapper.NavItem style={navItemStyle} />
-            </NavWrapper.NavList>
-          </NavWrapper>
+          <NavBar style={navBarStyles} navItems={navItemList}>
+            <NavBar.NavList style={navListStyle}>
+              <NavBar.NavItem />
+            </NavBar.NavList>
+          </NavBar>
         </HeaderLeft>
         <HeaderRight>
           <Search />
@@ -61,7 +69,7 @@ const StyledBrandIdentity = styled.div`
   font-weight: bold;
 `;
 
-const navStyles = {
+const navBarStyles = {
   backgroundColor: "#ffffff",
 };
 
