@@ -11,6 +11,13 @@ type SignInData = {
   refreshToken: string;
 };
 
+export type SignUpData = {
+  nickname: string;
+  email: string;
+  password: string;
+  verificationCode: string;
+};
+
 export type User = {
   userId: number;
   nickname: string;
@@ -23,7 +30,8 @@ type AccessTokenData = {
   accessToken: string;
 };
 
-export const postSignUp = async (body: FormData) => {
+export const postSignUp = async (body: SignUpData) => {
+  console.log("body:", body);
   const res = await fetcher.post<Response<null>>("/users", body);
   return res.data;
 };
