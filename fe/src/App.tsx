@@ -20,7 +20,7 @@ export default function App() {
 
 const StyledApp = styled.div`
   width: 100%;
+  height: inherit;
   min-height: inherit;
-  position: relative;
   overflow: hidden;
 `;

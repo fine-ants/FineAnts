@@ -11,5 +11,8 @@ export default function BasePage({ children }: Props) {
 
 const StyledBasePage = styled.div`
   width: 100%;
+  height: inherit;
   min-height: inherit;
+  display: flex;
+  flex-direction: column;
 `;
