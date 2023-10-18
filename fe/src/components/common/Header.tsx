@@ -3,12 +3,13 @@ import { NavWrapper } from "../Nav";
 import styled from "styled-components";
 import Search from "../Search";
 import UserControls from "../common/UserControls";
+import Routes from "router/Routes";
 
 export default function Header() {
   const headerNavLinks = [
-    { name: "Portfolio", url: "/portfolio" },
-    { name: "Watchlist", url: "/watchlist" },
-    { name: "Indices", url: "/indices" },
+    { name: "Portfolio", url: Routes.PORTFOLIO },
+    { name: "Watchlist", url: Routes.WATCHLIST },
+    { name: "Indices", url: Routes.INDICES },
   ];
 
   return (
