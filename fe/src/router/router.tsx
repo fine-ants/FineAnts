@@ -1,11 +1,13 @@
+import { User } from "@api/auth";
+import SignUpPage from "@pages/SignUpPage/SignUpPage";
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import PublicOnlyRoute from "./PublicOnlyRoute";
-import { User } from "api/auth";
 import ProtectedRoute from "./ProtectedRoute";
+import PublicOnlyRoute from "./PublicOnlyRoute";
+import Routes from "./Routes";
 
 export default (user: User | undefined) =>
   createBrowserRouter(
@@ -26,8 +28,8 @@ export default (user: User | undefined) =>
         </Route>
 
         <Route element={<PublicOnlyRoute user={user} />}>
-          {/* <Route index path={Routes.SIGNIN} element={<SignInPage />}/> */}
-          {/* <Route path={Routes.SIGNUP} element={<SignUpPage />}/> */}
+          {/* <Route index path={Routes.SIGNIN} element={<SignInPage />} /> */}
+          <Route path={Routes.SIGNUP} element={<SignUpPage />} />
         </Route>
 
         {/* <Route path={Routes.INDICES} element={<IndicesPage />}/> */}
