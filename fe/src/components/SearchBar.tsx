@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-export default function Search() {
+export default function SearchBar() {
   return (
     <StyledSearch>
-      <Input type="text" placeholder="검색창" />
+      <Input type="text" placeholder="종목 또는 지수 검색" />
     </StyledSearch>
   );
 }

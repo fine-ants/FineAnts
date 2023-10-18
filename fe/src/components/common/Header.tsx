@@ -1,48 +1,77 @@
 import TVTickerTapeWidget from "../TradingViewWidgets/TVTickerTape";
 import { NavBar } from "../NavBar";
 import styled from "styled-components";
-import Search from "../Search";
+import SearchBar from "../SearchBar";
 import UserControls from "../common/UserControls";
 import Routes from "router/Routes";
+import Dropdown from "./Dropdown";
 
 export default function Header() {
-  const navItemList = [
-    <div
-      style={navItemStyle}
-      onClick={() => console.log("포트폴리오 Dropdown 요소가 들어갈자리")}>
-      Portfolio
-    </div>,
-    <a style={navItemStyle} href={Routes.WATCHLIST}>
-      Watchlist
-    </a>,
-    <a style={navItemStyle} href={Routes.INDICES}>
-      Indices
-    </a>,
+  const navItemLinks = [
+    { name: "Watchlist", path: Routes.WATCHLIST },
+    { name: "indices", path: Routes.INDICES },
+  ];
+
+  const dropdownProps = [
+    {
+      name: "내꿈은워렌버핏",
+      onClick: () => {
+        console.log("워렌버핏으로 이동");
+      },
+    },
+    {
+      name: "단타왕",
+      onClick: () => {
+        console.log("단타왕으로 이동");
+      },
+    },
+    {
+      name: "물린게아니고장기투자",
+      onClick: () => {
+        console.log("장기투자로 이동");
+      },
+    },
   ];
 
   return (
     <>
       <StyledHeader>
-        <HeaderLeft>
-          <StyledBrandIdentity>FineAnts</StyledBrandIdentity>
-          <NavBar style={navBarStyles} navItems={navItemList}>
-            <NavBar.NavList style={navListStyle}>
-              <NavBar.NavItem />
-            </NavBar.NavList>
-          </NavBar>
-        </HeaderLeft>
-        <HeaderRight>
-          <Search />
-          <UserControls />
-        </HeaderRight>
+        <HeaderTop>
+          <HeaderLeft>
+            <StyledBrandIdentity>FineAnts</StyledBrandIdentity>
+            <NavBar style={navBarStyles}>
+              {/* <NavBar.NavList style={navListStyle}> */}
+              <Dropdown itemProps={dropdownProps}>
+                <Dropdown.Toggle style={ddToggleStyle}>
+                  Portfolio
+                </Dropdown.Toggle>
+                <Dropdown.List style={ddListStyle}>
+                  <Dropdown.Items style={ddItemsStyle} />
+                </Dropdown.List>
+              </Dropdown>
+              {navItemLinks.map((link) => (
+                <NavBar.NavItem link={link} style={navItemStyle} />
+              ))}
+              {/* </NavBar.NavList> */}
+            </NavBar>
+          </HeaderLeft>
+          <HeaderRight>
+            <SearchBar />
+            <UserControls />
+          </HeaderRight>
+        </HeaderTop>
+        <TVTickerTapeWidget />
       </StyledHeader>
-      <TVTickerTapeWidget />
     </>
   );
 }
 
 const StyledHeader = styled.header`
-  width: 1440px;
+  z-index: 1;
+`;
+
+const HeaderTop = styled.header`
+  // width: 1440px;
   height: 80px;
   display: flex;
   gap: 48px;
@@ -71,11 +100,9 @@ const StyledBrandIdentity = styled.div`
 
 const navBarStyles = {
   backgroundColor: "#ffffff",
-};
-
-const navListStyle = {
   display: "flex",
   gap: "16px",
+  alignItems: "center",
 };
 
 const navItemStyle = {
@@ -86,4 +113,29 @@ const navItemStyle = {
   alignItems: "center",
   fontSize: "16px",
   fontWeight: "bold",
+};
+
+const ddToggleStyle = {
+  ...navItemStyle,
+  cursor: "pointer",
+  position: "relative" as "relative",
+};
+
+const ddListStyle = {
+  top: "0px",
+  backgroundColor: "#ffffff",
+  border: "1.5px solid #e5e5e5",
+  borderRadius: "8px",
+  padding: "10px",
+  display: "flex",
+  flexDirection: "column" as "column",
+  gap: "8px",
+  width: "200px",
+};
+
+const ddItemsStyle = {
+  width: "inherit",
+  height: " 30px",
+  display: "flex",
+  alignItems: "center",
 };

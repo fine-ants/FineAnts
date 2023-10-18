@@ -1,44 +1,34 @@
 import React from "react";
 
 type Props = {
-  navItems: React.ReactElement[];
-  style?: React.CSSProperties;
+  style: React.CSSProperties;
   children: React.ReactNode;
 };
 
-const NavContext = React.createContext({ navItems: [<div>initial</div>] });
-
-export function NavBar({ navItems, style, children }: Props) {
-  const contextValue = { navItems };
-
+export function NavBar({ style, children }: Props) {
   return (
-    <NavContext.Provider value={contextValue}>
-      <nav style={style}>{children}</nav>
-    </NavContext.Provider>
+    <nav>
+      <ul style={style}> {children}</ul>
+    </nav>
   );
 }
 
-export function NavList({
-  children,
+export function NavItem({
   style,
+  link,
 }: {
-  children: React.ReactNode;
   style: React.CSSProperties;
+  link: { name: string; path: string };
 }) {
-  return <ul style={style}>{children}</ul>;
-}
-
-export function NavItem() {
-  const { navItems } = React.useContext(NavContext);
-
   return (
     <>
-      {navItems.map((navItem, idx) => (
-        <li key={idx}>{navItem}</li>
-      ))}
+      <li key={link.name}>
+        <a style={style} href={link.path}>
+          {link.name}
+        </a>
+      </li>
     </>
   );
 }
 
-NavBar.NavList = NavList;
 NavBar.NavItem = NavItem;
