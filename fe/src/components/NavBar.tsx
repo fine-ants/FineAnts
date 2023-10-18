@@ -1,14 +1,15 @@
-import React from "react";
+import { ReactNode } from "react";
+import { CSSProperties } from "styled-components";
 
 type Props = {
-  style: React.CSSProperties;
-  children: React.ReactNode;
+  style: CSSProperties;
+  children: ReactNode;
 };
 
 export function NavBar({ style, children }: Props) {
   return (
     <nav>
-      <ul style={style}> {children}</ul>
+      <ul style={style}>{children}</ul>
     </nav>
   );
 }
@@ -17,17 +18,15 @@ export function NavItem({
   style,
   link,
 }: {
-  style: React.CSSProperties;
+  style: CSSProperties;
   link: { name: string; path: string };
 }) {
   return (
-    <>
-      <li key={link.name}>
-        <a style={style} href={link.path}>
-          {link.name}
-        </a>
-      </li>
-    </>
+    <li key={link.name}>
+      <a style={style} href={link.path}>
+        {link.name}
+      </a>
+    </li>
   );
 }
 

@@ -1,28 +1,17 @@
-import React, { useContext } from "react";
-interface DropdownProps {
-  children: React.ReactNode;
-  itemProps: {
-    name: string;
-    onClick: () => void;
-  }[];
-}
-const DropdownContext = React.createContext({
+import { ReactNode, createContext, useContext, useState } from "react";
+import { CSSProperties } from "styled-components";
+
+const DropdownContext = createContext({
   isOpen: false,
   toggle: () => {},
-  itemProps: [
-    {
-      name: "",
-      onClick: () => {},
-    },
-  ],
 });
 
-export default function Dropdown({ children, itemProps }: DropdownProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
+export default function Dropdown({ children }: { children: ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <DropdownContext.Provider value={{ isOpen, toggle, itemProps }}>
+    <DropdownContext.Provider value={{ isOpen, toggle }}>
       <div>{children}</div>
     </DropdownContext.Provider>
   );
@@ -32,8 +21,8 @@ function DropdownToggle({
   children,
   style,
 }: {
-  children: React.ReactNode;
-  style: React.CSSProperties;
+  children: ReactNode;
+  style: CSSProperties;
 }) {
   const { toggle } = useContext(DropdownContext);
 
@@ -44,12 +33,12 @@ function DropdownToggle({
   );
 }
 
-function DropdownList({
+function DropdownMenu({
   children,
   style,
 }: {
-  children: React.ReactNode;
-  style: React.CSSProperties;
+  children: ReactNode;
+  style: CSSProperties;
 }) {
   const { isOpen } = useContext(DropdownContext);
 
@@ -60,20 +49,25 @@ function DropdownList({
   ) : null;
 }
 
-function DropdownItems({ style }: { style: React.CSSProperties }) {
-  const { itemProps } = useContext(DropdownContext);
-
+function DropdownItem({
+  style,
+  item,
+}: {
+  style: CSSProperties;
+  item: {
+    name: string;
+    onClick: () => void;
+  };
+}) {
   return (
     <>
-      {itemProps.map((item) => (
-        <li key={item.name} style={style} onClick={item.onClick}>
-          {item.name}
-        </li>
-      ))}
+      <li key={item.name} style={style} onClick={item.onClick}>
+        {item.name}
+      </li>
     </>
   );
 }
 
 Dropdown.Toggle = DropdownToggle;
-Dropdown.List = DropdownList;
-Dropdown.Items = DropdownItems;
+Dropdown.Menu = DropdownMenu;
+Dropdown.Item = DropdownItem;

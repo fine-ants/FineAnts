@@ -12,7 +12,7 @@ export default function Header() {
     { name: "indices", path: Routes.INDICES },
   ];
 
-  const dropdownProps = [
+  const dropdownItems = [
     {
       name: "내꿈은워렌버핏",
       onClick: () => {
@@ -40,19 +40,23 @@ export default function Header() {
           <HeaderLeft>
             <StyledBrandIdentity>FineAnts</StyledBrandIdentity>
             <NavBar style={navBarStyles}>
-              {/* <NavBar.NavList style={navListStyle}> */}
-              <Dropdown itemProps={dropdownProps}>
-                <Dropdown.Toggle style={ddToggleStyle}>
+              <Dropdown>
+                <Dropdown.Toggle style={dropdownToggleStyle}>
                   Portfolio
                 </Dropdown.Toggle>
-                <Dropdown.List style={ddListStyle}>
-                  <Dropdown.Items style={ddItemsStyle} />
-                </Dropdown.List>
+                <Dropdown.Menu style={dropdownMenuStyle}>
+                  {dropdownItems.map((item) => (
+                    <Dropdown.Item item={item} style={dropdownItemStyle} />
+                  ))}
+                </Dropdown.Menu>
               </Dropdown>
               {navItemLinks.map((link) => (
-                <NavBar.NavItem link={link} style={navItemStyle} />
+                <NavBar.NavItem
+                  key={link.name}
+                  link={link}
+                  style={navItemStyle}
+                />
               ))}
-              {/* </NavBar.NavList> */}
             </NavBar>
           </HeaderLeft>
           <HeaderRight>
@@ -115,13 +119,13 @@ const navItemStyle = {
   fontWeight: "bold",
 };
 
-const ddToggleStyle = {
+const dropdownToggleStyle = {
   ...navItemStyle,
   cursor: "pointer",
   position: "relative" as "relative",
 };
 
-const ddListStyle = {
+const dropdownMenuStyle = {
   top: "0px",
   backgroundColor: "#ffffff",
   border: "1.5px solid #e5e5e5",
@@ -133,7 +137,7 @@ const ddListStyle = {
   width: "200px",
 };
 
-const ddItemsStyle = {
+const dropdownItemStyle = {
   width: "inherit",
   height: " 30px",
   display: "flex",
