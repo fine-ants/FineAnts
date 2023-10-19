@@ -1,13 +1,14 @@
 const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/ws'
+    brokerURL: 'ws://localhost:8080/portfolio'
 });
 
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/realtimeData', (greeting) => {
-        console.log(greeting);
-        showGreeting(JSON.parse(greeting.body).data);
+    stompClient.subscribe('/topic/realTimeSigningPrice', (response) => {
+        console.log(response);
+        let body = JSON.parse(response.body);
+        showGreeting(body.mksc_shrn_iscd + ', ' + body.stck_cntg_hour + ', ' + body.stck_prpr);
     });
 };
 
@@ -42,9 +43,9 @@ function disconnect() {
 }
 
 function sendName() {
+    console.log($("#name").val())
     stompClient.publish({
-        destination: "/app/subscribe",
-        body: JSON.stringify({'name': $("#name").val()})
+        destination: "/app/realTimeSigningPrice/" + $("#name").val()
     });
 }
 

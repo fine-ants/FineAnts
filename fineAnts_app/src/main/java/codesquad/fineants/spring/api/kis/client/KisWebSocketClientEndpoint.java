@@ -46,6 +46,11 @@ public class KisWebSocketClientEndpoint {
 	@OnMessage
 	public void onMessage(String message) {
 		if (this.messageHandler != null) {
+			try {
+				Thread.sleep(2000L);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 			this.messageHandler.handleMessage(message);
 		}
 	}

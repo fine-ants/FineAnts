@@ -2,6 +2,8 @@ package codesquad.fineants.spring.api.kis.client;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,10 +26,10 @@ class OauthKisClientTest {
 		// given
 
 		// when
-		Map<String, Object> response = oauthKisClient.approval();
+		String approvalKey = oauthKisClient.approval();
 
 		// then
-		assertThat(response.get("approval_key")).isNotNull();
+		assertThat(approvalKey).isNotNull();
 	}
 
 	@DisplayName("리퀘스트 바디의 값을 암화하한다")
@@ -59,13 +61,12 @@ class OauthKisClientTest {
 
 	@DisplayName("실시간 체결가를 조회합니다.")
 	@Test
-	void readRealTimeSigningPrice() {
+	void readRealTimeSigningPrice() throws URISyntaxException {
 		// given
-
+		KisWebSocketClientEndpoint clientEndpoint = new KisWebSocketClientEndpoint(
+			new URI(OauthKisClient.realTimeSigningPriceURI));
 		// when
-		Map<String, Object> response = oauthKisClient.readRealTimeSigningPrice();
+		oauthKisClient.readRealTimeSigningPrice(oauthKisClient.approval(), clientEndpoint, "005930");
 		// then
-		System.out.println(response);
-
 	}
 }
