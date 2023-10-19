@@ -11,7 +11,10 @@ export default function MyProfilePage() {
   const { section } = useParams();
   const [selectedSection, setSelectedSection] = useState(section || "edit");
 
-  const onChange = (_: React.MouseEvent<HTMLElement>, section: string) => {
+  const onSectionChange = (
+    _: React.MouseEvent<HTMLElement>,
+    section: string
+  ) => {
     if (!section) return;
 
     setSelectedSection(section);
@@ -24,7 +27,7 @@ export default function MyProfilePage() {
         color="primary"
         value={selectedSection}
         exclusive
-        onChange={onChange}
+        onChange={onSectionChange}
         aria-label="Platform">
         <ToggleButton value="edit">내 프로필</ToggleButton>
         <ToggleButton value="portfolios">내 포트폴리오</ToggleButton>

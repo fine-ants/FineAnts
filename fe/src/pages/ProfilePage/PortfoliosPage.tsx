@@ -3,55 +3,43 @@ import { addComma } from "../../utils/addComma";
 
 type Portfolio = {
   id: number;
-  symbol: string;
+  securitiesFirmImage: string;
   name: string;
   budget: number;
-  total: {
-    gain: number;
-    return: number;
-  };
-  daily: {
-    gain: number;
-    return: number;
-  };
-  currentMonthDividend: number;
-  numberOfShares: number;
+  totalGain: number;
+  totalReturnRate: number;
+  dailyGain: number;
+  dailyReturnRate: number;
+  expectedMonthlyDividend: number;
+  numShares: number;
 };
 
 const SAMPLE_PORTFOLIO = [
   {
     id: 0,
-    symbol:
+    securitiesFirmImage:
       "https://framerusercontent.com/images/y7135TGP0TiQ7gtLbQ0IrWOzww.jpg",
     name: "물린게아니라장기투자",
     budget: 1000000,
-    total: {
-      gain: 10,
-      return: 100000,
-    },
-    daily: {
-      gain: 10,
-      return: 100000,
-    },
-    currentMonthDividend: 20000,
-    numberOfShares: 12,
+    totalGain: 10,
+    totalReturnRate: 100000,
+    dailyGain: 10,
+    dailyReturnRate: 100000,
+    expectedMonthlyDividend: 20000,
+    numShares: 12,
   },
   {
     id: 1,
-    symbol:
+    securitiesFirmImage:
       "https://framerusercontent.com/images/y7135TGP0TiQ7gtLbQ0IrWOzww.jpg",
     name: "롱숏롱숏",
     budget: 1000000,
-    total: {
-      gain: -5,
-      return: -50000,
-    },
-    daily: {
-      gain: -5,
-      return: -50000,
-    },
-    currentMonthDividend: 1000,
-    numberOfShares: 1,
+    totalGain: -5,
+    totalReturnRate: 50000,
+    dailyGain: -5,
+    dailyReturnRate: 50000,
+    expectedMonthlyDividend: 1000,
+    numShares: 1,
   },
 ];
 
@@ -80,29 +68,29 @@ export default function PortfoliosPage() {
 type Props = { portfolio: Portfolio };
 
 function PortfolioItem({ portfolio }: Props) {
-  const onClickPortfolio = () => {
+  const onPortfolioClick = () => {
     // TODO : 개별 portfolio page가 구현된다면 page 이동 구현 예정
 
     console.log(portfolio.id);
   };
 
   return (
-    <tr onClick={onClickPortfolio}>
+    <tr onClick={onPortfolioClick}>
       <td>
-        <SymbolImg src={portfolio.symbol} />
+        <SymbolImg src={portfolio.securitiesFirmImage} />
         <span>{portfolio.name}</span>
       </td>
       <td>{addComma(portfolio.budget)}</td>
       <td>
-        <div>{portfolio.total.gain}%</div>
-        <div>{addComma(portfolio.total.return)}</div>
+        <div>{portfolio.totalGain}%</div>
+        <div>{addComma(portfolio.totalReturnRate)}</div>
       </td>
       <td>
-        <div>{portfolio.daily.gain}%</div>
-        <div>{addComma(portfolio.daily.return)}</div>
+        <div>{portfolio.dailyGain}%</div>
+        <div>{addComma(portfolio.dailyReturnRate)}</div>
       </td>
-      <td>{addComma(portfolio.currentMonthDividend)}</td>
-      <td>{addComma(portfolio.numberOfShares)}</td>
+      <td>{addComma(portfolio.expectedMonthlyDividend)}</td>
+      <td>{addComma(portfolio.numShares)}</td>
     </tr>
   );
 }

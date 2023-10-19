@@ -9,23 +9,21 @@ const EMPTY_IMG =
   "https://www.interakt.shop/wp-content/uploads/2023/01/blank_profile_img.webp";
 
 export default function ProfileEditPage() {
-  // TODO : isCheckedNickname state를 이용해 닉네임 중복 체크 여부를 화면에 css color 또는 icon으로 표시
+  // TODO : isNicknameChecked state를 이용해 닉네임 중복 체크 여부를 화면에 css color 또는 icon으로 표시
 
-  const [isCheckedNickname, setIsCheckedNickname] = useState(false);
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [imgFile, setImgFile] = useState<File>();
   const [profileImg, setProfileImg] = useState<String | undefined>(SAMPLE_IMG);
 
   const nickname = useText({
-    initialValue: "",
     validators: [validateNickname],
   });
 
   const password = useText({
-    initialValue: "",
     validators: [validatePassword],
   });
 
-  const onChangeProfile = (event: ChangeEvent<HTMLInputElement>) => {
+  const onProfileChange = (event: ChangeEvent<HTMLInputElement>) => {
     // TODO : 이미지의 용량 제한
     const fileList = event.target.files;
 
@@ -44,14 +42,14 @@ export default function ProfileEditPage() {
     }
   };
 
-  const onRemoveProfile = () => {
+  const onProfileRemove = () => {
     // TODO : api 추가 예정
 
     setProfileImg(undefined);
     setImgFile(undefined);
   };
 
-  const onSaveProfile = () => {
+  const onProfileSave = () => {
     // TODO : api 추가 예정
 
     if (!imgFile) return;
@@ -65,20 +63,20 @@ export default function ProfileEditPage() {
     if (!nickname.value) return;
 
     console.log(nickname.value);
-    setIsCheckedNickname(true);
+    setIsNicknameChecked(true);
   };
 
   const onSubmit = (e: FormEvent) => {
     // TODO : api 추가 예정
 
     e.preventDefault();
-    console.log(`isCheckedNickname : ${isCheckedNickname}`);
+    console.log(`isCheckedNickname : ${isNicknameChecked}`);
     console.log(`nickname : ${nickname.value}`);
     console.log(`password : ${password.value}`);
   };
 
   return (
-    <ProfileEdit>
+    <StyledProfileEditPage>
       <Title>프로필</Title>
       <ProfileWrapper>
         <ProfileImg htmlFor="fileUploader" $profileImgUrl={profileImg} />
@@ -86,13 +84,13 @@ export default function ProfileEditPage() {
           id="fileUploader"
           type="file"
           accept="image/*"
-          onChange={onChangeProfile}
+          onChange={onProfileChange}
         />
         <ButtonWrapper>
-          <Button variant="contained" onClick={onSaveProfile}>
+          <Button variant="contained" onClick={onProfileSave}>
             저장
           </Button>
-          <Button variant="contained" onClick={onRemoveProfile}>
+          <Button variant="contained" onClick={onProfileRemove}>
             삭제
           </Button>
         </ButtonWrapper>
@@ -139,10 +137,10 @@ export default function ProfileEditPage() {
           </Button>
         </SubmitWrapper>
       </Form>
-    </ProfileEdit>
+    </StyledProfileEditPage>
   );
 }
-const ProfileEdit = styled.div`
+const StyledProfileEditPage = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
