@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+// import { useNavigate } from "react-router-dom";
 import { CSSProperties } from "styled-components";
 
 type Props = {
@@ -16,16 +17,18 @@ export function NavBar({ style, children }: Props) {
 
 export function NavItem({
   style,
-  link,
+  item,
 }: {
   style: CSSProperties;
-  link: { name: string; path: string };
+  item: { name: string; path: string };
 }) {
+  // const navigate = useNavigate();
+
   return (
-    <li key={link.name}>
-      <a style={style} href={link.path}>
-        {link.name}
-      </a>
+    <li key={item.name}>
+      <div style={style} onClick={() => console.log(item.path)}>
+        {item.name}
+      </div>
     </li>
   );
 }
