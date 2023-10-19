@@ -41,12 +41,12 @@ export const postSignIn = async (body: SignInCredentials) => {
   return res.data;
 };
 
-export const getOAuthSignIn = async (
+export const postOAuthSignIn = async (
   provider: OAuthProvider,
   authCode: string
 ) => {
   const res = await fetcher.get<Response<SignInData>>(
-    `/auth/oauth/${provider}?code=${authCode}`
+    `/auth/${provider}/login?code=${authCode}`
   );
   return res.data;
 };
