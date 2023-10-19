@@ -14,6 +14,7 @@ export default function PasswordSubPage({ onNext }: Props) {
   } = useText({
     validators: [validatePassword],
   });
+
   const {
     value: passwordConfirm,
     isError: isPasswordConfirmError,
@@ -21,6 +22,8 @@ export default function PasswordSubPage({ onNext }: Props) {
   } = useText({
     validators: [validatePassword],
   });
+
+  const isPasswordMismatch = !isPasswordError && password !== passwordConfirm;
 
   return (
     <SubPage>
@@ -45,7 +48,8 @@ export default function PasswordSubPage({ onNext }: Props) {
           value={passwordConfirm}
           onChange={(e) => onPasswordConfirmChange(e.target.value.trim())}
         />
-        {/* TODO: Error 비밀번호가 일치하지 않습니다 */}
+
+        {isPasswordMismatch && <p>비밀번호가 일치하지 않습니다.</p>}
       </div>
 
       <button
