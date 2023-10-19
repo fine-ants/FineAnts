@@ -11,19 +11,27 @@ type SignInData = {
   refreshToken: string;
 };
 
+export type SignUpData = {
+  nickname: string;
+  email: string;
+  password: string;
+  verificationCode: string;
+};
+
 export type User = {
   userId: number;
   nickname: string;
   imageUrl: string;
 };
 
-export type OAuthProvider = "kakao";
+export type OAuthProvider = "google" | "naver" | "kakao";
 
 type AccessTokenData = {
   accessToken: string;
 };
 
-export const postSignUp = async (body: FormData) => {
+export const postSignUp = async (body: SignUpData) => {
+  console.log("body:", body);
   const res = await fetcher.post<Response<null>>("/users", body);
   return res.data;
 };

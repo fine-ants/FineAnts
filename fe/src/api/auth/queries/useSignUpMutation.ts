@@ -13,5 +13,9 @@ export default function useSignUpMutation() {
     onSuccess: () => {
       navigate(Routes.SIGNIN);
     },
+    onError: (error) => {
+      // TODO: Handle error
+      console.error(error);
+    },
   });
 }

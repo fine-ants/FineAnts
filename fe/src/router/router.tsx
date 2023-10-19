@@ -1,18 +1,20 @@
+import { User } from "@api/auth";
+import SignUpPage from "@pages/SignUpPage/SignUpPage";
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 import PublicOnlyRoute from "./PublicOnlyRoute";
-
-type User = {}; // TODO: 다른 파일로 이동
+import Routes from "./Routes";
 
 export default (user: User | undefined) =>
   createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
-        <Route element={<PublicOnlyRoute user={user} />}>
-          {/* <Route path={Routes.DASHBOARD} element={<DashboardPage />} /> */}
+        <Route element={<ProtectedRoute user={user} />}>
+          {/* <Route index path={Routes.DASHBOARD} element={<DashboardPage />} /> */}
 
           {/* <Route path="/profile"> */}
           {/* <Route path={Routes.PROFILEEDIT} element={<ProfileEditPage />} /> */}
@@ -26,8 +28,8 @@ export default (user: User | undefined) =>
         </Route>
 
         <Route element={<PublicOnlyRoute user={user} />}>
-          {/* <Route path={Routes.SIGNIN} element={<SignInPage />}/> */}
-          {/* <Route path={Routes.SIGNUP} element={<SignUpPage />}/> */}
+          {/* <Route index path={Routes.SIGNIN} element={<SignInPage />} /> */}
+          <Route path={Routes.SIGNUP} element={<SignUpPage />} />
         </Route>
 
         {/* <Route path={Routes.INDICES} element={<IndicesPage />}/> */}

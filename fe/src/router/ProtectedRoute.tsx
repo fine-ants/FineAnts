@@ -1,14 +1,7 @@
-import { ProductItemsFiltersProvider } from "@context/ProductItemsFiltersContext";
-import { User } from "api/user";
 import { Navigate, Outlet } from "react-router-dom";
 import Routes from "./Routes";
+import { User } from "api/auth";
 
 export default function ProtectedRoute({ user }: { user: User | undefined }) {
-  return user ? (
-    <ProductItemsFiltersProvider>
-      <Outlet />
-    </ProductItemsFiltersProvider>
-  ) : (
-    <Navigate to={Routes.SIGNIN} />
-  );
+  return user ? <Outlet /> : <Navigate to={Routes.SIGNIN} />;
 }
