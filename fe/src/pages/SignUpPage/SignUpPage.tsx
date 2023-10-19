@@ -1,4 +1,4 @@
-import { SignUpData } from "@api/auth";
+import { SignUpData, postEmailVerification } from "@api/auth";
 import useSignUpMutation from "@api/auth/queries/useSignUpMutation";
 import { useState } from "react";
 import styled from "styled-components";
@@ -57,7 +57,8 @@ export default function SignUpPage() {
             onNext={(password: string, passwordConfirm: string) => {
               setSignUpData((prev) => ({ ...prev, password, passwordConfirm }));
               setSubPage("verification");
-              // TODO: request server to send verification code to the email.
+              // Request server to send verification code
+              postEmailVerification(signUpData.email);
             }}
           />
         )}
@@ -66,7 +67,7 @@ export default function SignUpPage() {
             email={signUpData.email}
             onNext={async (data: string) => {
               setSignUpData((prev) => ({ ...prev, verificationCode: data }));
-              // TODO: Signup Request
+              // TODO: If unsuccessful, show error message and require user to re-enter verification code
               signUpMutate(signUpData);
             }}
           />
