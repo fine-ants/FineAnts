@@ -1,8 +1,26 @@
+import useUserInfoQuery from "@api/auth/queries/useUserInfoQuery";
 import { RouterProvider } from "react-router-dom";
 import router from "router/router";
+import styled, { ThemeProvider } from "styled-components";
+import GlobalStyles from "styles/GlobalStyles";
 
 export default function App() {
-  const user = {}; // TODO
+  const { data: user } = useUserInfoQuery();
 
-  return <RouterProvider router={router(user)} />;
+  return (
+    <ThemeProvider theme={{}}>
+      <GlobalStyles />
+
+      <StyledApp>
+        <RouterProvider router={router(user)} />
+      </StyledApp>
+    </ThemeProvider>
+  );
 }
+
+const StyledApp = styled.div`
+  width: 100%;
+  height: inherit;
+  min-height: inherit;
+  overflow: hidden;
+`;

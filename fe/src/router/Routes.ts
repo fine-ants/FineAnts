@@ -1,11 +1,10 @@
 export default {
-  HOME: "/",
   SIGNUP: "/signup",
   SIGNIN: "/signin",
   PROFILE: "/profile",
   DASHBOARD: "/dashboard",
   WATCHLIST: "/watchlist",
-  PORTFOLIOS: "/portfolios",
+  PORTFOLIOS: "portfolios",
   PORTFOLIO: "/portfolio/:id",
   PORTFOLIOSTOCK: "/portfolio/:id/stock/:id",
   INDICES: "/indices",
