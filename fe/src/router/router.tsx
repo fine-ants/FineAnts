@@ -3,7 +3,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import MyProfilePage from "../pages/MyProfilePage";
+import MyProfilePage from "../pages/ProfilePage/MyProfilePage";
 import PublicOnlyRoute from "./PublicOnlyRoute";
 import Routes from "./Routes";
 

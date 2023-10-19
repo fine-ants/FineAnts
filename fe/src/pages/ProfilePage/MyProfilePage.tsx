@@ -2,7 +2,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Routes from "../router/Routes";
+import Routes from "../../router/Routes";
 import PortfoliosPage from "./PortfoliosPage";
 import ProfileEditPage from "./ProfileEditPage";
 

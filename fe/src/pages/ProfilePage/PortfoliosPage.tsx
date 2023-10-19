@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { addComma } from "../utils/addComma";
+import { addComma } from "../../utils/addComma";
 
 type Portfolio = {
   id: number;

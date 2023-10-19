@@ -1,8 +1,8 @@
 import { Button } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
 import styled from "styled-components";
-import useText from "../hooks/useText";
-import { validateNickname, validatePassword } from "../utils/textValidators";
+import useText from "../../hooks/useText";
+import { validateNickname, validatePassword } from "../../utils/textValidators";
 
 const SAMPLE_IMG = "https://avatars.githubusercontent.com/u/41321198?v=4";
 const EMPTY_IMG =
