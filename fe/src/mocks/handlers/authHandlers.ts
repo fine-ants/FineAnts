@@ -25,30 +25,38 @@ export default [
     async (req, res, ctx) => {
       const { nickname } = await req.json();
 
-      if (nickname === "test") {
-        return res(
-          ctx.status(HTTPSTATUS.success),
-          ctx.json(successfulNicknameDuplicationCheckData)
-        );
-      } else {
+      if (nickname === "duplicate") {
         return res(
           ctx.status(HTTPSTATUS.badRequest),
           ctx.json(unsuccessfulNicknameDuplicationCheckData)
+        );
+      } else {
+        return res(
+          ctx.status(HTTPSTATUS.success),
+          ctx.json(successfulNicknameDuplicationCheckData)
         );
       }
     }
   ),
 
-  rest.post("/api/auth/signup/duplicationcheck/email", async (_, res, ctx) => {
-    return res(
-      ctx.status(HTTPSTATUS.success),
-      ctx.json(successfulEmailDuplicationCheckData)
-    );
-    return res(
-      ctx.status(HTTPSTATUS.badRequest),
-      ctx.json(unsuccessfulEmailDuplicationCheckData)
-    );
-  }),
+  rest.post(
+    "/api/auth/signup/duplicationcheck/email",
+    async (req, res, ctx) => {
+      const { email } = await req.json();
+
+      if (email === "duplicate@email.com") {
+        return res(
+          ctx.status(HTTPSTATUS.badRequest),
+          ctx.json(unsuccessfulEmailDuplicationCheckData)
+        );
+      } else {
+        return res(
+          ctx.status(HTTPSTATUS.success),
+          ctx.json(successfulEmailDuplicationCheckData)
+        );
+      }
+    }
+  ),
 
   rest.post("/api/auth/signup/verifyEmail", async (_, res, ctx) => {
     return res(
