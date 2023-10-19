@@ -2,6 +2,7 @@ import { User } from "@api/auth";
 import MyProfilePage from "@pages/ProfilePage/MyProfilePage";
 import SignUpPage from "@pages/SignUpPage/SignUpPage";
 import {
+  Navigate,
   Route,
   createBrowserRouter,
   createRoutesFromElements,
@@ -15,6 +16,10 @@ export default (user: User | undefined) =>
     createRoutesFromElements(
       <Route path="/">
         {/* TODO : 테스트를 위해 ProtectedRoute 외부에 선언합니다. user 정보가 생기면 ProtectedRoute 내부로 옮기겠습니다. */}
+        <Route
+          path={Routes.PROFILE}
+          element={<Navigate to={`${Routes.PROFILE}/${Routes.PORTFOLIOS}`} />}
+        />
         <Route
           path={`${Routes.PROFILE}/:section`}
           element={<MyProfilePage />}

@@ -4,6 +4,7 @@ export default {
   PROFILE: "/profile",
   DASHBOARD: "/dashboard",
   WATCHLIST: "/watchlist",
+  PORTFOLIOS: "portfolios",
   PORTFOLIO: "/portfolio/:id",
   PORTFOLIOSTOCK: "/portfolio/:id/stock/:id",
   INDICES: "/indices",

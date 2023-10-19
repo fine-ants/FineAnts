@@ -1,6 +1,6 @@
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { useState } from "react";
+import { MouseEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Routes from "../../router/Routes";
 import PortfoliosPage from "./PortfoliosPage";
@@ -9,15 +9,10 @@ import ProfileEditPage from "./ProfileEditPage";
 export default function MyProfilePage() {
   const navigate = useNavigate();
   const { section } = useParams();
-  const [selectedSection, setSelectedSection] = useState(section || "edit");
 
-  const onSectionChange = (
-    _: React.MouseEvent<HTMLElement>,
-    section: string
-  ) => {
+  const onSectionChange = (_: MouseEvent<HTMLElement>, section: string) => {
     if (!section) return;
 
-    setSelectedSection(section);
     navigate(`${Routes.PROFILE}/${section}`);
   };
 
@@ -25,7 +20,7 @@ export default function MyProfilePage() {
     <>
       <ToggleButtonGroup
         color="primary"
-        value={selectedSection}
+        value={section}
         exclusive
         onChange={onSectionChange}
         aria-label="Platform">
