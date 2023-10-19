@@ -57,6 +57,7 @@ export default function SignUpPage() {
             onNext={(password: string, passwordConfirm: string) => {
               setSignUpData((prev) => ({ ...prev, password, passwordConfirm }));
               setSubPage("verification");
+              // TODO: request server to send verification code to the email.
             }}
           />
         )}

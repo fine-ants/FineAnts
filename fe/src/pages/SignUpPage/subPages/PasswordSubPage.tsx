@@ -7,23 +7,27 @@ type Props = {
 };
 
 export default function PasswordSubPage({ onNext }: Props) {
-  const { value: password, onChange: onPasswordChange } = useText({
+  const {
+    value: password,
+    isError: isPasswordError,
+    onChange: onPasswordChange,
+  } = useText({
     validators: [validatePassword],
   });
-  const { value: passwordConfirm, onChange: onPasswordConfirmChange } = useText(
-    {
-      validators: [validatePassword],
-    }
-  );
-
-  // const isPasswordMatch = password === passwordConfirm;
+  const {
+    value: passwordConfirm,
+    isError: isPasswordConfirmError,
+    onChange: onPasswordConfirmChange,
+  } = useText({
+    validators: [validatePassword],
+  });
 
   return (
     <SubPage>
       <div>
         <label htmlFor="passwordInput">비밀번호</label>
         <input
-          type="text"
+          type="password"
           placeholder="비밀번호"
           id="passwordInput"
           value={password}
@@ -35,7 +39,7 @@ export default function PasswordSubPage({ onNext }: Props) {
       <div>
         <label htmlFor="passwordConfirmInput">비밀번호 확인</label>
         <input
-          type="text"
+          type="password"
           placeholder="비밀번호 확인"
           id="passwordConfirmInput"
           value={passwordConfirm}
@@ -44,8 +48,14 @@ export default function PasswordSubPage({ onNext }: Props) {
         {/* TODO: Error 비밀번호가 일치하지 않습니다 */}
       </div>
 
-      {/* TODO: Disabled condition */}
-      <button type="button" onClick={() => onNext(password, passwordConfirm)}>
+      <button
+        type="button"
+        onClick={() => onNext(password, passwordConfirm)}
+        disabled={
+          isPasswordError ||
+          isPasswordConfirmError ||
+          password !== passwordConfirm
+        }>
         다음
       </button>
     </SubPage>

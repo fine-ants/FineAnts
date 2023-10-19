@@ -9,7 +9,7 @@ type Props = {
 export default function NicknameSubPage({ onNext }: Props) {
   const {
     value: nickname,
-    isError: isNicknameError,
+    isError,
     onChange,
   } = useText({
     validators: [validateNickname],
@@ -32,10 +32,7 @@ export default function NicknameSubPage({ onNext }: Props) {
 
       <p>영문/한글/숫자 (2~10자)</p>
 
-      <button
-        type="button"
-        onClick={() => onNext(nickname)}
-        disabled={isNicknameError}>
+      <button type="button" onClick={() => onNext(nickname)} disabled={isError}>
         다음
       </button>
     </SubPage>

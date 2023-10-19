@@ -7,7 +7,11 @@ type Props = {
 };
 
 export default function EmailSubPage({ onNext }: Props) {
-  const { value: email, onChange } = useText({ validators: [validateEmail] });
+  const {
+    value: email,
+    isError,
+    onChange,
+  } = useText({ validators: [validateEmail] });
 
   return (
     <SubPage>
@@ -19,12 +23,12 @@ export default function EmailSubPage({ onNext }: Props) {
         value={email}
         onChange={(e) => onChange(e.target.value.trim())}
       />
+      {/* TODO: 중복 확인 */}
       <button type="button" onClick={() => {}}>
         중복 확인
       </button>
 
-      {/* TODO: Disabled condition */}
-      <button type="button" onClick={() => onNext(email)}>
+      <button type="button" onClick={() => onNext(email)} disabled={isError}>
         다음
       </button>
     </SubPage>
