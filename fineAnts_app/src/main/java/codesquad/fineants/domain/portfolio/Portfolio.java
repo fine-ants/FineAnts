@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 
 import codesquad.fineants.domain.member.Member;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,4 +34,20 @@ public class Portfolio {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	private Member member;
+
+	@Builder
+	public Portfolio(Long id, String name, String securitiesFirm, Long budget, Long targetGain, Long maximumLoss,
+		Long investedAmount, Long balance, Long totalAnnualDividend, Long annualInvestmentDividend, Member member) {
+		this.id = id;
+		this.name = name;
+		this.securitiesFirm = securitiesFirm;
+		this.budget = budget;
+		this.targetGain = targetGain;
+		this.maximumLoss = maximumLoss;
+		this.investedAmount = investedAmount;
+		this.balance = balance;
+		this.totalAnnualDividend = totalAnnualDividend;
+		this.annualInvestmentDividend = annualInvestmentDividend;
+		this.member = member;
+	}
 }
