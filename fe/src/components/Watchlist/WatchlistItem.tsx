@@ -18,9 +18,8 @@ interface DragStock {
 }
 
 export function WatchlistItem({ id, item, index, moveStock }: Props) {
-  const plusOrMinus = item.change.isUp ? "+" : "-";
+  const StyledWatchlistItemRef = useRef<HTMLDivElement>(null);
 
-  const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId }, drop] = useDrop<
     DragStock,
     void,
@@ -33,7 +32,7 @@ export function WatchlistItem({ id, item, index, moveStock }: Props) {
       };
     },
     hover(item: DragStock, monitor) {
-      if (!ref.current) {
+      if (!StyledWatchlistItemRef.current) {
         return;
       }
       const dragIndex = item.index;
@@ -43,7 +42,8 @@ export function WatchlistItem({ id, item, index, moveStock }: Props) {
         return;
       }
 
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      const hoverBoundingRect =
+        StyledWatchlistItemRef.current?.getBoundingClientRect();
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
@@ -52,7 +52,6 @@ export function WatchlistItem({ id, item, index, moveStock }: Props) {
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return;
       }
-
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
         return;
       }
@@ -71,13 +70,26 @@ export function WatchlistItem({ id, item, index, moveStock }: Props) {
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
+    options: {
+      dropEffect: "none",
+    },
   });
 
-  drag(drop(ref));
+  drag(drop(StyledWatchlistItemRef));
+
+  const plusOrMinus = item.change.value >= 0 ? "+" : "-";
+
+  const moveToStockDetailPage = () => {
+    // 종목의 detail 페이지로 이동하는 코드 작성
+    console.log(`${item.name}으로 이동하는 함수`);
+  };
+
+  console.log(isDragging);
 
   return (
     <StyledWatchlistItem
-      ref={ref}
+      onClick={moveToStockDetailPage}
+      ref={StyledWatchlistItemRef}
       data-handler-id={handlerId}
       $isDragging={isDragging}>
       <Name>{item.name}</Name>
@@ -99,7 +111,9 @@ const StyledWatchlistItem = styled.div<{ $isDragging: boolean }>`
   align-items: center;
   justify-content: flex-start;
   background-color: #f0f7f8;
-  opacity: ${({ $isDragging }) => ($isDragging ? 0.5 : 1)};
+  opacity: ${({ $isDragging }) => ($isDragging ? 0.3 : 1)};
+  cursor: ${({ $isDragging }) =>
+    $isDragging ? "grabbing !important" : "grab"};
 `;
 
 const Item = styled.div`
@@ -109,6 +123,7 @@ const Item = styled.div`
 
 const Name = styled(Item)`
   color: #00b1fd;
+  cursor: pointer;
 `;
 
 const GreenText = styled(Item)`

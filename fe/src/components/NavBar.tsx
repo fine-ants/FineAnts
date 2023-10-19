@@ -15,7 +15,7 @@ export function NavBar({ style, children }: Props) {
   );
 }
 
-export function NavItem({
+function NavItem({
   style,
   item,
 }: {

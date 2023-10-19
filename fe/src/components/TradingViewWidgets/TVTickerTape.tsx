@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-function TVTickerTapeWidget() {
+export default function TVTickerTapeWidget() {
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -52,5 +52,3 @@ function TVTickerTapeWidget() {
     </div>
   );
 }
-
-export default TVTickerTapeWidget;
