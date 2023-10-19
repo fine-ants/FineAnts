@@ -8,7 +8,6 @@ type Props = {
 
 export default function VerificationCodeSubPage({ email, onNext }: Props) {
   const onDigitsFilled = (digits: string) => {
-    console.log("digits:", digits);
     onNext(digits);
   };
 

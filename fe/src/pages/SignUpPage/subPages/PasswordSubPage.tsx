@@ -3,7 +3,7 @@ import { validatePassword } from "@utils/textValidators";
 import SubPage from "./SubPage";
 
 type Props = {
-  onNext: (data: string) => void;
+  onNext: (password: string, passwordConfirm: string) => void;
 };
 
 export default function PasswordSubPage({ onNext }: Props) {
@@ -45,7 +45,7 @@ export default function PasswordSubPage({ onNext }: Props) {
       </div>
 
       {/* TODO: Disabled condition */}
-      <button type="button" onClick={() => onNext(password)}>
+      <button type="button" onClick={() => onNext(password, passwordConfirm)}>
         다음
       </button>
     </SubPage>

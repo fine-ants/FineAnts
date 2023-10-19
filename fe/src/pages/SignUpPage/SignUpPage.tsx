@@ -19,6 +19,7 @@ export default function SignUpPage() {
     nickname: "",
     email: "",
     password: "",
+    passwordConfirm: "",
     verificationCode: "",
   });
 
@@ -53,8 +54,8 @@ export default function SignUpPage() {
         )}
         {subPage === "password" && (
           <PasswordSubPage
-            onNext={(data: string) => {
-              setSignUpData((prev) => ({ ...prev, password: data }));
+            onNext={(password: string, passwordConfirm: string) => {
+              setSignUpData((prev) => ({ ...prev, password, passwordConfirm }));
               setSubPage("verification");
             }}
           />
