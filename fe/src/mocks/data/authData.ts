@@ -46,3 +46,17 @@ export const unsuccessfulEmailDuplicationCheckData = {
   message: "이메일이 중복되었습니다",
   data: null,
 };
+
+export const successfulEmailVerificationData = {
+  code: HTTPSTATUS.success,
+  status: "Success",
+  message: "이메일로 검증코드를 전송하였습니다",
+  data: null,
+};
+
+export const unsuccessfulEmailVerificationData = {
+  code: HTTPSTATUS.badRequest,
+  status: "Bad Request",
+  message: "이메일 검증코드 전송을 실패했습니다",
+  data: null,
+};

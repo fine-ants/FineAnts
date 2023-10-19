@@ -94,3 +94,10 @@ export const postEmailDuplicateCheck = async (email: string) => {
   );
   return res.data;
 };
+
+export const postEmailVerification = async (email: string) => {
+  const res = await fetcher.post<Response<null>>("/auth/signup/verifyEmail", {
+    email,
+  });
+  return res.data;
+};
