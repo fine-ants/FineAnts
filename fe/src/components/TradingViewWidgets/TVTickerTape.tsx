@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
-const TVTickerTapeWidget: React.FC = () => {
+function TVTickerTapeWidget() {
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -55,6 +55,6 @@ const TVTickerTapeWidget: React.FC = () => {
       <div className="tradingview-widget-container__widget"></div>
     </div>
   );
-};
+}
 
 export default TVTickerTapeWidget;
