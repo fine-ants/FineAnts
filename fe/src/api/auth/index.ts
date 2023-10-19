@@ -15,6 +15,7 @@ export type SignUpData = {
   nickname: string;
   email: string;
   password: string;
+  passwordConfirm: string;
   verificationCode: string;
 };
 
@@ -31,8 +32,7 @@ type AccessTokenData = {
 };
 
 export const postSignUp = async (body: SignUpData) => {
-  console.log("body:", body);
-  const res = await fetcher.post<Response<null>>("/users", body);
+  const res = await fetcher.post<Response<null>>("/auth/signup", body);
   return res.data;
 };
 
@@ -76,5 +76,21 @@ export const patchUserInfo = async (body: FormData) => {
       "Content-Type": "multipart/form-data",
     },
   });
+  return res.data;
+};
+
+export const postNicknameDuplicateCheck = async (nickname: string) => {
+  const res = await fetcher.post<Response<null>>(
+    "/auth/signup/duplicationcheck/nickname",
+    { nickname }
+  );
+  return res.data;
+};
+
+export const postEmailDuplicateCheck = async (email: string) => {
+  const res = await fetcher.post<Response<null>>(
+    "/auth/signup/duplicationcheck/email",
+    { email }
+  );
   return res.data;
 };

@@ -1,3 +1,3 @@
-// import & export handlers
+import authHandlers from "./authHandlers";
 
-export default [];
+export default [...authHandlers];
