@@ -1,5 +1,9 @@
+import { postNicknameDuplicateCheck } from "@api/auth";
+import { HTTPSTATUS } from "@api/types";
 import useText from "@hooks/useText";
 import { validateNickname } from "@utils/textValidators";
+import axios from "axios";
+import { ChangeEvent, useState } from "react";
 import SubPage from "./SubPage";
 
 type Props = {
@@ -15,6 +19,32 @@ export default function NicknameSubPage({ onNext }: Props) {
     validators: [validateNickname],
   });
 
+  const [isDuplicateChecked, setIsDuplicateChecked] = useState(false);
+  const [duplicateCheckErrorMsg, setDuplicateCheckErrorMsg] = useState("");
+
+  const onNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value.trim());
+    setIsDuplicateChecked(false);
+    setDuplicateCheckErrorMsg("");
+  };
+
+  const onDuplicateCheckButtonClick = async () => {
+    try {
+      const res = await postNicknameDuplicateCheck(nickname);
+
+      if (res.code === HTTPSTATUS.success) {
+        setIsDuplicateChecked(true);
+        setDuplicateCheckErrorMsg("");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setDuplicateCheckErrorMsg(error.response?.data.message);
+      } else {
+        setDuplicateCheckErrorMsg((error as Error).message);
+      }
+    }
+  };
+
   return (
     <SubPage>
       <label htmlFor="nicknameInput">닉네임</label>
@@ -23,16 +53,23 @@ export default function NicknameSubPage({ onNext }: Props) {
         placeholder="닉네임"
         id="nicknameInput"
         value={nickname}
-        onChange={(e) => onChange(e.target.value.trim())}
+        onChange={onNicknameChange}
       />
-      {/* TODO: 중복 확인 */}
-      <button type="button" onClick={() => {}}>
+      <button
+        type="button"
+        onClick={onDuplicateCheckButtonClick}
+        disabled={isError}>
         중복 확인
       </button>
 
       <p>영문/한글/숫자 (2~10자)</p>
 
-      <button type="button" onClick={() => onNext(nickname)} disabled={isError}>
+      <p>{duplicateCheckErrorMsg}</p>
+
+      <button
+        type="button"
+        onClick={() => onNext(nickname)}
+        disabled={isError || !isDuplicateChecked}>
         다음
       </button>
     </SubPage>

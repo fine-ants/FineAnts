@@ -22,15 +22,20 @@ export default [
 
   rest.post(
     "/api/auth/signup/duplicationcheck/nickname",
-    async (_, res, ctx) => {
-      return res(
-        ctx.status(HTTPSTATUS.success),
-        ctx.json(successfulNicknameDuplicationCheckData)
-      );
-      return res(
-        ctx.status(HTTPSTATUS.badRequest),
-        ctx.json(unsuccessfulNicknameDuplicationCheckData)
-      );
+    async (req, res, ctx) => {
+      const { nickname } = await req.json();
+
+      if (nickname === "test") {
+        return res(
+          ctx.status(HTTPSTATUS.success),
+          ctx.json(successfulNicknameDuplicationCheckData)
+        );
+      } else {
+        return res(
+          ctx.status(HTTPSTATUS.badRequest),
+          ctx.json(unsuccessfulNicknameDuplicationCheckData)
+        );
+      }
     }
   ),
 
