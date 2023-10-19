@@ -7,7 +7,11 @@ type Props = {
 };
 
 export default function NicknameSubPage({ onNext }: Props) {
-  const { value: nickname, onChange } = useText({
+  const {
+    value: nickname,
+    isError: isNicknameError,
+    onChange,
+  } = useText({
     validators: [validateNickname],
   });
 
@@ -21,14 +25,17 @@ export default function NicknameSubPage({ onNext }: Props) {
         value={nickname}
         onChange={(e) => onChange(e.target.value.trim())}
       />
+      {/* TODO: 중복 확인 */}
       <button type="button" onClick={() => {}}>
         중복 확인
       </button>
 
       <p>영문/한글/숫자 (2~10자)</p>
 
-      {/* TODO: Disabled condition */}
-      <button type="button" onClick={() => onNext(nickname)}>
+      <button
+        type="button"
+        onClick={() => onNext(nickname)}
+        disabled={isNicknameError}>
         다음
       </button>
     </SubPage>
