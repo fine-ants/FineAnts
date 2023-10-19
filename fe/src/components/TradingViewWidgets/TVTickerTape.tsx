@@ -9,28 +9,24 @@ function TVTickerTapeWidget() {
     script.innerHTML = JSON.stringify({
       symbols: [
         {
-          description: "KOSPI",
+          proName: "FOREXCOM:SPXUSD",
+          title: "S&P 500",
+        },
+        {
+          proName: "FOREXCOM:NSXUSD",
+          title: "US 100",
+        },
+        {
+          description: "",
           proName: "KRX:KOSPI",
         },
         {
-          description: "KOSDAQ",
+          description: "",
           proName: "KRX:KOSDAQ",
         },
         {
-          description: "달러인덱스",
-          proName: "TVC:DXY",
-        },
-        {
-          description: "SPX",
-          proName: "SP:SPX",
-        },
-        {
-          description: "KOSPI200",
-          proName: "KRX:KOSPI200",
-        },
-        {
-          description: "NASDAQ",
-          proName: "NASDAQ:IXIC",
+          description: "",
+          proName: "FX_IDC:USDKRW",
         },
       ],
       showSymbolLogo: true,
