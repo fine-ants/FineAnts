@@ -7,8 +7,11 @@ import Routes from "router/Routes";
 import Dropdown from "./Dropdown";
 
 export default function Header() {
-  const navItemLinks = [
-    { name: "Watchlist", path: Routes.WATCHLIST },
+  const navItems = [
+    {
+      name: "Watchlist",
+      path: Routes.WATCHLIST,
+    },
     { name: "indices", path: Routes.INDICES },
   ];
 
@@ -46,14 +49,18 @@ export default function Header() {
                 </Dropdown.Toggle>
                 <Dropdown.Menu style={dropdownMenuStyle}>
                   {dropdownItems.map((item) => (
-                    <Dropdown.Item item={item} style={dropdownItemStyle} />
+                    <Dropdown.Item
+                      key={item.name}
+                      item={item}
+                      style={dropdownItemStyle}
+                    />
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
-              {navItemLinks.map((link) => (
+              {navItems.map((item) => (
                 <NavBar.NavItem
-                  key={link.name}
-                  link={link}
+                  key={item.name}
+                  item={item}
                   style={navItemStyle}
                 />
               ))}
@@ -75,7 +82,6 @@ const StyledHeader = styled.header`
 `;
 
 const HeaderTop = styled.header`
-  // width: 1440px;
   height: 80px;
   display: flex;
   gap: 48px;
@@ -142,4 +148,5 @@ const dropdownItemStyle = {
   height: " 30px",
   display: "flex",
   alignItems: "center",
+  cursor: "pointer",
 };
