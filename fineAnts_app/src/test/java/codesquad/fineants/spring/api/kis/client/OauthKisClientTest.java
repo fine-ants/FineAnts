@@ -61,10 +61,11 @@ class OauthKisClientTest {
 
 	@DisplayName("실시간 체결가를 조회합니다.")
 	@Test
-	void readRealTimeSigningPrice() throws URISyntaxException {
+	void readRealTimeSigningPrice() throws URISyntaxException, InterruptedException {
 		// given
 		KisWebSocketClientEndpoint clientEndpoint = new KisWebSocketClientEndpoint(
 			new URI(OauthKisClient.realTimeSigningPriceURI));
+		clientEndpoint.addMessageHandler(System.out::println);
 		// when
 		oauthKisClient.readRealTimeSigningPrice(oauthKisClient.approval(), clientEndpoint, "005930");
 		// then

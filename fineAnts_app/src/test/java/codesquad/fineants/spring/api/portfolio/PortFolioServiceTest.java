@@ -23,8 +23,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
+import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
 import codesquad.fineants.spring.api.errors.exception.BadRequestException;
+import codesquad.fineants.spring.api.errors.exception.ConflictException;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
 
@@ -149,6 +151,43 @@ class PortFolioServiceTest {
 			Arguments.of(1000000L),
 			Arguments.of(1100000L)
 		);
+	}
+
+	@DisplayName("회원은 내가 가지고 있는 포트폴리오들중에서 동일한 이름을 가지는 포트폴리오를 추가할 수는 없다")
+	@Test
+	void addPortfolioWithDuplicateName() throws JsonProcessingException {
+		// given
+		portfolioRepository.save(Portfolio.builder()
+			.name("내꿈은 워렌버핏")
+			.securitiesFirm("토스")
+			.budget(1000000L)
+			.targetGain(1500000L)
+			.maximumLoss(900000L)
+			.investedAmount(0L)
+			.balance(1000000L)
+			.totalAnnualDividend(0L)
+			.annualInvestmentDividend(0L)
+			.member(member)
+			.build());
+
+		Map<String, Object> body = new HashMap<>();
+		body.put("name", "내꿈은 워렌버핏");
+		body.put("securitiesFirm", "토스");
+		body.put("budget", 1000000L);
+		body.put("targetGain", 1500000L);
+		body.put("maximumLoss", 900000L);
+
+		PortfolioCreateRequest request = objectMapper.readValue(objectMapper.writeValueAsString(body),
+			PortfolioCreateRequest.class);
+
+		// when
+		Throwable throwable = catchThrowable(() -> service.addPortFolio(request, AuthMember.from(member)));
+
+		// then
+		assertThat(throwable)
+			.isInstanceOf(ConflictException.class)
+			.extracting("message")
+			.isEqualTo("포트폴리오 이름이 중복되었습니다");
 	}
 
 }
