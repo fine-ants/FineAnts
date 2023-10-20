@@ -117,4 +117,27 @@ class PortFolioRestControllerTest {
 			.andExpect(jsonPath("message").value(equalTo("포트폴리오가 추가되었습니다")))
 			.andExpect(jsonPath("data").value(equalTo(null)));
 	}
+
+	@DisplayName("사용자는 포트폴리오 추가시 유효하지 않은 입력 정보로 추가할 수 없다")
+	@Test
+	void addPortfolioWithInvalidInput() throws Exception {
+		// given
+		Map<String, Object> requestBodyMap = new HashMap<>();
+		requestBodyMap.put("name", "");
+		requestBodyMap.put("securitiesFirm", "");
+		requestBodyMap.put("budget", 0);
+		requestBodyMap.put("targetGain", null);
+		requestBodyMap.put("maximumLoss", -1);
+
+		String body = objectMapper.writeValueAsString(requestBodyMap);
+		// when & then
+		mockMvc.perform(post("/api/portfolios")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(body))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("code").value(equalTo(400)))
+			.andExpect(jsonPath("status").value(equalTo("Bad Request")))
+			.andExpect(jsonPath("message").value(equalTo("잘못된 입력형식입니다")))
+			.andExpect(jsonPath("data").isArray());
+	}
 }
