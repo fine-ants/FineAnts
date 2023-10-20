@@ -11,6 +11,7 @@ import codesquad.fineants.domain.portfolio.PortfolioRepository;
 import codesquad.fineants.spring.api.errors.errorcode.MemberErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
 import codesquad.fineants.spring.api.errors.exception.BadRequestException;
+import codesquad.fineants.spring.api.errors.exception.ConflictException;
 import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
@@ -31,6 +32,8 @@ public class PortFolioService {
 
 		Member member = memberRepository.findById(authMember.getMemberId())
 			.orElseThrow(() -> new NotFoundResourceException(MemberErrorCode.NOT_FOUND_MEMBER));
+
+		validateUniquePortfolioName(request.getName(), member);
 		Portfolio portfolio = request.toEntity(member);
 		return PortFolioCreateResponse.from(portfolioRepository.save(portfolio));
 	}
@@ -44,6 +47,12 @@ public class PortFolioService {
 	private void validateMaximumLossIsEqualGraterThanBudget(Long maximumLoss, Long budget) {
 		if (maximumLoss >= budget) {
 			throw new BadRequestException(PortfolioErrorCode.MAXIMUM_LOSS_IS_EQUAL_GREATER_THAN_BUDGET);
+		}
+	}
+
+	private void validateUniquePortfolioName(String name, Member member) {
+		if (portfolioRepository.existsByNameAndMember(name, member)) {
+			throw new ConflictException(PortfolioErrorCode.DUPLICATE_NAME);
 		}
 	}
 }
