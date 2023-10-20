@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import codesquad.fineants.domain.member.Member;
+import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
+import codesquad.fineants.spring.api.errors.exception.BadRequestException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,5 +51,11 @@ public class Portfolio {
 		this.totalAnnualDividend = totalAnnualDividend;
 		this.annualInvestmentDividend = annualInvestmentDividend;
 		this.member = member;
+	}
+
+	public void validateTargetGainLossThanBudget() {
+		if (targetGain <= budget) {
+			throw new BadRequestException(PortfolioErrorCode.TARGET_GAIN_LOSS_IS_EQUAL_LESS_THAN_BUDGET);
+		}
 	}
 }
