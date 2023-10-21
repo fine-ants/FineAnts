@@ -1,5 +1,7 @@
 package codesquad.fineants.domain.portfolio;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -7,17 +9,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import codesquad.fineants.domain.member.Member;
-import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
-import codesquad.fineants.spring.api.errors.exception.BadRequestException;
+import codesquad.fineants.domain.portfolio_stock.PortFolioStock;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"member", "portFolioStocks"})
 @Entity
 public class Portfolio {
 	@Id
@@ -37,6 +41,9 @@ public class Portfolio {
 	@JoinColumn(name = "member_id")
 	private Member member;
 
+	@OneToMany(mappedBy = "portfolio")
+	private List<PortFolioStock> portFolioStocks;
+
 	@Builder
 	public Portfolio(Long id, String name, String securitiesFirm, Long budget, Long targetGain, Long maximumLoss,
 		Long investedAmount, Long balance, Long totalAnnualDividend, Long annualInvestmentDividend, Member member) {
@@ -53,9 +60,21 @@ public class Portfolio {
 		this.member = member;
 	}
 
-	public void validateTargetGainLossThanBudget() {
-		if (targetGain <= budget) {
-			throw new BadRequestException(PortfolioErrorCode.TARGET_GAIN_LOSS_IS_EQUAL_LESS_THAN_BUDGET);
-		}
+	public Long calculateTotalGain() {
+		return portFolioStocks.stream()
+			.mapToLong(PortFolioStock::getTotalGain)
+			.sum();
+	}
+
+	public void change(Portfolio changePortfolio) {
+		this.name = changePortfolio.name;
+		this.securitiesFirm = changePortfolio.securitiesFirm;
+		this.budget = changePortfolio.budget;
+		this.targetGain = changePortfolio.targetGain;
+		this.maximumLoss = changePortfolio.maximumLoss;
+	}
+
+	public boolean hasAuthorization(Long memberId) {
+		return member.getId().equals(memberId);
 	}
 }
