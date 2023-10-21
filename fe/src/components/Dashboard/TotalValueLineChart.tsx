@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { ISeriesApi, LineWidth, PriceLineSource } from "lightweight-charts";
+import { ISeriesApi, LineWidth } from "lightweight-charts";
 import { Chart, AreaSeries } from "lightweight-charts-react-wrapper";
 import styled from "styled-components";
 

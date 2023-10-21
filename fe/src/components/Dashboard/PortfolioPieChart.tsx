@@ -12,33 +12,31 @@ const data = [
 
 const total = 6000030;
 
-// const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
-
 const renderActiveShape = (props: any) => {
-  const RADIAN = Math.PI / 180;
+  // const RADIAN = Math.PI / 180;
   const {
     cx,
     cy,
-    midAngle,
+    // midAngle,
     innerRadius,
     outerRadius,
     startAngle,
     endAngle,
     fill,
     payload,
-    percent,
-    value,
+    // percent,
+    // value,
     activeIndex,
   } = props;
-  const sin = Math.sin(-RADIAN * midAngle);
-  const cos = Math.cos(-RADIAN * midAngle);
-  const sx = cx + (outerRadius + 10) * cos;
-  const sy = cy + (outerRadius + 10) * sin;
-  const mx = cx + (outerRadius + 30) * cos;
-  const my = cy + (outerRadius + 30) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  const ey = my;
-  const textAnchor = cos >= 0 ? "start" : "end";
+  // const sin = Math.sin(-RADIAN * midAngle);
+  // const cos = Math.cos(-RADIAN * midAngle);
+  // const sx = cx + (outerRadius + 10) * cos;
+  // const sy = cy + (outerRadius + 10) * sin;
+  // const mx = cx + (outerRadius + 30) * cos;
+  // const my = cy + (outerRadius + 30) * sin;
+  // const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+  // const ey = my;
+  // const textAnchor = cos >= 0 ? "start" : "end";
 
   console.log("함수안에서", activeIndex);
 
@@ -60,7 +58,6 @@ const renderActiveShape = (props: any) => {
         fill={"black"}>
         {addComma(payload.value)}
       </text>
-
       <Sector
         cx={cx}
         cy={cy}
@@ -70,6 +67,7 @@ const renderActiveShape = (props: any) => {
         endAngle={endAngle}
         fill={fill}
       />
+      // TODO: 차트 활용할 때 다시 한 번 참고해보려고 남겨둠
       {/* <Sector
         cx={cx}
         cy={cy}
