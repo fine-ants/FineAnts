@@ -1,5 +1,8 @@
 package codesquad.fineants.spring.api.portfolio;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,15 +11,25 @@ import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
+import codesquad.fineants.domain.portfolio_stock.PortFolioStock;
+import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
+import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
 import codesquad.fineants.spring.api.errors.errorcode.MemberErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
 import codesquad.fineants.spring.api.errors.exception.BadRequestException;
 import codesquad.fineants.spring.api.errors.exception.ConflictException;
+import codesquad.fineants.spring.api.errors.exception.ForBiddenException;
 import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
+import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
 import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
+import codesquad.fineants.spring.api.portfolio.response.PortFolioItem;
+import codesquad.fineants.spring.api.portfolio.response.PortfolioListResponse;
+import codesquad.fineants.spring.api.portfolio.response.PortfolioModifyResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -24,18 +37,24 @@ public class PortFolioService {
 
 	private final PortfolioRepository portfolioRepository;
 	private final MemberRepository memberRepository;
+	private final PortFolioStockRepository portFolioStockRepository;
+	private final TradeHistoryRepository tradeHistoryRepository;
 
 	@Transactional
 	public PortFolioCreateResponse addPortFolio(PortfolioCreateRequest request, AuthMember authMember) {
 		validateTargetGainIsEqualLessThanBudget(request.getTargetGain(), request.getBudget());
 		validateMaximumLossIsEqualGraterThanBudget(request.getMaximumLoss(), request.getBudget());
 
-		Member member = memberRepository.findById(authMember.getMemberId())
-			.orElseThrow(() -> new NotFoundResourceException(MemberErrorCode.NOT_FOUND_MEMBER));
+		Member member = findMember(authMember.getMemberId());
 
 		validateUniquePortfolioName(request.getName(), member);
 		Portfolio portfolio = request.toEntity(member);
 		return PortFolioCreateResponse.from(portfolioRepository.save(portfolio));
+	}
+
+	private Member findMember(Long memberId) {
+		return memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundResourceException(MemberErrorCode.NOT_FOUND_MEMBER));
 	}
 
 	private void validateTargetGainIsEqualLessThanBudget(Long targetGain, Long budget) {
@@ -54,5 +73,66 @@ public class PortFolioService {
 		if (portfolioRepository.existsByNameAndMember(name, member)) {
 			throw new ConflictException(PortfolioErrorCode.DUPLICATE_NAME);
 		}
+	}
+
+	@Transactional
+	public PortfolioModifyResponse modifyPortfolio(PortfolioModifyRequest request, Long portfolioId,
+		AuthMember authMember) {
+		log.info("포트폴리오 수정 서비스 요청 : request={}, portfolioId={}, authMember={}", request, portfolioId, authMember);
+
+		validateTargetGainIsEqualLessThanBudget(request.getTargetGain(), request.getBudget());
+		validateMaximumLossIsEqualGraterThanBudget(request.getMaximumLoss(), request.getBudget());
+
+		Member member = findMember(authMember.getMemberId());
+		Portfolio originalPortfolio = findPortfolio(portfolioId);
+		Portfolio changePortfolio = request.toEntity(member);
+
+		validatePortfolioAuthorization(originalPortfolio, authMember.getMemberId());
+		validateUniquePortfolioName(changePortfolio.getName(), member);
+		originalPortfolio.change(changePortfolio);
+
+		log.info("변경된 포트폴리오 결과 : {}", originalPortfolio);
+		return PortfolioModifyResponse.from(changePortfolio);
+	}
+
+	private void validatePortfolioAuthorization(Portfolio portfolio, Long memberId) {
+		if (!portfolio.hasAuthorization(memberId)) {
+			throw new ForBiddenException(PortfolioErrorCode.NOT_HAVE_AUTHORIZATION);
+		}
+	}
+
+	@Transactional
+	public void deletePortfolio(Long portfolioId, AuthMember authMember) {
+		log.info("포트폴리오 삭제 서비스 요청 : portfolioId={}, authMember={}", portfolioId, authMember);
+
+		Portfolio findPortfolio = findPortfolio(portfolioId);
+		validatePortfolioAuthorization(findPortfolio, authMember.getMemberId());
+
+		List<Long> portfolioStockIds = portFolioStockRepository.findAllByPortfolioId(findPortfolio.getId()).stream()
+			.map(PortFolioStock::getId)
+			.collect(Collectors.toList());
+
+		int delTradeHistoryCnt = tradeHistoryRepository.deleteAllByPortFolioStockIdIn(portfolioStockIds);
+		log.info("매매이력 삭제 개수 : {}", delTradeHistoryCnt);
+
+		int delPortfolioCnt = portFolioStockRepository.deleteAllByPortfolioId(findPortfolio.getId());
+		log.info("포트폴리오 종목 삭제 개수 : {}", delPortfolioCnt);
+
+		portfolioRepository.deleteById(findPortfolio.getId());
+		log.info("포트폴리오 삭제 : delPortfolio={}", findPortfolio);
+	}
+
+	private Portfolio findPortfolio(Long portfolioId) {
+		return portfolioRepository.findById(portfolioId)
+			.orElseThrow(() -> new NotFoundResourceException(PortfolioErrorCode.NOT_FOUND_PORTFOLIO));
+	}
+
+	public PortfolioListResponse readAllByMember(AuthMember authMember) {
+		List<PortFolioItem> portFolioItems = portfolioRepository.findAllByMemberIdOrderByIdDesc(
+				authMember.getMemberId())
+			.stream()
+			.map(PortFolioItem::from)
+			.collect(Collectors.toList());
+		return new PortfolioListResponse(portFolioItems);
 	}
 }
