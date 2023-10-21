@@ -28,6 +28,7 @@ import codesquad.fineants.domain.portfolio.PortfolioRepository;
 import codesquad.fineants.spring.api.errors.exception.BadRequestException;
 import codesquad.fineants.spring.api.errors.exception.ConflictException;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
+import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
 import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
 
 @SpringBootTest
@@ -190,4 +191,68 @@ class PortFolioServiceTest {
 			.isEqualTo("포트폴리오 이름이 중복되었습니다");
 	}
 
+	@DisplayName("회원이 포트폴리오를 수정한다")
+	@Test
+	void modifyPortfolio() throws JsonProcessingException {
+		// given
+		Portfolio originPortfolio = portfolioRepository.save(Portfolio.builder()
+			.name("내꿈은 워렌버핏")
+			.securitiesFirm("토스")
+			.budget(1000000L)
+			.targetGain(1500000L)
+			.maximumLoss(900000L)
+			.investedAmount(0L)
+			.balance(1000000L)
+			.totalAnnualDividend(0L)
+			.annualInvestmentDividend(0L)
+			.member(member)
+			.build());
+
+		Map<String, Object> body = new HashMap<>();
+		body.put("name", "내꿈은 워렌버핏2");
+		body.put("securitiesFirm", "미래에셋증권");
+		body.put("budget", 1500000L);
+		body.put("targetGain", 2000000L);
+		body.put("maximumLoss", 900000L);
+
+		PortfolioModifyRequest request = objectMapper.readValue(objectMapper.writeValueAsString(body),
+			PortfolioModifyRequest.class);
+		Long portfolioId = originPortfolio.getId();
+
+		// when
+		service.modifyPortfolio(request, portfolioId, AuthMember.from(member));
+
+		// then
+		Portfolio changePortfolio = portfolioRepository.findById(portfolioId).orElseThrow();
+
+		assertThat(changePortfolio)
+			.extracting("name", "securitiesFirm", "budget", "targetGain", "maximumLoss")
+			.containsExactly("내꿈은 워렌버핏2", "미래에셋증권", 1500000L, 2000000L, 900000L);
+	}
+
+	@DisplayName("회원이 포트폴리오를 삭제한다")
+	@Test
+	void deletePortfolio() {
+		// given
+		Portfolio portfolio = portfolioRepository.save(Portfolio.builder()
+			.name("내꿈은 워렌버핏")
+			.securitiesFirm("토스")
+			.budget(1000000L)
+			.targetGain(1500000L)
+			.maximumLoss(900000L)
+			.investedAmount(0L)
+			.balance(1000000L)
+			.totalAnnualDividend(0L)
+			.annualInvestmentDividend(0L)
+			.member(member)
+			.build());
+
+		// when
+		service.deletePortfolio(portfolio.getId(), AuthMember.from(member));
+
+		// then
+		boolean result = portfolioRepository.existsById(portfolio.getId());
+
+		assertThat(result).isFalse();
+	}
 }
