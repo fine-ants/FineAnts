@@ -23,7 +23,6 @@ public class TradeHistory extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private LocalDateTime purchaseDate;
-
 	private Long purchasePricePerShare;
 	private Long numberOfShares;
 	private String memo;
@@ -42,5 +41,10 @@ public class TradeHistory extends BaseEntity {
 		this.numberOfShares = numberOfShares;
 		this.memo = memo;
 		this.portFolioStock = portFolioStock;
+	}
+
+	// 투자 금액 = 주당 매입가 * 개수
+	public long calculateInvestmentAmount() {
+		return purchasePricePerShare * numberOfShares;
 	}
 }

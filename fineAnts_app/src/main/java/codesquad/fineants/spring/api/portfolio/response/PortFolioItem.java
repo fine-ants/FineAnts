@@ -1,9 +1,14 @@
 package codesquad.fineants.spring.api.portfolio.response;
 
+import java.time.LocalDateTime;
+
 import codesquad.fineants.domain.portfolio.Portfolio;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class PortFolioItem {
 	private Long id;
 	private String name;
@@ -29,17 +34,17 @@ public class PortFolioItem {
 		this.numberOfShares = numberOfShares;
 	}
 
-	public static PortFolioItem from(Portfolio portfolio) {
+	public static PortFolioItem of(Portfolio portfolio, PortfolioGainHistory prevHistory) {
 		return PortFolioItem.builder()
 			.id(portfolio.getId())
 			.name(portfolio.getName())
 			.budget(portfolio.getBudget())
 			.totalGain(portfolio.calculateTotalGain())
-			.totalReturnRate(0.0)
-			.dailyGain(0L)
-			.dailyReturnRate(0.0)
-			.expectedMonthlyDividend(0L)
-			.numberOfShares(0)
+			.totalReturnRate(portfolio.calculateTotalReturnRate())
+			.dailyGain(portfolio.calculateDailyGain(prevHistory))
+			.dailyReturnRate(portfolio.calculateDailyReturnRate(prevHistory))
+			.expectedMonthlyDividend(portfolio.calculateExpectedMonthlyDividend(LocalDateTime.now()))
+			.numberOfShares(portfolio.getNumberOfShares())
 			.build();
 	}
 }

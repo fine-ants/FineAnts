@@ -1,16 +1,27 @@
 package codesquad.fineants.spring.api.portfolio;
 
+import static codesquad.fineants.domain.portfolio.QPortfolio.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.querydsl.core.types.Predicate;
 
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
+import codesquad.fineants.domain.page.ScrollPaginationCollection;
 import codesquad.fineants.domain.portfolio.Portfolio;
+import codesquad.fineants.domain.portfolio.PortfolioPaginationRepository;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
 import codesquad.fineants.domain.portfolio_stock.PortFolioStock;
 import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
 import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
@@ -23,9 +34,8 @@ import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
 import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
-import codesquad.fineants.spring.api.portfolio.response.PortFolioItem;
-import codesquad.fineants.spring.api.portfolio.response.PortfolioListResponse;
 import codesquad.fineants.spring.api.portfolio.response.PortfolioModifyResponse;
+import codesquad.fineants.spring.api.portfolio.response.PortfoliosResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,6 +49,8 @@ public class PortFolioService {
 	private final MemberRepository memberRepository;
 	private final PortFolioStockRepository portFolioStockRepository;
 	private final TradeHistoryRepository tradeHistoryRepository;
+	private final PortfolioGainHistoryRepository portfolioGainHistoryRepository;
+	private final PortfolioPaginationRepository paginationRepository;
 
 	@Transactional
 	public PortFolioCreateResponse addPortFolio(PortfolioCreateRequest request, AuthMember authMember) {
@@ -127,12 +139,33 @@ public class PortFolioService {
 			.orElseThrow(() -> new NotFoundResourceException(PortfolioErrorCode.NOT_FOUND_PORTFOLIO));
 	}
 
-	public PortfolioListResponse readAllByMember(AuthMember authMember) {
-		List<PortFolioItem> portFolioItems = portfolioRepository.findAllByMemberIdOrderByIdDesc(
-				authMember.getMemberId())
-			.stream()
-			.map(PortFolioItem::from)
-			.collect(Collectors.toList());
-		return new PortfolioListResponse(portFolioItems);
+	public PortfoliosResponse readMyAllPortfolio(AuthMember authMember, int size, Long nextCursor) {
+		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByCreateAtIsLessThanEqualOrderByCreateAtDesc(
+				LocalDateTime.now())
+			.orElseGet(PortfolioGainHistory::empty);
+
+		PageRequest pageRequest = PageRequest.of(0, size + 1);
+		Page<Portfolio> page = portfolioRepository.findAllByMemberIdAndIdLessThanOrderByIdDesc(authMember.getMemberId(),
+			nextCursor, pageRequest);
+		List<Portfolio> portfolios = page.getContent();
+
+		ScrollPaginationCollection<Portfolio> portfoliosCursor = ScrollPaginationCollection.of(
+			portfolios, size);
+
+		return PortfoliosResponse.of(portfoliosCursor, latestHistory);
+	}
+
+	private Predicate equalMemberId(Long memberId) {
+		if (memberId == null) {
+			return null;
+		}
+		return portfolio.member.id.eq(memberId);
+	}
+
+	private Predicate lessThanPortfolioId(Long cursor) {
+		if (cursor == null) {
+			return null;
+		}
+		return portfolio.id.lt(cursor);
 	}
 }

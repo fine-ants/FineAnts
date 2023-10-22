@@ -38,10 +38,6 @@ public class PortfolioCreateRequest {
 			.budget(budget)
 			.targetGain(targetGain)
 			.maximumLoss(maximumLoss)
-			.investedAmount(0L)
-			.balance(budget)
-			.totalAnnualDividend(0L)
-			.annualInvestmentDividend(0L)
 			.member(member)
 			.build();
 	}

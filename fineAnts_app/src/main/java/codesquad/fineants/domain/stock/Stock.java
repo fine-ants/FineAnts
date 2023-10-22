@@ -1,12 +1,22 @@
 package codesquad.fineants.domain.stock;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import codesquad.fineants.domain.BaseEntity;
+import codesquad.fineants.domain.stock_dividend.StockDividend;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +31,38 @@ public class Stock extends BaseEntity {
 	private String engCompanyName;
 	private String stockcode;
 	private String tickerSymbol;
-	private Long currentPricePerShare;
-	private String market;
+	@Enumerated(value = EnumType.STRING)
+	private Market market;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	private final List<StockDividend> stockDividends = new ArrayList<>();
+
+	@Builder
+	public Stock(Long id, String companyName, String engCompanyName, String stockcode, String tickerSymbol,
+		Market market) {
+		this.id = id;
+		this.companyName = companyName;
+		this.engCompanyName = engCompanyName;
+		this.stockcode = stockcode;
+		this.tickerSymbol = tickerSymbol;
+		this.market = market;
+	}
+
+	public boolean hasMonthlyDividend(LocalDateTime monthDateTime) {
+		return stockDividends.stream()
+			.anyMatch(stockDividend -> stockDividend.isMonthlyDividend(monthDateTime));
+	}
+
+	public long readDividend(LocalDateTime monthDateTime) {
+		return stockDividends.stream()
+			.filter(stockDividend -> stockDividend.isMonthlyDividend(monthDateTime))
+			.mapToLong(StockDividend::getDividend)
+			.sum();
+	}
+
+	public void addStockDividend(StockDividend stockDividend) {
+		if (!stockDividends.contains(stockDividend)) {
+			stockDividends.add(stockDividend);
+		}
+	}
 }
