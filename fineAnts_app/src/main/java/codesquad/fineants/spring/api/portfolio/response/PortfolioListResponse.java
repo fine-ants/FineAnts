@@ -7,4 +7,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PortfolioListResponse {
 	private List<PortFolioItem> portfolios;
+	private Boolean hasNext;
+	private Long nextCursor;
 }

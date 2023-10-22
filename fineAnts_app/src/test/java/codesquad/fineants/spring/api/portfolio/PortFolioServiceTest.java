@@ -164,10 +164,6 @@ class PortFolioServiceTest {
 			.budget(1000000L)
 			.targetGain(1500000L)
 			.maximumLoss(900000L)
-			.investedAmount(0L)
-			.balance(1000000L)
-			.totalAnnualDividend(0L)
-			.annualInvestmentDividend(0L)
 			.member(member)
 			.build());
 
@@ -201,10 +197,6 @@ class PortFolioServiceTest {
 			.budget(1000000L)
 			.targetGain(1500000L)
 			.maximumLoss(900000L)
-			.investedAmount(0L)
-			.balance(1000000L)
-			.totalAnnualDividend(0L)
-			.annualInvestmentDividend(0L)
 			.member(member)
 			.build());
 
@@ -240,10 +232,6 @@ class PortFolioServiceTest {
 			.budget(1000000L)
 			.targetGain(1500000L)
 			.maximumLoss(900000L)
-			.investedAmount(0L)
-			.balance(1000000L)
-			.totalAnnualDividend(0L)
-			.annualInvestmentDividend(0L)
 			.member(member)
 			.build());
 

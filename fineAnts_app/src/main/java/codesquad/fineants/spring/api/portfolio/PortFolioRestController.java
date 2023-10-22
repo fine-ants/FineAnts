@@ -2,13 +2,16 @@ package codesquad.fineants.spring.api.portfolio;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +19,7 @@ import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.oauth.support.AuthPrincipalMember;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
+import codesquad.fineants.spring.api.portfolio.response.PortfolioListResponse;
 import codesquad.fineants.spring.api.response.ApiResponse;
 import codesquad.fineants.spring.api.success.code.PortfolioSuccessCode;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +39,7 @@ public class PortFolioRestController {
 		@AuthPrincipalMember AuthMember authMember) {
 		log.info("포트폴리오 추가 요청, request={}", request);
 		portFolioService.addPortFolio(request, authMember);
-		return ApiResponse.created("포트폴리오가 추가되었습니다");
+		return ApiResponse.success(PortfolioSuccessCode.OK_ADD_PORTFOLIO);
 	}
 
 	@PutMapping("/{portfolioId}")
@@ -54,5 +58,13 @@ public class PortFolioRestController {
 		log.info("포트폴리오 삭제 요청, portfolioId={}", portfolioId);
 		portFolioService.deletePortfolio(portfolioId, authMember);
 		return ApiResponse.success(PortfolioSuccessCode.OK_DELETE_PORTFOLIO);
+	}
+
+	@GetMapping
+	public ApiResponse<PortfolioListResponse> readMyAllPortfolio(@AuthPrincipalMember AuthMember authMember,
+		@RequestParam(required = false) Long cursor,
+		Pageable pageable) {
+		return ApiResponse.success(PortfolioSuccessCode.OK_SEARCH_PORTFOLIOS,
+			portFolioService.readMyAllPortfolio(authMember, cursor, pageable));
 	}
 }

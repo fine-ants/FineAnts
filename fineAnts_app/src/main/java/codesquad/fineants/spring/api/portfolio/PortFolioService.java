@@ -1,16 +1,27 @@
 package codesquad.fineants.spring.api.portfolio;
 
+import static codesquad.fineants.domain.portfolio.QPortfolio.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.portfolio.Portfolio;
+import codesquad.fineants.domain.portfolio.PortfolioPaginationRepository;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
 import codesquad.fineants.domain.portfolio_stock.PortFolioStock;
 import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
 import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
@@ -39,6 +50,8 @@ public class PortFolioService {
 	private final MemberRepository memberRepository;
 	private final PortFolioStockRepository portFolioStockRepository;
 	private final TradeHistoryRepository tradeHistoryRepository;
+	private final PortfolioGainHistoryRepository portfolioGainHistoryRepository;
+	private final PortfolioPaginationRepository paginationRepository;
 
 	@Transactional
 	public PortFolioCreateResponse addPortFolio(PortfolioCreateRequest request, AuthMember authMember) {
@@ -127,12 +140,41 @@ public class PortFolioService {
 			.orElseThrow(() -> new NotFoundResourceException(PortfolioErrorCode.NOT_FOUND_PORTFOLIO));
 	}
 
-	public PortfolioListResponse readAllByMember(AuthMember authMember) {
-		List<PortFolioItem> portFolioItems = portfolioRepository.findAllByMemberIdOrderByIdDesc(
-				authMember.getMemberId())
+	public PortfolioListResponse readMyAllPortfolio(AuthMember authMember, Long cursor, Pageable pageable) {
+		PortfolioGainHistory prevHistory = portfolioGainHistoryRepository.findFirstByCreateAtIsLessThanEqualOrderByCreateAtDesc(
+				LocalDateTime.now())
+			.orElseGet(PortfolioGainHistory::empty);
+
+		BooleanBuilder conditions = new BooleanBuilder();
+		conditions.orAllOf(
+			equalMemberId(authMember.getMemberId()),
+			lessThanPortfolioId(cursor));
+		Slice<Portfolio> portfolioSlice = paginationRepository.findAll(conditions, pageable);
+
+		List<PortFolioItem> portFolioItems = portfolioSlice.getContent()
 			.stream()
-			.map(PortFolioItem::from)
+			.map(portfolio -> PortFolioItem.of(portfolio, prevHistory))
 			.collect(Collectors.toList());
-		return new PortfolioListResponse(portFolioItems);
+
+		boolean hasNext = portfolioSlice.hasNext();
+		Long nextCursor = null;
+		if (hasNext) {
+			nextCursor = portFolioItems.get(portFolioItems.size() - 1).getId();
+		}
+		return new PortfolioListResponse(portFolioItems, hasNext, nextCursor);
+	}
+
+	private Predicate equalMemberId(Long memberId) {
+		if (memberId == null) {
+			return null;
+		}
+		return portfolio.member.id.eq(memberId);
+	}
+
+	private Predicate lessThanPortfolioId(Long cursor) {
+		if (cursor == null) {
+			return null;
+		}
+		return portfolio.id.lt(cursor);
 	}
 }
