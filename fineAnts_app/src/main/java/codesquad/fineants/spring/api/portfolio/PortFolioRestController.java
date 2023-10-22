@@ -2,7 +2,6 @@ package codesquad.fineants.spring.api.portfolio;
 
 import javax.validation.Valid;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,7 @@ import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.oauth.support.AuthPrincipalMember;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
-import codesquad.fineants.spring.api.portfolio.response.PortfolioListResponse;
+import codesquad.fineants.spring.api.portfolio.response.PortfoliosResponse;
 import codesquad.fineants.spring.api.response.ApiResponse;
 import codesquad.fineants.spring.api.success.code.PortfolioSuccessCode;
 import lombok.RequiredArgsConstructor;
@@ -61,10 +60,10 @@ public class PortFolioRestController {
 	}
 
 	@GetMapping
-	public ApiResponse<PortfolioListResponse> readMyAllPortfolio(@AuthPrincipalMember AuthMember authMember,
-		@RequestParam(required = false) Long cursor,
-		Pageable pageable) {
+	public ApiResponse<PortfoliosResponse> readMyAllPortfolio(@AuthPrincipalMember AuthMember authMember,
+		@RequestParam(required = false, defaultValue = "10") int size,
+		@RequestParam(required = false, defaultValue = Long.MAX_VALUE + "") long nextCursor) {
 		return ApiResponse.success(PortfolioSuccessCode.OK_SEARCH_PORTFOLIOS,
-			portFolioService.readMyAllPortfolio(authMember, cursor, pageable));
+			portFolioService.readMyAllPortfolio(authMember, size, nextCursor));
 	}
 }

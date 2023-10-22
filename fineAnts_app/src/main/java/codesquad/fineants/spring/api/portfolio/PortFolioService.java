@@ -6,17 +6,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
+import codesquad.fineants.domain.page.ScrollPaginationCollection;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioPaginationRepository;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
@@ -34,9 +34,8 @@ import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
 import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
-import codesquad.fineants.spring.api.portfolio.response.PortFolioItem;
-import codesquad.fineants.spring.api.portfolio.response.PortfolioListResponse;
 import codesquad.fineants.spring.api.portfolio.response.PortfolioModifyResponse;
+import codesquad.fineants.spring.api.portfolio.response.PortfoliosResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -140,28 +139,20 @@ public class PortFolioService {
 			.orElseThrow(() -> new NotFoundResourceException(PortfolioErrorCode.NOT_FOUND_PORTFOLIO));
 	}
 
-	public PortfolioListResponse readMyAllPortfolio(AuthMember authMember, Long cursor, Pageable pageable) {
-		PortfolioGainHistory prevHistory = portfolioGainHistoryRepository.findFirstByCreateAtIsLessThanEqualOrderByCreateAtDesc(
+	public PortfoliosResponse readMyAllPortfolio(AuthMember authMember, int size, Long nextCursor) {
+		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByCreateAtIsLessThanEqualOrderByCreateAtDesc(
 				LocalDateTime.now())
 			.orElseGet(PortfolioGainHistory::empty);
 
-		BooleanBuilder conditions = new BooleanBuilder();
-		conditions.orAllOf(
-			equalMemberId(authMember.getMemberId()),
-			lessThanPortfolioId(cursor));
-		Slice<Portfolio> portfolioSlice = paginationRepository.findAll(conditions, pageable);
+		PageRequest pageRequest = PageRequest.of(0, size + 1);
+		Page<Portfolio> page = portfolioRepository.findAllByMemberIdAndIdLessThanOrderByIdDesc(authMember.getMemberId(),
+			nextCursor, pageRequest);
+		List<Portfolio> portfolios = page.getContent();
 
-		List<PortFolioItem> portFolioItems = portfolioSlice.getContent()
-			.stream()
-			.map(portfolio -> PortFolioItem.of(portfolio, prevHistory))
-			.collect(Collectors.toList());
+		ScrollPaginationCollection<Portfolio> portfoliosCursor = ScrollPaginationCollection.of(
+			portfolios, size);
 
-		boolean hasNext = portfolioSlice.hasNext();
-		Long nextCursor = null;
-		if (hasNext) {
-			nextCursor = portFolioItems.get(portFolioItems.size() - 1).getId();
-		}
-		return new PortfolioListResponse(portFolioItems, hasNext, nextCursor);
+		return PortfoliosResponse.of(portfoliosCursor, latestHistory);
 	}
 
 	private Predicate equalMemberId(Long memberId) {

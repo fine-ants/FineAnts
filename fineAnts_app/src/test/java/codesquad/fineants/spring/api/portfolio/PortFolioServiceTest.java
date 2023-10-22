@@ -3,7 +3,9 @@ package codesquad.fineants.spring.api.portfolio;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -30,6 +32,7 @@ import codesquad.fineants.spring.api.errors.exception.ConflictException;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
 import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
+import codesquad.fineants.spring.api.portfolio.response.PortfoliosResponse;
 
 @SpringBootTest
 class PortFolioServiceTest {
@@ -242,5 +245,74 @@ class PortFolioServiceTest {
 		boolean result = portfolioRepository.existsById(portfolio.getId());
 
 		assertThat(result).isFalse();
+	}
+
+	@DisplayName("사용자가 나의 포트폴리오들을 처음 조회한다")
+	@Test
+	void readMyAllPortfolio() {
+		// given
+		List<Portfolio> portfolios = new ArrayList<>();
+		for (int i = 1; i <= 25; i++) {
+			portfolios.add(Portfolio.builder()
+				.name("내꿈은 워렌버핏" + i)
+				.securitiesFirm("토스")
+				.budget(1000000L)
+				.targetGain(1500000L)
+				.maximumLoss(900000L)
+				.member(member)
+				.build());
+		}
+		portfolioRepository.saveAll(portfolios);
+		int size = 10;
+		Long nextCursor = Long.MAX_VALUE;
+
+		// when
+		PortfoliosResponse response = service.readMyAllPortfolio(AuthMember.from(member), size, nextCursor);
+
+		// then
+		assertAll(
+			() -> assertThat(response).extracting("nextCursor").isEqualTo(16L),
+			() -> assertThat(response).extracting("portfolios")
+				.asList()
+				.hasSize(10)
+		);
+	}
+
+	@DisplayName("사용자가 나의 포트폴리오들을 스크롤하여 조회한다")
+	@Test
+	void readMyAllPortfolioWithNextCursor() {
+		// given
+		List<Portfolio> portfolios = new ArrayList<>();
+		for (int i = 1; i <= 25; i++) {
+			portfolios.add(Portfolio.builder()
+				.name("내꿈은 워렌버핏" + i)
+				.securitiesFirm("토스")
+				.budget(1000000L)
+				.targetGain(1500000L)
+				.maximumLoss(900000L)
+				.member(member)
+				.build());
+		}
+		portfolioRepository.saveAll(portfolios);
+		int size = 10;
+		Long nextCursor = 16L;
+
+		// when
+		PortfoliosResponse response = service.readMyAllPortfolio(AuthMember.from(member), size, nextCursor);
+		assertAll(
+			() -> assertThat(response).extracting("nextCursor").isEqualTo(6L),
+			() -> assertThat(response).extracting("portfolios")
+				.asList()
+				.hasSize(10)
+		);
+
+		nextCursor = 6L;
+		PortfoliosResponse response2 = service.readMyAllPortfolio(AuthMember.from(member), size, nextCursor);
+		assertAll(
+			() -> assertThat(response2).extracting("nextCursor").isEqualTo(null),
+			() -> assertThat(response2).extracting("portfolios")
+				.asList()
+				.hasSize(5)
+		);
 	}
 }
