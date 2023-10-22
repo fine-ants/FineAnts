@@ -28,6 +28,7 @@
       "@assets/*": ["assets/*"],
       "@pages/*": ["pages/*"],
       "@components/*": ["components/*"],
+      "@context/*": ["context/*"],
       "@hooks/*": ["hooks/*"],
       "@utils/*": ["utils/*"]
     }

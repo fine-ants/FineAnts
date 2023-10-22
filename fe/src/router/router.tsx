@@ -1,4 +1,5 @@
 import { User } from "@api/auth";
+import { WindowProvider } from "@context/WindowContext";
 import SignUpPage from "@pages/SignUpPage/SignUpPage";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import {
@@ -30,10 +31,12 @@ export default (user: User | undefined) =>
 
         <Route
           element={
-            <GoogleOAuthProvider
-              clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-              <PublicOnlyRoute user={user} />
-            </GoogleOAuthProvider>
+            <WindowProvider>
+              <GoogleOAuthProvider
+                clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+                <PublicOnlyRoute user={user} />
+              </GoogleOAuthProvider>
+            </WindowProvider>
           }>
           {/* <Route index path={Routes.SIGNIN} element={<SignInPage />} /> */}
           <Route path={Routes.SIGNUP} element={<SignUpPage />} />
