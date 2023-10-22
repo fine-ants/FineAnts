@@ -34,10 +34,11 @@ public class KisService {
 	}
 
 	public String approval() {
+		log.info("approval call");
 		return oauthKisClient.approval();
 	}
 
-	public String readRealTimeSigningPrice(String stockCode) {
+	public void readRealTimeSigningPrice(String stockCode) {
 		KisWebSocketClientEndpoint clientEndpoint;
 		try {
 			clientEndpoint = new KisWebSocketClientEndpoint(new URI(realTimeSigningPriceURI));
@@ -46,7 +47,6 @@ public class KisService {
 		}
 		clientEndpoint.addMessageHandler(getMessageHandler());
 		oauthKisClient.readRealTimeSigningPrice(approveKey, clientEndpoint, stockCode);
-		return null;
 	}
 
 	private KisWebSocketClientEndpoint.MessageHandler getMessageHandler() {
