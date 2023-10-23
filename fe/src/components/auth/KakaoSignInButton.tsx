@@ -1,7 +1,7 @@
 import kakaoLoginButtonImage from "@assets/images/kakao_login_medium_wide.png";
+import { CLIENT_URL, KAKAO_CLIENT_ID } from "@constants/config";
 import { WindowContext } from "@context/WindowContext";
 import openPopUpWindow from "@utils/openPopUpWindow";
-import { CLIENT_URL } from "config";
 import { useContext } from "react";
 import { styled } from "styled-components";
 
@@ -10,9 +10,7 @@ export default function KakaoSignInButton() {
 
   const onKakaoSignIn = () => {
     const oAuthPopUpWindow = openPopUpWindow(
-      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${
-        import.meta.env.VITE_KAKAO_CLIENT_ID
-      }&redirect_uri=${CLIENT_URL}/signin?provider=kakao`,
+      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${CLIENT_URL}/signin?provider=kakao`,
       "kakaoOAuth",
       500,
       600

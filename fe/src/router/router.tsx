@@ -1,4 +1,5 @@
 import { User } from "@api/auth";
+import { GOOGLE_CLIENT_ID } from "@constants/config";
 import { WindowProvider } from "@context/WindowContext";
 import SignInPage from "@pages/SignInPage";
 import SignUpPage from "@pages/SignUpPage/SignUpPage";
@@ -33,8 +34,7 @@ export default (user: User | undefined) =>
         <Route
           element={
             <WindowProvider>
-              <GoogleOAuthProvider
-                clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+              <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
                 <PublicOnlyRoute user={user} />
               </GoogleOAuthProvider>
             </WindowProvider>

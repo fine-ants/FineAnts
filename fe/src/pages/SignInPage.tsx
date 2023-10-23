@@ -3,9 +3,9 @@ import useSignInMutation from "@api/auth/queries/useSignInMutation";
 import GoogleSignInButton from "@components/auth/GoogleSignInButton";
 import KakaoSignInButton from "@components/auth/KakaoSignInButton";
 import NaverSignInButton from "@components/auth/NaverSignInButton";
+import { CLIENT_URL } from "@constants/config";
 import useText from "@hooks/useText";
 import { validateEmail } from "@utils/textValidators";
-import { CLIENT_URL } from "config";
 import { WindowContext } from "context/WindowContext";
 import { FormEvent, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -80,7 +80,7 @@ export default function SignInPage() {
             value={email}
             onChange={(e) => onEmailChange(e.target.value.trim())}
           />
-          {<TextInputError>{emailError}</TextInputError>}
+          <TextInputError>{emailError}</TextInputError>
         </InputControl>
         <InputControl>
           <TextInputLabel>비밀번호</TextInputLabel>

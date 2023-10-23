@@ -1,10 +1,11 @@
+import { CLIENT_URL, NAVER_CLIENT_ID } from "@constants/config";
 import { useEffect } from "react";
 import styled from "styled-components";
 
 export default function NaverSignInButton() {
   const naverLogin = new (window as any).naver.LoginWithNaverId({
-    clientId: import.meta.env.VITE_NAVER_CLIENT_ID,
-    callbackUrl: `${import.meta.env.VITE_CLIENT_URL}/signin?provider=naver`,
+    clientId: NAVER_CLIENT_ID,
+    callbackUrl: `${CLIENT_URL}/signin?provider=naver`,
     isPopup: true,
     loginButton: {
       color: "green",
