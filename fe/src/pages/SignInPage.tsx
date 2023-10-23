@@ -2,6 +2,7 @@ import useOAuthSignInMutation from "@api/auth/queries/useOAuthSignInMutation";
 import useSignInMutation from "@api/auth/queries/useSignInMutation";
 import GoogleSignInButton from "@components/auth/GoogleSignInButton";
 import KakaoSignInButton from "@components/auth/KakaoSignInButton";
+import NaverSignInButton from "@components/auth/NaverSignInButton";
 import useText from "@hooks/useText";
 import { validateEmail } from "@utils/textValidators";
 import { CLIENT_URL } from "config";
@@ -98,7 +99,7 @@ export default function SignInPage() {
 
       <GoogleSignInButton />
       <KakaoSignInButton />
-      {/* <NaverSignInButton /> */}
+      <NaverSignInButton />
 
       <button type="button" onClick={() => navigate(Routes.SIGNUP)}>
         회원가입
