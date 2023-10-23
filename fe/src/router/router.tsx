@@ -1,4 +1,5 @@
 import { User } from "@api/auth";
+import PortfolioPage from "@pages/PortfolioPage/PortfolioPage";
 import MyProfilePage from "@pages/ProfilePage/MyProfilePage";
 import SignUpPage from "@pages/SignUpPage/SignUpPage";
 import {
@@ -24,6 +25,8 @@ export default (user: User | undefined) =>
           path={`${Routes.PROFILE}/:section`}
           element={<MyProfilePage />}
         />
+        <Route path={Routes.PORTFOLIO} element={<PortfolioPage />} />
+
         <Route element={<ProtectedRoute user={user} />}>
           {/* <Route index path={Routes.DASHBOARD} element={<DashboardPage />} /> */}
           {/* <Route path={Routes.PORTFOLIO} element={<PortfolioPage />} /> */}
