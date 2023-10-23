@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 
 import codesquad.fineants.domain.trade_history.TradeHistory;
 
-class PortFolioStockTest {
+class PortfolioStockTest {
 
 	@DisplayName("한 종목의 총 투자 금액을 계산한다")
 	@Test
 	void calculateTotalInvestmentAmount() {
 		// given
-		PortFolioStock portFolioStock = PortFolioStock.builder()
+		PortfolioStock portFolioStock = PortfolioStock.builder()
 			.numberOfShares(10L)
 			.currentPrice(10000L)
 			.build();
@@ -46,7 +46,7 @@ class PortFolioStockTest {
 	@Test
 	void calculateAverageCostPerShare() {
 		// given
-		PortFolioStock portFolioStock = PortFolioStock.builder()
+		PortfolioStock portFolioStock = PortfolioStock.builder()
 			.numberOfShares(10L)
 			.currentPrice(10000L)
 			.build();
@@ -77,7 +77,7 @@ class PortFolioStockTest {
 	@Test
 	void calculateTotalGain() {
 		// given
-		PortFolioStock portFolioStock = PortFolioStock.builder()
+		PortfolioStock portFolioStock = PortfolioStock.builder()
 			.numberOfShares(10L)
 			.currentPrice(20000L)
 			.build();
@@ -108,7 +108,7 @@ class PortFolioStockTest {
 	@Test
 	void calculateTotalReturnRate() {
 		// given
-		PortFolioStock portFolioStock = PortFolioStock.builder()
+		PortfolioStock portFolioStock = PortfolioStock.builder()
 			.numberOfShares(10L)
 			.currentPrice(20000L)
 			.build();

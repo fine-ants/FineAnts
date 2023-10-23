@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import codesquad.fineants.domain.portfolio_stock.PortFolioStock;
+import codesquad.fineants.domain.portfolio_stock.PortfolioStock;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock_dividend.StockDividend;
@@ -20,7 +20,7 @@ class PortfolioTest {
 	@Test
 	void calculateTotalGain() {
 		// given
-		PortFolioStock portFolioStock = PortFolioStock.builder()
+		PortfolioStock portFolioStock = PortfolioStock.builder()
 			.numberOfShares(10L)
 			.currentPrice(20000L)
 			.build();
@@ -59,7 +59,7 @@ class PortfolioTest {
 	@Test
 	void calculateTotalReturnRate() {
 		// given
-		PortFolioStock portFolioStock = PortFolioStock.builder()
+		PortfolioStock portFolioStock = PortfolioStock.builder()
 			.numberOfShares(10L)
 			.currentPrice(20000L)
 			.build();
@@ -136,7 +136,7 @@ class PortfolioTest {
 		stock.addStockDividend(stockDividend3);
 		stock.addStockDividend(stockDividend4);
 
-		PortFolioStock portFolioStock = PortFolioStock.builder()
+		PortfolioStock portFolioStock = PortfolioStock.builder()
 			.numberOfShares(10L)
 			.currentPrice(20000L)
 			.stock(stock)

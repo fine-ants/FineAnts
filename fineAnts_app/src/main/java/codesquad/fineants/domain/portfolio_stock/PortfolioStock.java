@@ -21,17 +21,19 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString(exclude = {"portfolio", "stock"})
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PortFolioStock extends BaseEntity {
+public class PortfolioStock extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long numberOfShares; // 주식 개수
-	private Long annualDividend; // 연간배당금
-	private Long currentPrice; // 현재가
+	private Long numberOfShares;    // 주식 개수
+	private Long annualDividend;    // 연간배당금
+	private Long currentPrice;      // 현재가
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "portfolio_id")
@@ -41,12 +43,9 @@ public class PortFolioStock extends BaseEntity {
 	@JoinColumn(name = "stock_id")
 	private Stock stock;
 
-	@OneToMany(mappedBy = "portFolioStock")
-	private final List<TradeHistory> tradeHistories = new ArrayList<>();
-
 	@Builder
-	public PortFolioStock(Long id, Long numberOfShares, Long annualDividend, Long currentPrice,
-		Portfolio portfolio, Stock stock) {
+	public PortfolioStock(Long id, Long numberOfShares, Long annualDividend, Long currentPrice, Portfolio portfolio,
+		Stock stock) {
 		this.id = id;
 		this.numberOfShares = numberOfShares;
 		this.annualDividend = annualDividend;
@@ -54,6 +53,19 @@ public class PortFolioStock extends BaseEntity {
 		this.portfolio = portfolio;
 		this.stock = stock;
 	}
+
+	public static PortfolioStock empty(Portfolio portfolio, Stock stock) {
+		return PortfolioStock.builder()
+			.numberOfShares(0L)
+			.annualDividend(0L)
+			.currentPrice(null)
+			.portfolio(portfolio)
+			.stock(stock)
+			.build();
+	}
+
+	@OneToMany(mappedBy = "portFolioStock")
+	private final List<TradeHistory> tradeHistories = new ArrayList<>();
 
 	//== 연관관계 메소드 ==//
 	public void addTradeHistory(TradeHistory tradeHistory) {
