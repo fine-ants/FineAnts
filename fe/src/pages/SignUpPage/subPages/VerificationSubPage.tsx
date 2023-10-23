@@ -8,14 +8,13 @@ type Props = {
 
 export default function VerificationCodeSubPage({ email, onNext }: Props) {
   const onDigitsFilled = (digits: string) => {
-    console.log("digits:", digits);
     onNext(digits);
   };
 
   return (
     <SubPage>
       <h3>가입을 완료하려면 인증 코드를 입력해주세요</h3>
-      <p>{email}로 전송된 인증 코드를 입력해주세요</p>
+      <p>{email}으로 전송된 인증 코드를 입력해주세요</p>
 
       <VerificationCodeInput onComplete={onDigitsFilled} />
 

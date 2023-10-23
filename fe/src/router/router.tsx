@@ -1,6 +1,10 @@
 import { User } from "@api/auth";
+import { GOOGLE_CLIENT_ID } from "@constants/config";
+import { WindowProvider } from "@context/WindowContext";
 import MyProfilePage from "@pages/ProfilePage/MyProfilePage";
+import SignInPage from "@pages/SignInPage";
 import SignUpPage from "@pages/SignUpPage/SignUpPage";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import {
   Navigate,
   Route,
@@ -32,8 +36,15 @@ export default (user: User | undefined) =>
           {/* <Route path={Routes.WATCHLIST} element={<WatchListPage />}/> */}
         </Route>
 
-        <Route element={<PublicOnlyRoute user={user} />}>
-          {/* <Route index path={Routes.SIGNIN} element={<SignInPage />} /> */}
+        <Route
+          element={
+            <WindowProvider>
+              <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+                <PublicOnlyRoute user={user} />
+              </GoogleOAuthProvider>
+            </WindowProvider>
+          }>
+          <Route index path={Routes.SIGNIN} element={<SignInPage />} />
           <Route path={Routes.SIGNUP} element={<SignUpPage />} />
         </Route>
 

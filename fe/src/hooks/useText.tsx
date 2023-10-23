@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   initialValue?: string;
@@ -30,6 +30,10 @@ export default function useText(options?: Props) {
 
     setValue(newVal);
   };
+
+  useEffect(() => {
+    onChange(initialValue);
+  }, []);
 
   return {
     value,

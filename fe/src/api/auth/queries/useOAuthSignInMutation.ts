@@ -1,4 +1,4 @@
-import { OAuthProvider, getOAuthSignIn } from "@api/auth";
+import { OAuthProvider, postOAuthSignIn } from "@api/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import Routes from "router/Routes";
@@ -15,7 +15,7 @@ export default function useOAuthSignInMutation() {
     }: {
       provider: OAuthProvider;
       authCode: string;
-    }) => getOAuthSignIn(provider, authCode),
+    }) => postOAuthSignIn(provider, authCode),
     onSuccess: ({ data }) => {
       const { accessToken, refreshToken } = data;
 
