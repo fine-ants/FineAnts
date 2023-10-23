@@ -1,3 +1,4 @@
 import authHandlers from "./authHandlers";
+import portfolioHandlers from "./portfolioHandlers";
 
-export default [...authHandlers];
+export default [...authHandlers, ...portfolioHandlers];

@@ -7,8 +7,11 @@ import Routes from "router/Routes";
 import Dropdown from "./Dropdown";
 
 export default function Header() {
-  const navItemLinks = [
-    { name: "Watchlist", path: Routes.WATCHLIST },
+  const navItems = [
+    {
+      name: "Watchlist",
+      path: Routes.WATCHLIST,
+    },
     { name: "indices", path: Routes.INDICES },
   ];
 
@@ -41,19 +44,17 @@ export default function Header() {
             <StyledBrandIdentity>FineAnts</StyledBrandIdentity>
             <NavBar style={navBarStyles}>
               <Dropdown>
-                <Dropdown.Toggle style={dropdownToggleStyle}>
-                  Portfolio
-                </Dropdown.Toggle>
-                <Dropdown.Menu style={dropdownMenuStyle}>
+                <Dropdown.Toggle>Portfolio</Dropdown.Toggle>
+                <Dropdown.Menu>
                   {dropdownItems.map((item) => (
-                    <Dropdown.Item item={item} style={dropdownItemStyle} />
+                    <Dropdown.Item key={item.name} item={item} />
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
-              {navItemLinks.map((link) => (
+              {navItems.map((item) => (
                 <NavBar.NavItem
-                  key={link.name}
-                  link={link}
+                  key={item.name}
+                  item={item}
                   style={navItemStyle}
                 />
               ))}
@@ -75,7 +76,6 @@ const StyledHeader = styled.header`
 `;
 
 const HeaderTop = styled.header`
-  // width: 1440px;
   height: 80px;
   display: flex;
   gap: 48px;
@@ -117,29 +117,4 @@ const navItemStyle = {
   alignItems: "center",
   fontSize: "16px",
   fontWeight: "bold",
-};
-
-const dropdownToggleStyle = {
-  ...navItemStyle,
-  cursor: "pointer",
-  position: "relative" as "relative",
-};
-
-const dropdownMenuStyle = {
-  top: "0px",
-  backgroundColor: "#ffffff",
-  border: "1.5px solid #e5e5e5",
-  borderRadius: "8px",
-  padding: "10px",
-  display: "flex",
-  flexDirection: "column" as "column",
-  gap: "8px",
-  width: "200px",
-};
-
-const dropdownItemStyle = {
-  width: "inherit",
-  height: " 30px",
-  display: "flex",
-  alignItems: "center",
 };
