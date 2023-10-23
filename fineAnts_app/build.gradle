@@ -61,7 +61,7 @@ tasks.named('test') {
 }
 
 /** QueryDSL start **/
-def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = "build/generated/querydsl"
 
 querydsl {
     jpa = true
