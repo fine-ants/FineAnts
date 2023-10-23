@@ -8,7 +8,7 @@ import { styled } from "styled-components";
 export default function KakaoSignInButton() {
   const { onOpenPopUpWindow } = useContext(WindowContext);
 
-  const onClick = () => {
+  const onKakaoSignIn = () => {
     const oAuthPopUpWindow = openPopUpWindow(
       `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${
         import.meta.env.VITE_KAKAO_CLIENT_ID
@@ -16,13 +16,15 @@ export default function KakaoSignInButton() {
       "kakaoOAuth",
       500,
       600
-    )!; // TODO: handle case where popup doesn't show (Ex: user blocked popups)
+    ); // TODO: handle case where popup doesn't show (Ex: user blocked popups)
 
-    onOpenPopUpWindow(oAuthPopUpWindow);
+    if (oAuthPopUpWindow) {
+      onOpenPopUpWindow(oAuthPopUpWindow);
+    }
   };
 
   return (
-    <StyledKakaoSignInButton type="button" onClick={onClick}>
+    <StyledKakaoSignInButton type="button" onClick={onKakaoSignIn}>
       <img src={kakaoLoginButtonImage} alt="카카오 로그인" />
     </StyledKakaoSignInButton>
   );
