@@ -14,7 +14,6 @@ export function WindowProvider({ children }: { children: ReactNode }) {
   const [popUpWindow, setPopUpWindow] = useState<Window | null>(null);
 
   const onOpenPopUpWindow = (targetWindow: Window) => {
-    console.log("targetWindow", targetWindow);
     setPopUpWindow(targetWindow);
   };
 
