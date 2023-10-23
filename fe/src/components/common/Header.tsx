@@ -44,16 +44,10 @@ export default function Header() {
             <StyledBrandIdentity>FineAnts</StyledBrandIdentity>
             <NavBar style={navBarStyles}>
               <Dropdown>
-                <Dropdown.Toggle style={dropdownToggleStyle}>
-                  Portfolio
-                </Dropdown.Toggle>
-                <Dropdown.Menu style={dropdownMenuStyle}>
+                <Dropdown.Toggle>Portfolio</Dropdown.Toggle>
+                <Dropdown.Menu>
                   {dropdownItems.map((item) => (
-                    <Dropdown.Item
-                      key={item.name}
-                      item={item}
-                      style={dropdownItemStyle}
-                    />
+                    <Dropdown.Item key={item.name} item={item} />
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
@@ -123,30 +117,4 @@ const navItemStyle = {
   alignItems: "center",
   fontSize: "16px",
   fontWeight: "bold",
-};
-
-const dropdownToggleStyle = {
-  ...navItemStyle,
-  cursor: "pointer",
-  position: "relative" as "relative",
-};
-
-const dropdownMenuStyle = {
-  top: "0px",
-  backgroundColor: "#ffffff",
-  border: "1.5px solid #e5e5e5",
-  borderRadius: "8px",
-  padding: "10px",
-  display: "flex",
-  flexDirection: "column" as "column",
-  gap: "8px",
-  width: "200px",
-};
-
-const dropdownItemStyle = {
-  width: "inherit",
-  height: " 30px",
-  display: "flex",
-  alignItems: "center",
-  cursor: "pointer",
 };

@@ -1,3 +1,5 @@
 // import & export handlers
 
-export default [];
+import portfolioHandlers from "./portfolioHandlers";
+
+export default [...portfolioHandlers];
