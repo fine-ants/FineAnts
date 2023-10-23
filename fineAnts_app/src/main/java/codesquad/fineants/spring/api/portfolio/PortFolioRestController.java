@@ -38,7 +38,7 @@ public class PortFolioRestController {
 		@AuthPrincipalMember AuthMember authMember) {
 		log.info("포트폴리오 추가 요청, request={}", request);
 		portFolioService.addPortFolio(request, authMember);
-		return ApiResponse.success(PortfolioSuccessCode.OK_ADD_PORTFOLIO);
+		return ApiResponse.success(PortfolioSuccessCode.CREATED_ADD_PORTFOLIO);
 	}
 
 	@PutMapping("/{portfolioId}")

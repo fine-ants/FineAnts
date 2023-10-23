@@ -31,7 +31,7 @@ public class PortfolioStock extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long numberOfShares;    // 주식 개수
+	private Long numShares;    // 주식 개수
 	private Long annualDividend;    // 연간배당금
 	private Long currentPrice;      // 현재가
 
@@ -44,10 +44,10 @@ public class PortfolioStock extends BaseEntity {
 	private Stock stock;
 
 	@Builder
-	public PortfolioStock(Long id, Long numberOfShares, Long annualDividend, Long currentPrice, Portfolio portfolio,
+	public PortfolioStock(Long id, Long numShares, Long annualDividend, Long currentPrice, Portfolio portfolio,
 		Stock stock) {
 		this.id = id;
-		this.numberOfShares = numberOfShares;
+		this.numShares = numShares;
 		this.annualDividend = annualDividend;
 		this.currentPrice = currentPrice;
 		this.portfolio = portfolio;
@@ -56,7 +56,7 @@ public class PortfolioStock extends BaseEntity {
 
 	public static PortfolioStock empty(Portfolio portfolio, Stock stock) {
 		return PortfolioStock.builder()
-			.numberOfShares(0L)
+			.numShares(0L)
 			.annualDividend(0L)
 			.currentPrice(null)
 			.portfolio(portfolio)
@@ -76,12 +76,12 @@ public class PortfolioStock extends BaseEntity {
 
 	// 종목 총 손익 = (종목 현재가 - 종목 평균 매입가) * 개수
 	public long calculateTotalGain() {
-		return (currentPrice - calculateAverageCostPerShare()) * numberOfShares;
+		return (currentPrice - calculateAverageCostPerShare()) * numShares;
 	}
 
 	// 종목 평균 매입가 = 총 투자 금액 / 개수
 	public long calculateAverageCostPerShare() {
-		return calculateTotalInvestmentAmount() / numberOfShares;
+		return calculateTotalInvestmentAmount() / numShares;
 	}
 
 	// 총 투자 금액 = 투자 금액들의 합계
@@ -98,7 +98,7 @@ public class PortfolioStock extends BaseEntity {
 
 	// 평가 금액(현재 가치) = 현재가 * 개수
 	public Long calculateCurrentValue() {
-		return currentPrice * numberOfShares;
+		return currentPrice * numShares;
 	}
 
 	public boolean hasMonthlyDividend(LocalDateTime monthDateTime) {
@@ -106,6 +106,6 @@ public class PortfolioStock extends BaseEntity {
 	}
 
 	public long readDividend(LocalDateTime monthDateTime) {
-		return stock.readDividend(monthDateTime) * numberOfShares;
+		return stock.readDividend(monthDateTime) * numShares;
 	}
 }

@@ -62,6 +62,8 @@ class PortfolioStockRestControllerTest {
 	private Portfolio portfolio;
 	private Stock stock;
 
+	private PortfolioStock portfolioStock;
+
 	@BeforeEach
 	void setup() {
 		mockMvc = MockMvcBuilders.standaloneSetup(portfolioStockRestController)
@@ -102,6 +104,15 @@ class PortfolioStockRestControllerTest {
 			.engCompanyName("SamsungElectronics")
 			.stockcode("KR7005930003")
 			.market(Market.KOSPI)
+			.build();
+
+		portfolioStock = PortfolioStock.builder()
+			.id(1L)
+			.numShares(0L)
+			.annualDividend(0L)
+			.currentPrice(null)
+			.portfolio(portfolio)
+			.stock(stock)
 			.build();
 	}
 
@@ -147,5 +158,21 @@ class PortfolioStockRestControllerTest {
 			.andExpect(jsonPath("status").value(equalTo("Bad Request")))
 			.andExpect(jsonPath("message").value(equalTo("잘못된 입력형식입니다")))
 			.andExpect(jsonPath("data").isArray());
+	}
+
+	@DisplayName("사용자는 포트폴리오 종목을 삭제한다")
+	@Test
+	void deletePortfolioStock() throws Exception {
+		// given
+		Long portfolioStockId = portfolioStock.getId();
+		Long portfolioId = portfolio.getId();
+
+		// when & then
+		mockMvc.perform(delete("/api/portfolio/" + portfolioId + "/stocks/" + portfolioStockId))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("code").value(equalTo(200)))
+			.andExpect(jsonPath("status").value(equalTo("OK")))
+			.andExpect(jsonPath("message").value(equalTo("포트폴리오 종목이 삭제되었습니다")))
+			.andExpect(jsonPath("data").value(equalTo(null)));
 	}
 }

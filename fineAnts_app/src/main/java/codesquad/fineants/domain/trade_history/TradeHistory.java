@@ -24,7 +24,7 @@ public class TradeHistory extends BaseEntity {
 	private Long id;
 	private LocalDateTime purchaseDate;
 	private Long purchasePricePerShare;
-	private Long numberOfShares;
+	private Long numShares;
 	private String memo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -32,19 +32,19 @@ public class TradeHistory extends BaseEntity {
 	private PortfolioStock portFolioStock;
 
 	@Builder
-	public TradeHistory(Long id, LocalDateTime purchaseDate, Long purchasePricePerShare, Long numberOfShares,
+	public TradeHistory(Long id, LocalDateTime purchaseDate, Long purchasePricePerShare, Long numShares,
 		String memo,
 		PortfolioStock portFolioStock) {
 		this.id = id;
 		this.purchaseDate = purchaseDate;
 		this.purchasePricePerShare = purchasePricePerShare;
-		this.numberOfShares = numberOfShares;
+		this.numShares = numShares;
 		this.memo = memo;
 		this.portFolioStock = portFolioStock;
 	}
 
 	// 투자 금액 = 주당 매입가 * 개수
 	public long calculateInvestmentAmount() {
-		return purchasePricePerShare * numberOfShares;
+		return purchasePricePerShare * numShares;
 	}
 }

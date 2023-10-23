@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"member", "portFolioStocks"})
+@ToString(exclude = {"member", "portfolioStocks"})
 @Entity
 public class Portfolio {
 	@Id

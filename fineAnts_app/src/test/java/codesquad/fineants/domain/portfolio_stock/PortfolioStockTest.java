@@ -16,19 +16,19 @@ class PortfolioStockTest {
 	void calculateTotalInvestmentAmount() {
 		// given
 		PortfolioStock portFolioStock = PortfolioStock.builder()
-			.numberOfShares(10L)
+			.numShares(10L)
 			.currentPrice(10000L)
 			.build();
 
 		TradeHistory tradeHistory1 = TradeHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
 		TradeHistory tradeHistory2 = TradeHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
@@ -47,19 +47,19 @@ class PortfolioStockTest {
 	void calculateAverageCostPerShare() {
 		// given
 		PortfolioStock portFolioStock = PortfolioStock.builder()
-			.numberOfShares(10L)
+			.numShares(10L)
 			.currentPrice(10000L)
 			.build();
 
 		TradeHistory tradeHistory1 = TradeHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
 		TradeHistory tradeHistory2 = TradeHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
@@ -78,19 +78,19 @@ class PortfolioStockTest {
 	void calculateTotalGain() {
 		// given
 		PortfolioStock portFolioStock = PortfolioStock.builder()
-			.numberOfShares(10L)
+			.numShares(10L)
 			.currentPrice(20000L)
 			.build();
 
 		TradeHistory tradeHistory1 = TradeHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
 		TradeHistory tradeHistory2 = TradeHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
@@ -109,19 +109,19 @@ class PortfolioStockTest {
 	void calculateTotalReturnRate() {
 		// given
 		PortfolioStock portFolioStock = PortfolioStock.builder()
-			.numberOfShares(10L)
+			.numShares(10L)
 			.currentPrice(20000L)
 			.build();
 
 		TradeHistory tradeHistory1 = TradeHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
 		TradeHistory tradeHistory2 = TradeHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 

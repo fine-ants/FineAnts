@@ -3,6 +3,7 @@ package codesquad.fineants.spring.api.portfolio_stock;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,12 +24,16 @@ import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
 import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
+import codesquad.fineants.domain.portfolio_stock.PortfolioStock;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
+import codesquad.fineants.domain.trade_history.TradeHistory;
+import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
 import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.portfolio_stock.request.PortfolioStockCreateRequest;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStockCreateResponse;
+import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStockDeleteResponse;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -50,6 +55,9 @@ class PortfolioStockServiceTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	private TradeHistoryRepository tradeHistoryRepository;
 
 	private Member member;
 
@@ -89,6 +97,7 @@ class PortfolioStockServiceTest {
 
 	@AfterEach
 	void tearDown() {
+		tradeHistoryRepository.deleteAllInBatch();
 		portFolioStockRepository.deleteAllInBatch();
 		portfolioRepository.deleteAllInBatch();
 		memberRepository.deleteAllInBatch();
@@ -136,5 +145,50 @@ class PortfolioStockServiceTest {
 		assertThat(throwable).isInstanceOf(NotFoundResourceException.class)
 			.extracting("message")
 			.isEqualTo("종목을 찾을 수 없습니다");
+	}
+
+	@DisplayName("사용자는 포트폴리오의 종목을 삭제한다")
+	@Test
+	void deletePortfolioStock() {
+		// given
+		PortfolioStock portfolioStock = portFolioStockRepository.save(
+			PortfolioStock.empty(portfolio, stock)
+		);
+
+		tradeHistoryRepository.save(
+			TradeHistory.builder()
+				.purchaseDate(LocalDateTime.now())
+				.purchasePricePerShare(10000L)
+				.numShares(1L)
+				.memo("첫구매")
+				.build()
+		);
+
+		Long portfolioStockId = portfolioStock.getId();
+		// when
+		PortfolioStockDeleteResponse response = portfolioStockService.deletePortfolioStock(
+			portfolioStockId, portfolio.getId(), AuthMember.from(member));
+
+		// then
+		assertAll(
+			() -> assertThat(response).extracting("portfolioStockId").isNotNull(),
+			() -> assertThat(portFolioStockRepository.findById(portfolioStockId).isEmpty()).isTrue(),
+			() -> assertThat(tradeHistoryRepository.findAllByPortFolioStockId(portfolioStockId)).isEmpty()
+		);
+	}
+
+	@DisplayName("사용자는 존재하지 않은 포트폴리오의 종목을 삭제할 수 없다")
+	@Test
+	void deletePortfolioStockWithNotExistPortfolioStockId() {
+		// given
+		Long portfolioStockId = 9999L;
+
+		// when
+		Throwable throwable = catchThrowable(() -> portfolioStockService.deletePortfolioStock(
+			portfolioStockId, portfolio.getId(), AuthMember.from(member)));
+
+		// then
+		assertThat(throwable).isInstanceOf(NotFoundResourceException.class).extracting("message")
+			.isEqualTo("포트폴리오 종목이 존재하지 않습니다");
 	}
 }
