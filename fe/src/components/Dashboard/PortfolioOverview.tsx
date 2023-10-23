@@ -1,10 +1,8 @@
 import styled from "styled-components";
 
-export default function CurrentValues() {
-  const isProfitUp = currentValues.profit.value.isUp;
-
+export default function PortfolioOverview() {
   return (
-    <StyledCurrentValues>
+    <StyledPortfolioOverview>
       <TotalMainContentWrapper>
         <MainText>{currentValues.total.title}</MainText>
         <MainText>₩ {currentValues.total.value}</MainText>
@@ -17,12 +15,8 @@ export default function CurrentValues() {
       <TotalSubContentWrapper>
         <SubText>{currentValues.profit.title}</SubText>
         <NumWrapper>
-          <SubText>
-            {isProfitUp ? "+" : "-"} {currentValues.profit.value.amount}
-          </SubText>
-          <SubText>
-            {isProfitUp ? "+" : "-"} {currentValues.profit.value.percentage} %
-          </SubText>
+          <SubText>{currentValues.profit.value.amount}</SubText>
+          <SubText>{currentValues.profit.value.percentage} %</SubText>
         </NumWrapper>
       </TotalSubContentWrapper>
       <TotalSubContentWrapper>
@@ -32,11 +26,11 @@ export default function CurrentValues() {
           <SubText>+ {currentValues.dividends.value.percentage} %</SubText>
         </NumWrapper>
       </TotalSubContentWrapper>
-    </StyledCurrentValues>
+    </StyledPortfolioOverview>
   );
 }
 
-const StyledCurrentValues = styled.div`
+const StyledPortfolioOverview = styled.div`
   width: 1440px;
   height: 144px;
   display: flex;
@@ -97,7 +91,6 @@ const currentValues = {
   profit: {
     title: "총 손익",
     value: {
-      isUp: true,
       amount: 1000000,
       percentage: 100,
     },
@@ -105,7 +98,6 @@ const currentValues = {
   dividends: {
     title: "연 배당금",
     value: {
-      isUp: true,
       amount: 200000,
       percentage: 10,
     },

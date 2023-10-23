@@ -3,18 +3,26 @@ import { ISeriesApi, LineWidth } from "lightweight-charts";
 import { Chart, AreaSeries } from "lightweight-charts-react-wrapper";
 import styled from "styled-components";
 
-type DataType = {
+//TODO: 예시로 사용하는 데이터가 time,value인데 수가 너무 많아서 나중에 자체 데이터 사용할 때 date,valueation으로 수정
+type HistoricalValuation = {
   time: string;
   value: number;
-}[];
-type TotalValueLineChartProps = {
-  data: DataType;
+};
+
+type Props = {
+  data: HistoricalValuation[];
   currentRangeIndex: number;
 };
 
-export default function TotalValueLineChart(props: TotalValueLineChartProps) {
+export default function TotalValueLineChart(props: Props) {
   const seriesRef = useRef<ISeriesApi<"Area">>(null);
   const chartRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (chartRef.current) {
+      chartRef.current.timeScale().fitContent();
+    }
+  }, [props.currentRangeIndex]);
 
   const barSpacings = [6, 7, 9, 16, 33, 62];
   // TODO: 숫자들은 상수로 빼기 ex) "1DSpace", "1WSpace", "1MSpace", or "1D", "1W", "1M"
@@ -57,37 +65,30 @@ export default function TotalValueLineChart(props: TotalValueLineChartProps) {
     },
   };
 
-  useEffect(() => {
-    if (chartRef.current) {
-      chartRef.current.timeScale().fitContent();
-    }
-  }, [props.currentRangeIndex]);
-
   return (
-    <>
-      <StyledLineChart>
-        <h1 style={{ fontSize: "20px", fontWeight: "bold" }}>
-          총 자산 현황 추이
-        </h1>
-        <div style={{ position: "relative" }}>
-          <Chart {...options} ref={chartRef}>
-            <AreaSeries
-              data={props.data}
-              topColor="#2962FF"
-              bottomColor="rgba(41, 98, 255, 0.28)"
-              lineColor="#2962FF"
-              lineWidth={2}
-              crosshairMarkerVisible={true}
-              crosshairMarkerRadius={4}
-              ref={seriesRef}></AreaSeries>
-          </Chart>
-        </div>
-      </StyledLineChart>
-    </>
+    <StyledTotalValueLineChart>
+      <h1 style={{ fontSize: "20px", fontWeight: "bold" }}>
+        총 자산 현황 추이
+      </h1>
+      <div style={{ position: "relative" }}>
+        <Chart {...options} ref={chartRef}>
+          <AreaSeries
+            data={props.data}
+            topColor="#2962FF"
+            bottomColor="rgba(41, 98, 255, 0.28)"
+            lineColor="#2962FF"
+            lineWidth={2}
+            crosshairMarkerVisible={true}
+            crosshairMarkerRadius={4}
+            ref={seriesRef}
+          />
+        </Chart>
+      </div>
+    </StyledTotalValueLineChart>
   );
 }
 
-const StyledLineChart = styled.div`
+const StyledTotalValueLineChart = styled.div`
   width: 688px;
   height: 384px;
   background-color: #ffffff;

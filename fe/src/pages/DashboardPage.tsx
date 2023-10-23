@@ -1,36 +1,34 @@
-import CurrentValues from "@components/Dashboard/CurrentValues";
+import PortfolioOverview from "@components/Dashboard/PortfolioOverview";
 import Footer from "../components/common/Footer";
 import Header from "../components/common/Header";
 
 import styled from "styled-components";
-import PortfolioPieChart from "@components/Dashboard/PortfolioPieChart";
+
 import TotalValueLineChart from "@components/Dashboard/TotalValueLineChart";
 
 import TimeRangeButton from "@components/Dashboard/TimeRangeButton";
 import { useState } from "react";
+import PortfolioPieChart from "@components/Dashboard/PortfolioPieChart";
 
 export default function DashboardPage() {
   const range = ["1D", "1W", "1M", "1Q", "1Y", "All"];
   const [currentRangeIndex, setCurrentRangeIndex] = useState(0);
 
   const switchTimeRange = (index: number) => {
-    console.log(index);
     setCurrentRangeIndex(index);
   };
-
-  console.log(data[currentRangeIndex]);
 
   return (
     <StyledDashboardPage>
       <Header />
       <Main>
         <MainColorBackground />
-        <CurrentValues />
+        <PortfolioOverview />
         <CurrentChartContainer>
-          {/* <DateRangeSelector>1D 1W 1M 1Q 1Y All</DateRangeSelector> */}
           <DateRangeSelector>
             {range.map((range, index) => (
               <TimeRangeButton
+                key={index}
                 range={range}
                 index={index}
                 onClick={switchTimeRange}
@@ -38,13 +36,18 @@ export default function DashboardPage() {
             ))}
           </DateRangeSelector>
           <ChartContainer>
-            <PortfolioPieChart />
+            <PortfolioPieChartContainer>
+              <PortfolioPieChart
+                width={384}
+                height={384}
+                legendStyle={{ bottom: "15px" }}
+              />
+            </PortfolioPieChartContainer>
             <TotalValueLineChart
               key={currentRangeIndex}
               currentRangeIndex={currentRangeIndex}
               data={data[currentRangeIndex]}
             />
-            {/* <TotalValue /> */}
           </ChartContainer>
         </CurrentChartContainer>
       </Main>
@@ -350,4 +353,15 @@ const ChartContainer = styled.div`
   justify-content: center;
   align-items: flex-end;
   gap: 54px;
+`;
+
+const PortfolioPieChartContainer = styled.div`
+  width: 460px;
+  height: 384px;
+  background-color: #ffffff;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid #000000;
 `;

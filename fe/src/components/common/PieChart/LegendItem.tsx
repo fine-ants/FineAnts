@@ -1,12 +1,11 @@
 import styled from "styled-components";
 
-export default function LegendItem({
-  color,
-  title,
-}: {
+type Props = {
   color: string;
   title: string;
-}) {
+};
+
+export default function LegendItem({ color, title }: Props) {
   return (
     <StyledLegendItem>
       <Circle $color={color} />
