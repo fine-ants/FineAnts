@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PortfoliosResponse {
 	private final List<PortFolioItem> portfolios;
+	private final boolean hasNext;
 	private final Long nextCursor;
 
 	public static PortfoliosResponse of(ScrollPaginationCollection<Portfolio> portfoliosScroll,
@@ -29,7 +30,10 @@ public class PortfoliosResponse {
 
 	private static PortfoliosResponse newScrollHasNext(List<Portfolio> portfolios, PortfolioGainHistory history,
 		Long nextCursor) {
-		return new PortfoliosResponse(getContents(portfolios, history), nextCursor);
+		if (nextCursor != null) {
+			return new PortfoliosResponse(getContents(portfolios, history), true, nextCursor);
+		}
+		return new PortfoliosResponse(getContents(portfolios, history), false, nextCursor);
 	}
 
 	private static List<PortFolioItem> getContents(List<Portfolio> portfolios, PortfolioGainHistory history) {

@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(FineAntsException.class)
-	public ResponseEntity<ApiResponse<Object>> handleSecondHandException(FineAntsException exception) {
+	public ResponseEntity<ApiResponse<Object>> handleFineANtsException(FineAntsException exception) {
 		log.error("SecondHandException 발생 : {}", exception.toString());
 		ApiResponse<Object> body = ApiResponse.error(exception.getErrorCode());
 		return ResponseEntity.status(exception.getErrorCode().getHttpStatus()).body(body);

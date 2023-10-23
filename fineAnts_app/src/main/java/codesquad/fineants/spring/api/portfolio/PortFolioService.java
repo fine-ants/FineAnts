@@ -1,7 +1,5 @@
 package codesquad.fineants.spring.api.portfolio;
 
-import static codesquad.fineants.domain.portfolio.QPortfolio.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,19 +9,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.querydsl.core.types.Predicate;
-
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.page.ScrollPaginationCollection;
 import codesquad.fineants.domain.portfolio.Portfolio;
-import codesquad.fineants.domain.portfolio.PortfolioPaginationRepository;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
-import codesquad.fineants.domain.portfolio_stock.PortFolioStock;
 import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
+import codesquad.fineants.domain.portfolio_stock.PortfolioStock;
 import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
 import codesquad.fineants.spring.api.errors.errorcode.MemberErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
@@ -50,7 +45,6 @@ public class PortFolioService {
 	private final PortFolioStockRepository portFolioStockRepository;
 	private final TradeHistoryRepository tradeHistoryRepository;
 	private final PortfolioGainHistoryRepository portfolioGainHistoryRepository;
-	private final PortfolioPaginationRepository paginationRepository;
 
 	@Transactional
 	public PortFolioCreateResponse addPortFolio(PortfolioCreateRequest request, AuthMember authMember) {
@@ -121,7 +115,7 @@ public class PortFolioService {
 		validatePortfolioAuthorization(findPortfolio, authMember.getMemberId());
 
 		List<Long> portfolioStockIds = portFolioStockRepository.findAllByPortfolioId(findPortfolio.getId()).stream()
-			.map(PortFolioStock::getId)
+			.map(PortfolioStock::getId)
 			.collect(Collectors.toList());
 
 		int delTradeHistoryCnt = tradeHistoryRepository.deleteAllByPortFolioStockIdIn(portfolioStockIds);
@@ -153,19 +147,5 @@ public class PortFolioService {
 			portfolios, size);
 
 		return PortfoliosResponse.of(portfoliosCursor, latestHistory);
-	}
-
-	private Predicate equalMemberId(Long memberId) {
-		if (memberId == null) {
-			return null;
-		}
-		return portfolio.member.id.eq(memberId);
-	}
-
-	private Predicate lessThanPortfolioId(Long cursor) {
-		if (cursor == null) {
-			return null;
-		}
-		return portfolio.id.lt(cursor);
 	}
 }

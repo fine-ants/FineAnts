@@ -15,7 +15,7 @@ class TradeHistoryTest {
 		// given
 		TradeHistory tradeHistory = TradeHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
