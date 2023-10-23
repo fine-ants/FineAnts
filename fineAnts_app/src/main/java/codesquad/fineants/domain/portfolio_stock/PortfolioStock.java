@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@ToString(exclude = {"portfolio", "stock"})
+@ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PortfolioStock extends BaseEntity {
