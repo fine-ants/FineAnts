@@ -22,6 +22,7 @@ import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.portfolio_stock.request.PortfolioStockCreateRequest;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStockCreateResponse;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStockDeleteResponse;
+import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStocksResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -77,5 +78,9 @@ public class PortfolioStockService {
 			throw new NotFoundResourceException(PortfolioStockErrorCode.NOT_FOUND_PORTFOLIO_STOCK);
 		}
 		return new PortfolioStockDeleteResponse(portfolioStockId);
+	}
+
+	public PortfolioStocksResponse readMyPortfolioStocks(Long portfolioId, AuthMember authMember) {
+		return null;
 	}
 }

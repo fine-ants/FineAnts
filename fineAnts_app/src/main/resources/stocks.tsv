@@ -1,4 +1,4 @@
-표준코드	단축코드	한글 종목명	영문 종목명	시장구분
+stockcode	tickerSymbol	companyName	engCompanyName	market
 KR7098120009	098120	(주)마이크로컨텍솔루션	Micro Contact Solution Co.,Ltd.	KOSDAQ
 KR7009520008	009520	(주)포스코엠텍	POSCO M-TECH CO.,LTD.	KOSDAQ
 KR7095570008	095570	AJ네트웍스보통주	AJ Networks Co.,Ltd.	KOSPI
