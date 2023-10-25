@@ -27,7 +27,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PortfolioStock extends BaseEntity {
+public class PortfolioHolding extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -44,7 +44,7 @@ public class PortfolioStock extends BaseEntity {
 	private Stock stock;
 
 	@Builder
-	public PortfolioStock(Long id, Long numShares, Long annualDividend, Long currentPrice, Portfolio portfolio,
+	public PortfolioHolding(Long id, Long numShares, Long annualDividend, Long currentPrice, Portfolio portfolio,
 		Stock stock) {
 		this.id = id;
 		this.numShares = numShares;
@@ -54,8 +54,8 @@ public class PortfolioStock extends BaseEntity {
 		this.stock = stock;
 	}
 
-	public static PortfolioStock empty(Portfolio portfolio, Stock stock) {
-		return PortfolioStock.builder()
+	public static PortfolioHolding empty(Portfolio portfolio, Stock stock) {
+		return PortfolioHolding.builder()
 			.numShares(0L)
 			.annualDividend(0L)
 			.currentPrice(null)
@@ -64,7 +64,7 @@ public class PortfolioStock extends BaseEntity {
 			.build();
 	}
 
-	@OneToMany(mappedBy = "portFolioStock")
+	@OneToMany(mappedBy = "portFolioHolding")
 	private final List<TradeHistory> tradeHistories = new ArrayList<>();
 
 	//== 연관관계 메소드 ==//

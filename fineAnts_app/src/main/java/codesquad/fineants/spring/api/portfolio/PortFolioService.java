@@ -18,7 +18,7 @@ import codesquad.fineants.domain.portfolio.PortfolioRepository;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
 import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
-import codesquad.fineants.domain.portfolio_stock.PortfolioStock;
+import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
 import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
 import codesquad.fineants.spring.api.errors.errorcode.MemberErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
@@ -115,10 +115,10 @@ public class PortFolioService {
 		validatePortfolioAuthorization(findPortfolio, authMember.getMemberId());
 
 		List<Long> portfolioStockIds = portFolioStockRepository.findAllByPortfolioId(findPortfolio.getId()).stream()
-			.map(PortfolioStock::getId)
+			.map(PortfolioHolding::getId)
 			.collect(Collectors.toList());
 
-		int delTradeHistoryCnt = tradeHistoryRepository.deleteAllByPortFolioStockIdIn(portfolioStockIds);
+		int delTradeHistoryCnt = tradeHistoryRepository.deleteAllByPortFolioHoldingIdIn(portfolioStockIds);
 		log.info("매매이력 삭제 개수 : {}", delTradeHistoryCnt);
 
 		int delPortfolioCnt = portFolioStockRepository.deleteAllByPortfolioId(findPortfolio.getId());

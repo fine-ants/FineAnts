@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PortFolioStockRepository extends JpaRepository<PortfolioStock, Long> {
+public interface PortFolioStockRepository extends JpaRepository<PortfolioHolding, Long> {
 
 	int deleteAllByPortfolioId(Long portFolioId);
 
-	List<PortfolioStock> findAllByPortfolioId(Long portfolioId);
+	List<PortfolioHolding> findAllByPortfolioId(Long portfolioId);
 
 }

@@ -4,5 +4,5 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class PortfolioStockDeleteResponse {
-	private Long portfolioStockId;
+	private Long portfolioHoldingId;
 }

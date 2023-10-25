@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 
 import codesquad.fineants.domain.trade_history.TradeHistory;
 
-class PortfolioStockTest {
+class PortfolioHoldingTest {
 
 	@DisplayName("한 종목의 총 투자 금액을 계산한다")
 	@Test
 	void calculateTotalInvestmentAmount() {
 		// given
-		PortfolioStock portFolioStock = PortfolioStock.builder()
+		PortfolioHolding portFolioHolding = PortfolioHolding.builder()
 			.numShares(10L)
 			.currentPrice(10000L)
 			.build();
@@ -32,11 +32,11 @@ class PortfolioStockTest {
 			.purchasePricePerShare(10000L)
 			.build();
 
-		portFolioStock.addTradeHistory(tradeHistory1);
-		portFolioStock.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(tradeHistory1);
+		portFolioHolding.addTradeHistory(tradeHistory2);
 
 		// when
-		long result = portFolioStock.calculateTotalInvestmentAmount();
+		long result = portFolioHolding.calculateTotalInvestmentAmount();
 
 		// then
 		assertThat(result).isEqualTo(100000L);
@@ -46,7 +46,7 @@ class PortfolioStockTest {
 	@Test
 	void calculateAverageCostPerShare() {
 		// given
-		PortfolioStock portFolioStock = PortfolioStock.builder()
+		PortfolioHolding portFolioHolding = PortfolioHolding.builder()
 			.numShares(10L)
 			.currentPrice(10000L)
 			.build();
@@ -63,11 +63,11 @@ class PortfolioStockTest {
 			.purchasePricePerShare(10000L)
 			.build();
 
-		portFolioStock.addTradeHistory(tradeHistory1);
-		portFolioStock.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(tradeHistory1);
+		portFolioHolding.addTradeHistory(tradeHistory2);
 
 		// when
-		long result = portFolioStock.calculateAverageCostPerShare();
+		long result = portFolioHolding.calculateAverageCostPerShare();
 
 		// then
 		assertThat(result).isEqualTo(10000L);
@@ -77,7 +77,7 @@ class PortfolioStockTest {
 	@Test
 	void calculateTotalGain() {
 		// given
-		PortfolioStock portFolioStock = PortfolioStock.builder()
+		PortfolioHolding portFolioHolding = PortfolioHolding.builder()
 			.numShares(10L)
 			.currentPrice(20000L)
 			.build();
@@ -94,11 +94,11 @@ class PortfolioStockTest {
 			.purchasePricePerShare(10000L)
 			.build();
 
-		portFolioStock.addTradeHistory(tradeHistory1);
-		portFolioStock.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(tradeHistory1);
+		portFolioHolding.addTradeHistory(tradeHistory2);
 
 		// when
-		long result = portFolioStock.calculateTotalGain();
+		long result = portFolioHolding.calculateTotalGain();
 
 		// then
 		assertThat(result).isEqualTo(100000L);
@@ -108,7 +108,7 @@ class PortfolioStockTest {
 	@Test
 	void calculateTotalReturnRate() {
 		// given
-		PortfolioStock portFolioStock = PortfolioStock.builder()
+		PortfolioHolding portFolioHolding = PortfolioHolding.builder()
 			.numShares(10L)
 			.currentPrice(20000L)
 			.build();
@@ -125,11 +125,11 @@ class PortfolioStockTest {
 			.purchasePricePerShare(10000L)
 			.build();
 
-		portFolioStock.addTradeHistory(tradeHistory1);
-		portFolioStock.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(tradeHistory1);
+		portFolioHolding.addTradeHistory(tradeHistory2);
 
 		// when
-		double result = portFolioStock.calculateTotalReturnRate();
+		double result = portFolioHolding.calculateTotalReturnRate();
 
 		// then
 		assertThat(result).isEqualTo(1.0);
