@@ -1,8 +1,9 @@
 package codesquad.fineants.elasticsearch.service;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,23 +46,23 @@ public class ElasticSearchService {
 	private void init() {
 		Iterator<StockSearch> iterator = repository.findAll().iterator();
 		if (!iterator.hasNext()) {
-			String tsvFilePath;
 			try {
-				tsvFilePath = new ClassPathResource(STOCK_TSV).getFile().getPath();
+				InputStream inputStream = new ClassPathResource(STOCK_TSV).getInputStream();
+				bulkInsertFromTsv(inputStream, STOCK_SEARCh_INDEX);
 			} catch (IOException e) {
-				log.error(e.getMessage(), e);
 				throw new RuntimeException(e);
 			}
-			bulkInsertFromTsv(tsvFilePath, STOCK_SEARCh_INDEX);
 			log.info("success bulk insert");
 			return;
+
 		}
 		log.info("exist stocks");
 	}
 
-	public void bulkInsertFromTsv(String tsvFilePath, String indexName) {
+	public void bulkInsertFromTsv(InputStream inputStream, String indexName) {
+
 		BulkRequest request = new BulkRequest();
-		try (BufferedReader br = new BufferedReader(new FileReader(tsvFilePath))) {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
 			String[] columnHeaders = br.readLine().split(TAB);
 			log.info("columnHeaders : {}", Arrays.toString(columnHeaders));
 			String line;

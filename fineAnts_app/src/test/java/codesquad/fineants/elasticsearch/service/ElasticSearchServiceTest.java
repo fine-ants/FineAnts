@@ -3,6 +3,7 @@ package codesquad.fineants.elasticsearch.service;
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.assertj.core.util.Lists;
@@ -44,11 +45,10 @@ class ElasticSearchServiceTest {
 	@Test
 	void bulkInsertFromTSV() throws IOException {
 		// given
-		String tsvFilePath = new ClassPathResource("stocks.tsv").getFile().getPath();
-		log.info("tsvFilePath : {}", tsvFilePath);
+		InputStream inputStream = new ClassPathResource("stocks.tsv").getInputStream();
 		String indexName = "stocksearch";
 		// when
-		service.bulkInsertFromTsv(tsvFilePath, indexName);
+		service.bulkInsertFromTsv(inputStream, indexName);
 		// then
 		Iterable<StockSearch> stockSearches = repository.findAll();
 		ArrayList<StockSearch> result = Lists.newArrayList(stockSearches);
