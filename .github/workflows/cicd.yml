@@ -2,7 +2,7 @@ name: ci-cd
 
 on:
   push:
-    branches: [ be/docs/#7-cicd, dev ]
+    branches: [ be/infra/#51-cicd, dev ]
 
 permissions:
   contents: read
