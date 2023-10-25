@@ -38,7 +38,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 		"/api/auth/**/signup",
 		"/api/auth/**/login",
 		"/api/auth/refresh/token",
-		"/api/auth/logout");
+		"/api/auth/logout",
+		"/api/stocks/**");
 	private final JwtProvider jwtProvider;
 	private final AuthenticationContext authenticationContext;
 	private final ObjectMapper objectMapper;
