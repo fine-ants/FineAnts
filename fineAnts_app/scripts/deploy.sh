@@ -23,7 +23,6 @@ fi
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo ">>> deploy DEPLOY_JAR"    >> /home/ec2-user/action/deploy.log
 sudo chmod 666 /var/run/docker.sock
-docker-compose -f ../docker-compose-dev.yml down
+docker-compose -f ../docker-compose-dev.yml down -v
 docker-compose -f ../docker-compose-dev.yml pull
 docker-compose -f ../docker-compose-dev.yml up -d
-docker image prune -f
