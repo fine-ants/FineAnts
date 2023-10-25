@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  app:
+    container_name: fineAnts_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - TZ=Asia/Seoul
+    depends_on:
+      - elasticsearch
+      - redis
+    networks:
+      - backend_net
+  elasticsearch:
+    container_name: fineAnts_es
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
+    platform: linux/x86_64
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=${ELASTIC_SECURITY}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    networks:
+      - backend_net
+  redis:
+    container_name: fineAnts_redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - backend_net
+networks:
+  backend_net:
