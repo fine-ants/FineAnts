@@ -10,7 +10,7 @@ import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
 import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
-import codesquad.fineants.domain.portfolio_stock.PortfolioStock;
+import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
 import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
@@ -46,10 +46,10 @@ public class PortfolioStockService {
 
 		Stock stock = stockRepository.findById(request.getStockId())
 			.orElseThrow(() -> new NotFoundResourceException(StockErrorCode.NOT_FOUND_STOCK));
-		PortfolioStock portFolioStock = portFolioStockRepository.save(PortfolioStock.empty(portfolio, stock));
+		PortfolioHolding portFolioHolding = portFolioStockRepository.save(PortfolioHolding.empty(portfolio, stock));
 
-		log.info("포트폴리오 종목 추가 결과 : {}", portFolioStock);
-		return PortfolioStockCreateResponse.from(portFolioStock);
+		log.info("포트폴리오 종목 추가 결과 : {}", portFolioHolding);
+		return PortfolioStockCreateResponse.from(portFolioHolding);
 	}
 
 	private Portfolio findPortfolio(Long portfolioId) {
@@ -64,20 +64,20 @@ public class PortfolioStockService {
 	}
 
 	@Transactional
-	public PortfolioStockDeleteResponse deletePortfolioStock(Long portfolioStockId, Long portfolioId,
+	public PortfolioStockDeleteResponse deletePortfolioStock(Long portfolioHoldingId, Long portfolioId,
 		AuthMember authMember) {
-		log.info("포트폴리오 종목 삭제 서비스 : portfolioStockId={}, authMember={}", portfolioStockId, authMember);
+		log.info("포트폴리오 종목 삭제 서비스 : portfolioHoldingId={}, authMember={}", portfolioHoldingId, authMember);
 
 		Portfolio portfolio = findPortfolio(portfolioId);
 		validatePortfolioAuthorization(portfolio, authMember.getMemberId());
 
-		tradeHistoryRepository.deleteAllByPortFolioStockIdIn(List.of(portfolioStockId));
+		tradeHistoryRepository.deleteAllByPortFolioHoldingIdIn(List.of(portfolioHoldingId));
 		try {
-			portFolioStockRepository.deleteById(portfolioStockId);
+			portFolioStockRepository.deleteById(portfolioHoldingId);
 		} catch (EmptyResultDataAccessException e) {
 			throw new NotFoundResourceException(PortfolioStockErrorCode.NOT_FOUND_PORTFOLIO_STOCK);
 		}
-		return new PortfolioStockDeleteResponse(portfolioStockId);
+		return new PortfolioStockDeleteResponse(portfolioHoldingId);
 	}
 
 	public PortfolioStocksResponse readMyPortfolioStocks(Long portfolioId, AuthMember authMember) {

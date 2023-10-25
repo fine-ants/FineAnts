@@ -20,7 +20,7 @@ import codesquad.fineants.spring.api.response.ApiResponse;
 import codesquad.fineants.spring.api.success.code.PortfolioStockSuccessCode;
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/api/portfolio/{portfolioId}/stocks")
+@RequestMapping("/api/portfolio/{portfolioId}/holdings")
 @RequiredArgsConstructor
 @RestController
 public class PortfolioStockRestController {
@@ -36,11 +36,11 @@ public class PortfolioStockRestController {
 		return ApiResponse.success(PortfolioStockSuccessCode.CREATED_ADD_PORTFOLIO_STOCK);
 	}
 
-	@DeleteMapping("/{portfolioStockId}")
+	@DeleteMapping("/{portfolioHoldingId}")
 	public ApiResponse<Void> deletePortfolioStock(@PathVariable Long portfolioId,
-		@PathVariable Long portfolioStockId,
+		@PathVariable Long portfolioHoldingId,
 		@AuthPrincipalMember AuthMember authMember) {
-		portfolioStockService.deletePortfolioStock(portfolioStockId, portfolioId, authMember);
+		portfolioStockService.deletePortfolioStock(portfolioHoldingId, portfolioId, authMember);
 		return ApiResponse.success(PortfolioStockSuccessCode.OK_DELETE_PORTFOLIO_STOCK);
 	}
 

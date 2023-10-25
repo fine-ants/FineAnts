@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
-import codesquad.fineants.domain.portfolio_stock.PortfolioStock;
+import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,7 +43,7 @@ public class Portfolio {
 	private Member member;
 
 	@OneToMany(mappedBy = "portfolio")
-	private final List<PortfolioStock> portfolioStocks = new ArrayList<>();
+	private final List<PortfolioHolding> portfolioHoldings = new ArrayList<>();
 
 	@Builder
 	public Portfolio(Long id, String name, String securitiesFirm, Long budget, Long targetGain, Long maximumLoss,
@@ -58,9 +58,9 @@ public class Portfolio {
 	}
 
 	//== 연관관계 메소드 ==//
-	public void addPortfolioStock(PortfolioStock portFolioStock) {
-		if (!portfolioStocks.contains(portFolioStock)) {
-			portfolioStocks.add(portFolioStock);
+	public void addPortfolioStock(PortfolioHolding portFolioHolding) {
+		if (!portfolioHoldings.contains(portFolioHolding)) {
+			portfolioHoldings.add(portFolioHolding);
 		}
 	}
 
@@ -80,8 +80,8 @@ public class Portfolio {
 	// 종목 총 손익 = (종목 현재가 - 종목 평균 매입가) * 개수
 	// 종목 평균 매입가 = 종목의 총 투자 금액 / 총 주식 개수
 	public Long calculateTotalGain() {
-		return portfolioStocks.stream()
-			.mapToLong(PortfolioStock::calculateTotalGain)
+		return portfolioHoldings.stream()
+			.mapToLong(PortfolioHolding::calculateTotalGain)
 			.sum();
 	}
 
@@ -96,8 +96,8 @@ public class Portfolio {
 
 	// 포트폴리오 총 투자 금액 = 각 종목들의 구입가들의 합계
 	private Long calculateTotalInvestmentAmount() {
-		return portfolioStocks.stream()
-			.mapToLong(PortfolioStock::calculateTotalInvestmentAmount)
+		return portfolioHoldings.stream()
+			.mapToLong(PortfolioHolding::calculateTotalInvestmentAmount)
 			.sum();
 	}
 
@@ -108,8 +108,8 @@ public class Portfolio {
 
 	// 포트폴리오 평가 금액(현재 가치) = 모든 종목들의 평가금액 합계
 	private Long calculateTotalCurrentValue() {
-		return portfolioStocks.stream()
-			.mapToLong(PortfolioStock::calculateCurrentValue)
+		return portfolioHoldings.stream()
+			.mapToLong(PortfolioHolding::calculateCurrentValue)
 			.sum();
 	}
 
@@ -124,13 +124,13 @@ public class Portfolio {
 
 	// 포트폴리오 당월 예상 배당금 = 각 종목들에 해당월의 배당금 합계
 	public Long calculateExpectedMonthlyDividend(LocalDateTime monthDateTime) {
-		return portfolioStocks.stream()
+		return portfolioHoldings.stream()
 			.filter(portFolioStock -> portFolioStock.hasMonthlyDividend(monthDateTime))
 			.mapToLong(portFolioStock -> portFolioStock.readDividend(monthDateTime))
 			.findAny().orElse(0L);
 	}
 
 	public Integer getNumberOfShares() {
-		return portfolioStocks.size();
+		return portfolioHoldings.size();
 	}
 }

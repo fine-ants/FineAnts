@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import codesquad.fineants.domain.BaseEntity;
-import codesquad.fineants.domain.portfolio_stock.PortfolioStock;
+import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -28,19 +28,19 @@ public class TradeHistory extends BaseEntity {
 	private String memo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "portfolio_stock_id")
-	private PortfolioStock portFolioStock;
+	@JoinColumn(name = "portfolio_holding_id")
+	private PortfolioHolding portFolioHolding;
 
 	@Builder
 	public TradeHistory(Long id, LocalDateTime purchaseDate, Long purchasePricePerShare, Long numShares,
 		String memo,
-		PortfolioStock portFolioStock) {
+		PortfolioHolding portFolioHolding) {
 		this.id = id;
 		this.purchaseDate = purchaseDate;
 		this.purchasePricePerShare = purchasePricePerShare;
 		this.numShares = numShares;
 		this.memo = memo;
-		this.portFolioStock = portFolioStock;
+		this.portFolioHolding = portFolioHolding;
 	}
 
 	// 투자 금액 = 주당 매입가 * 개수

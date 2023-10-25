@@ -18,11 +18,11 @@ public class PortFolioItem {
 	private Long dailyGain;
 	private Double dailyReturnRate;
 	private Long expectedMonthlyDividend;
-	private Integer numberOfShares;
+	private Integer numShares;
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private PortFolioItem(Long id, String name, Long budget, Long totalGain, Double totalReturnRate, Long dailyGain,
-		Double dailyReturnRate, Long expectedMonthlyDividend, Integer numberOfShares) {
+		Double dailyReturnRate, Long expectedMonthlyDividend, Integer numShares) {
 		this.id = id;
 		this.name = name;
 		this.budget = budget;
@@ -31,7 +31,7 @@ public class PortFolioItem {
 		this.dailyGain = dailyGain;
 		this.dailyReturnRate = dailyReturnRate;
 		this.expectedMonthlyDividend = expectedMonthlyDividend;
-		this.numberOfShares = numberOfShares;
+		this.numShares = numShares;
 	}
 
 	public static PortFolioItem of(Portfolio portfolio, PortfolioGainHistory prevHistory) {
@@ -44,7 +44,7 @@ public class PortFolioItem {
 			.dailyGain(portfolio.calculateDailyGain(prevHistory))
 			.dailyReturnRate(portfolio.calculateDailyReturnRate(prevHistory))
 			.expectedMonthlyDividend(portfolio.calculateExpectedMonthlyDividend(LocalDateTime.now()))
-			.numberOfShares(portfolio.getNumberOfShares())
+			.numShares(portfolio.getNumberOfShares())
 			.build();
 	}
 }

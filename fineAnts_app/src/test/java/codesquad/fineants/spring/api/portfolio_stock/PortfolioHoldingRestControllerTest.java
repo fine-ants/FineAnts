@@ -28,7 +28,7 @@ import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.oauth.support.AuthPrincipalArgumentResolver;
 import codesquad.fineants.domain.portfolio.Portfolio;
-import codesquad.fineants.domain.portfolio_stock.PortfolioStock;
+import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.spring.api.errors.handler.GlobalExceptionHandler;
@@ -39,7 +39,7 @@ import codesquad.fineants.spring.config.JpaAuditingConfiguration;
 @ActiveProfiles("test")
 @WebMvcTest(controllers = PortfolioStockRestController.class)
 @MockBean(JpaAuditingConfiguration.class)
-class PortfolioStockRestControllerTest {
+class PortfolioHoldingRestControllerTest {
 
 	private MockMvc mockMvc;
 
@@ -62,7 +62,7 @@ class PortfolioStockRestControllerTest {
 	private Portfolio portfolio;
 	private Stock stock;
 
-	private PortfolioStock portfolioStock;
+	private PortfolioHolding portfolioHolding;
 
 	@BeforeEach
 	void setup() {
@@ -106,7 +106,7 @@ class PortfolioStockRestControllerTest {
 			.market(Market.KOSPI)
 			.build();
 
-		portfolioStock = PortfolioStock.builder()
+		portfolioHolding = PortfolioHolding.builder()
 			.id(1L)
 			.numShares(0L)
 			.annualDividend(0L)
@@ -120,7 +120,7 @@ class PortfolioStockRestControllerTest {
 	@Test
 	void addPortfolioStock() throws Exception {
 		PortfolioStockCreateResponse response = PortfolioStockCreateResponse.from(
-			PortfolioStock.empty(portfolio, stock));
+			PortfolioHolding.empty(portfolio, stock));
 		given(portfolioStockService.addPortfolioStock(anyLong(), any(PortfolioStockCreateRequest.class),
 			any(AuthMember.class))).willReturn(response);
 
@@ -130,7 +130,7 @@ class PortfolioStockRestControllerTest {
 		String body = objectMapper.writeValueAsString(requestBodyMap);
 		Long portfolioId = portfolio.getId();
 		// when & then
-		mockMvc.perform(post("/api/portfolio/" + portfolioId + "/stocks")
+		mockMvc.perform(post("/api/portfolio/" + portfolioId + "/holdings")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(body))
 			.andExpect(status().isCreated())
@@ -150,7 +150,7 @@ class PortfolioStockRestControllerTest {
 		Long portfolioId = portfolio.getId();
 
 		// when & then
-		mockMvc.perform(post("/api/portfolio/" + portfolioId + "/stocks")
+		mockMvc.perform(post("/api/portfolio/" + portfolioId + "/holdings")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(body))
 			.andExpect(status().isBadRequest())
@@ -164,11 +164,11 @@ class PortfolioStockRestControllerTest {
 	@Test
 	void deletePortfolioStock() throws Exception {
 		// given
-		Long portfolioStockId = portfolioStock.getId();
+		Long portfolioHoldingId = portfolioHolding.getId();
 		Long portfolioId = portfolio.getId();
 
 		// when & then
-		mockMvc.perform(delete("/api/portfolio/" + portfolioId + "/stocks/" + portfolioStockId))
+		mockMvc.perform(delete("/api/portfolio/" + portfolioId + "/holdings/" + portfolioHoldingId))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("code").value(equalTo(200)))
 			.andExpect(jsonPath("status").value(equalTo("OK")))
