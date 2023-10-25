@@ -23,7 +23,7 @@ import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
-import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
+import codesquad.fineants.domain.portfolio_stock.PortFolioHoldingRepository;
 import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
@@ -42,7 +42,7 @@ class PortfolioHoldingServiceTest {
 	private PortfolioStockService portfolioStockService;
 
 	@Autowired
-	private PortFolioStockRepository portFolioStockRepository;
+	private PortFolioHoldingRepository portFolioHoldingRepository;
 
 	@Autowired
 	private PortfolioRepository portfolioRepository;
@@ -98,7 +98,7 @@ class PortfolioHoldingServiceTest {
 	@AfterEach
 	void tearDown() {
 		tradeHistoryRepository.deleteAllInBatch();
-		portFolioStockRepository.deleteAllInBatch();
+		portFolioHoldingRepository.deleteAllInBatch();
 		portfolioRepository.deleteAllInBatch();
 		memberRepository.deleteAllInBatch();
 		stockRepository.deleteAllInBatch();
@@ -123,7 +123,7 @@ class PortfolioHoldingServiceTest {
 			() -> assertThat(response)
 				.extracting("portfolioStockId")
 				.isNotNull(),
-			() -> assertThat(portFolioStockRepository.findAll()).hasSize(1)
+			() -> assertThat(portFolioHoldingRepository.findAll()).hasSize(1)
 		);
 	}
 
@@ -151,7 +151,7 @@ class PortfolioHoldingServiceTest {
 	@Test
 	void deletePortfolioStock() {
 		// given
-		PortfolioHolding portfolioHolding = portFolioStockRepository.save(
+		PortfolioHolding portfolioHolding = portFolioHoldingRepository.save(
 			PortfolioHolding.empty(portfolio, stock)
 		);
 
@@ -172,7 +172,7 @@ class PortfolioHoldingServiceTest {
 		// then
 		assertAll(
 			() -> assertThat(response).extracting("portfolioHoldingId").isNotNull(),
-			() -> assertThat(portFolioStockRepository.findById(portfolioHoldingId).isEmpty()).isTrue(),
+			() -> assertThat(portFolioHoldingRepository.findById(portfolioHoldingId).isEmpty()).isTrue(),
 			() -> assertThat(tradeHistoryRepository.findAllByPortFolioHoldingId(portfolioHoldingId)).isEmpty()
 		);
 	}

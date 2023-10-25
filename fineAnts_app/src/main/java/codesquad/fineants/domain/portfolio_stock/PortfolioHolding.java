@@ -24,16 +24,16 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@ToString
+@ToString(exclude = {"stock", "portfolio", "tradeHistories"})
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PortfolioHolding extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long numShares;    // 주식 개수
-	private Long annualDividend;    // 연간배당금
-	private Long currentPrice;      // 현재가
+	private Long numShares;             // 주식 개수
+	private Long annualDividend;        // 연간배당금
+	private Long currentPrice;     // 현재가
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "portfolio_id")
@@ -42,6 +42,9 @@ public class PortfolioHolding extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "stock_id")
 	private Stock stock;
+
+	@OneToMany(mappedBy = "portFolioHolding")
+	private final List<TradeHistory> tradeHistories = new ArrayList<>();
 
 	@Builder
 	public PortfolioHolding(Long id, Long numShares, Long annualDividend, Long currentPrice, Portfolio portfolio,
@@ -58,14 +61,11 @@ public class PortfolioHolding extends BaseEntity {
 		return PortfolioHolding.builder()
 			.numShares(0L)
 			.annualDividend(0L)
-			.currentPrice(null)
+			.currentPrice(0L)
 			.portfolio(portfolio)
 			.stock(stock)
 			.build();
 	}
-
-	@OneToMany(mappedBy = "portFolioHolding")
-	private final List<TradeHistory> tradeHistories = new ArrayList<>();
 
 	//== 연관관계 메소드 ==//
 	public void addTradeHistory(TradeHistory tradeHistory) {
@@ -76,12 +76,15 @@ public class PortfolioHolding extends BaseEntity {
 
 	// 종목 총 손익 = (종목 현재가 - 종목 평균 매입가) * 개수
 	public long calculateTotalGain() {
-		return (currentPrice - calculateAverageCostPerShare()) * numShares;
+		return (long)(currentPrice - calculateAverageCostPerShare()) * numShares;
 	}
 
 	// 종목 평균 매입가 = 총 투자 금액 / 개수
-	public long calculateAverageCostPerShare() {
-		return calculateTotalInvestmentAmount() / numShares;
+	public Double calculateAverageCostPerShare() {
+		if (numShares == 0) {
+			return 0.0;
+		}
+		return (double)(calculateTotalInvestmentAmount() / numShares);
 	}
 
 	// 총 투자 금액 = 투자 금액들의 합계
@@ -92,12 +95,16 @@ public class PortfolioHolding extends BaseEntity {
 	}
 
 	// 종목 총 손익율 = 총 손익 / 총 투자 금액
-	public Double calculateTotalReturnRate() {
-		return (double)(calculateTotalGain() / calculateTotalInvestmentAmount());
+	public Integer calculateTotalReturnRate() {
+		long totalInvestmentAmount = calculateTotalInvestmentAmount();
+		if (totalInvestmentAmount == 0) {
+			return 0;
+		}
+		return (int)(calculateTotalGain() / totalInvestmentAmount) * 100;
 	}
 
 	// 평가 금액(현재 가치) = 현재가 * 개수
-	public Long calculateCurrentValue() {
+	public Long calculateCurrentValuation() {
 		return currentPrice * numShares;
 	}
 
@@ -107,5 +114,26 @@ public class PortfolioHolding extends BaseEntity {
 
 	public long readDividend(LocalDateTime monthDateTime) {
 		return stock.readDividend(monthDateTime) * numShares;
+	}
+
+	// TODO: 개념 파악후 구현
+	// 당일 손익 = 현재 가치 - 이전 자산의 가치
+	public Long calculateDailyChange() {
+		return 0L;
+	}
+
+	// TODO: 개념 파악후 구현
+	// 당일 손익율
+	public Integer calculateDailyChangeRate() {
+		return 0;
+	}
+
+	// 연간배당율 = (연간배당금 / 현재 가치) * 100
+	public Integer calculateAnnualDividendYield() {
+		Long currentValuation = calculateCurrentValuation();
+		if (currentValuation == 0) {
+			return 0;
+		}
+		return (int)(annualDividend / currentValuation) * 100;
 	}
 }

@@ -67,10 +67,10 @@ class PortfolioHoldingTest {
 		portFolioHolding.addTradeHistory(tradeHistory2);
 
 		// when
-		long result = portFolioHolding.calculateAverageCostPerShare();
+		Double result = portFolioHolding.calculateAverageCostPerShare();
 
 		// then
-		assertThat(result).isEqualTo(10000L);
+		assertThat(result).isEqualTo(10000.0);
 	}
 
 	@DisplayName("한 종목의 총 손익을 계산한다")
