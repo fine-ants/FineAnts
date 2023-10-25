@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"member", "portfolioStocks"})
+@ToString(exclude = {"member", "portfolioHoldings"})
 @Entity
 public class Portfolio {
 	@Id
@@ -86,16 +86,16 @@ public class Portfolio {
 	}
 
 	// 포트폴리오 총 손익율 = (포트폴리오 총 손익 / 포트폴리오 총 투자 금액)
-	public Double calculateTotalReturnRate() {
+	public Integer calculateTotalGainRate() {
 		Long totalInvestmentAmount = calculateTotalInvestmentAmount();
 		if (totalInvestmentAmount == 0) {
-			return 0.0;
+			return 0;
 		}
-		return (double)(calculateTotalGain() / totalInvestmentAmount);
+		return (int)(calculateTotalGain() / totalInvestmentAmount) * 100;
 	}
 
 	// 포트폴리오 총 투자 금액 = 각 종목들의 구입가들의 합계
-	private Long calculateTotalInvestmentAmount() {
+	public Long calculateTotalInvestmentAmount() {
 		return portfolioHoldings.stream()
 			.mapToLong(PortfolioHolding::calculateTotalInvestmentAmount)
 			.sum();
@@ -103,23 +103,23 @@ public class Portfolio {
 
 	// 포트폴리오 당일 손익 = 모든 종목들의 평가 금액 합계 - 이전일 포트폴리오의 모든 종목들의 평가 금액 합계
 	public Long calculateDailyGain(PortfolioGainHistory previousHistory) {
-		return calculateTotalCurrentValue() - previousHistory.getCurrentValue();
+		return calculateTotalCurrentValuation() - previousHistory.getCurrentValue();
 	}
 
 	// 포트폴리오 평가 금액(현재 가치) = 모든 종목들의 평가금액 합계
-	private Long calculateTotalCurrentValue() {
+	private Long calculateTotalCurrentValuation() {
 		return portfolioHoldings.stream()
-			.mapToLong(PortfolioHolding::calculateCurrentValue)
+			.mapToLong(PortfolioHolding::calculateCurrentValuation)
 			.sum();
 	}
 
 	// 포트폴리오 당일 손익율 = (당일 포트폴리오 가치 총합 - 이전 포트폴리오 가치 총합) / 이전 포트폴리오 가치 총합
-	public Double calculateDailyReturnRate(PortfolioGainHistory prevHistory) {
+	public Integer calculateDailyGainRate(PortfolioGainHistory prevHistory) {
 		Long currentValue = prevHistory.getCurrentValue();
 		if (currentValue == 0) {
-			return 0.0;
+			return 0;
 		}
-		return (double)((calculateTotalCurrentValue() - prevHistory.getCurrentValue()) / currentValue);
+		return (int)((calculateTotalCurrentValuation() - prevHistory.getCurrentValue()) / currentValue) * 100;
 	}
 
 	// 포트폴리오 당월 예상 배당금 = 각 종목들에 해당월의 배당금 합계
@@ -132,5 +132,40 @@ public class Portfolio {
 
 	public Integer getNumberOfShares() {
 		return portfolioHoldings.size();
+	}
+
+	// 잔고 = 예산 - 총 투자 금액
+	public Long calculateBalance() {
+		return budget - calculateTotalInvestmentAmount();
+	}
+
+	// 총 연간 배당금 = 각 종목들의 연배당금의 합계
+	public Long calculateTotalAnnualDividend() {
+		return portfolioHoldings.stream()
+			.mapToLong(PortfolioHolding::getAnnualDividend)
+			.sum();
+	}
+
+	// 총 연간배당율 = 모든 종목들의 연 배당금 합계 / 모든 종목들의 총 가치의 합계) * 100
+	public Integer calculateTotalAnnualDividendYield() {
+		Long currentValuation = calculateTotalCurrentValuation();
+		if (currentValuation == 0) {
+			return 0;
+		}
+		return (int)(calculateTotalAnnualDividend() / calculateTotalCurrentValuation()) * 100;
+	}
+
+	// 최대손실율 = ((예산 - 최대손실금액) / 예산) * 100
+	public Integer calculateMaximumLossRate() {
+		return (int)((budget - maximumLoss) / budget) * 100;
+	}
+
+	// 투자대비 연간 배당율 = 포트폴리오 총 연배당금 / 포트폴리오 투자금액 * 100
+	public Integer calculateAnnualInvestmentDividendYield() {
+		Long totalInvestmentAmount = calculateTotalInvestmentAmount();
+		if (totalInvestmentAmount == 0) {
+			return 0;
+		}
+		return (int)(calculateTotalAnnualDividend() / totalInvestmentAmount) * 100;
 	}
 }

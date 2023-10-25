@@ -1,6 +1,7 @@
 package codesquad.fineants.spring.api.portfolio_stock.response;
 
 import codesquad.fineants.domain.portfolio.Portfolio;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import lombok.Builder;
 
 public class PortfolioDetailResponse {
@@ -46,8 +47,26 @@ public class PortfolioDetailResponse {
 		this.provisionalLossBalance = provisionalLossBalance;
 	}
 
-	public static PortfolioDetailResponse from(Portfolio portfolio) {
-		return null;
+	public static PortfolioDetailResponse from(Portfolio portfolio, PortfolioGainHistory history) {
+		return PortfolioDetailResponse.builder()
+			.id(portfolio.getId())
+			.name(portfolio.getName())
+			.budget(portfolio.getBudget())
+			.targetGain(portfolio.getTargetGain())
+			.targetReturnRate(portfolio.calculateTotalGainRate())
+			.maximumLoss(portfolio.getMaximumLoss())
+			.maximumLossRate(portfolio.calculateMaximumLossRate())
+			.investedAmount(portfolio.calculateTotalInvestmentAmount())
+			.totalGain(portfolio.calculateTotalGain())
+			.totalGainRate(portfolio.calculateDailyGainRate(history))
+			.dailyGain(portfolio.calculateDailyGain(history))
+			.dailyGainRate(portfolio.calculateDailyGainRate(history))
+			.balance(portfolio.calculateBalance())
+			.totalAnnualDividend(portfolio.calculateTotalAnnualDividend())
+			.totalAnnualDividendYield(portfolio.calculateTotalAnnualDividendYield())
+			.annualInvestmentDividendYield(portfolio.calculateAnnualInvestmentDividendYield())
+			.provisionalLossBalance(0L)
+			.build();
 	}
 }
 

@@ -88,10 +88,10 @@ class PortfolioTest {
 		portfolio.addPortfolioStock(portFolioHolding);
 
 		// when
-		Double result = portfolio.calculateTotalReturnRate();
+		Integer result = portfolio.calculateTotalGainRate();
 
 		// then
-		assertThat(result).isEqualTo(1.0);
+		assertThat(result).isEqualTo(10);
 	}
 
 	@DisplayName("포트폴리오의 당월 예상 배당을 계산한다")

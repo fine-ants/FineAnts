@@ -1,5 +1,6 @@
 package codesquad.fineants.spring.api.portfolio_stock;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -9,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
-import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
+import codesquad.fineants.domain.portfolio_stock.PortFolioHoldingRepository;
 import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
@@ -20,9 +23,9 @@ import codesquad.fineants.spring.api.errors.errorcode.StockErrorCode;
 import codesquad.fineants.spring.api.errors.exception.ForBiddenException;
 import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.portfolio_stock.request.PortfolioStockCreateRequest;
+import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioHoldingsResponse;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStockCreateResponse;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStockDeleteResponse;
-import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStocksResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,8 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 public class PortfolioStockService {
 	private final PortfolioRepository portfolioRepository;
 	private final StockRepository stockRepository;
-	private final PortFolioStockRepository portFolioStockRepository;
+	private final PortFolioHoldingRepository portFolioHoldingRepository;
 	private final TradeHistoryRepository tradeHistoryRepository;
+	private final PortfolioGainHistoryRepository portfolioGainHistoryRepository;
 
 	@Transactional
 	public PortfolioStockCreateResponse addPortfolioStock(Long portfolioId, PortfolioStockCreateRequest request,
@@ -46,7 +50,7 @@ public class PortfolioStockService {
 
 		Stock stock = stockRepository.findById(request.getStockId())
 			.orElseThrow(() -> new NotFoundResourceException(StockErrorCode.NOT_FOUND_STOCK));
-		PortfolioHolding portFolioHolding = portFolioStockRepository.save(PortfolioHolding.empty(portfolio, stock));
+		PortfolioHolding portFolioHolding = portFolioHoldingRepository.save(PortfolioHolding.empty(portfolio, stock));
 
 		log.info("포트폴리오 종목 추가 결과 : {}", portFolioHolding);
 		return PortfolioStockCreateResponse.from(portFolioHolding);
@@ -73,14 +77,19 @@ public class PortfolioStockService {
 
 		tradeHistoryRepository.deleteAllByPortFolioHoldingIdIn(List.of(portfolioHoldingId));
 		try {
-			portFolioStockRepository.deleteById(portfolioHoldingId);
+			portFolioHoldingRepository.deleteById(portfolioHoldingId);
 		} catch (EmptyResultDataAccessException e) {
 			throw new NotFoundResourceException(PortfolioStockErrorCode.NOT_FOUND_PORTFOLIO_STOCK);
 		}
 		return new PortfolioStockDeleteResponse(portfolioHoldingId);
 	}
 
-	public PortfolioStocksResponse readMyPortfolioStocks(Long portfolioId, AuthMember authMember) {
-		return null;
+	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId, AuthMember authMember) {
+		Portfolio portfolio = findPortfolio(portfolioId);
+		List<PortfolioHolding> portfolioHoldings = portFolioHoldingRepository.findAllByPortfolio(portfolio);
+		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByCreateAtIsLessThanEqualOrderByCreateAtDesc(
+				LocalDateTime.now())
+			.orElseGet(PortfolioGainHistory::empty);
+		return PortfolioHoldingsResponse.of(portfolio, latestHistory, portfolioHoldings);
 	}
 }
