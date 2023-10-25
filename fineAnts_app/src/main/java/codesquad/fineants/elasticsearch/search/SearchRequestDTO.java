@@ -5,8 +5,10 @@ import java.util.List;
 import org.elasticsearch.search.sort.SortOrder;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class SearchRequestDTO {
 	private List<String> fields;
 	private String searchTerm;

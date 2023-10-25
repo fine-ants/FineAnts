@@ -2,24 +2,26 @@ package codesquad.fineants.elasticsearch.search.util;
 
 import java.util.List;
 
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.WildcardQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 
 import codesquad.fineants.elasticsearch.search.SearchRequestDTO;
 import io.jsonwebtoken.lang.Collections;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public final class SearchUtil {
 
 	private SearchUtil() {
 
 	}
 
-	public static SearchRequest buildSearchRequest(final String indexName, final SearchRequestDTO dto) {
+	public static org.elasticsearch.action.search.SearchRequest buildSearchRequest(final String indexName,
+		final SearchRequestDTO dto) {
 		try {
 			SearchSourceBuilder builder = new SearchSourceBuilder()
 				.postFilter(getQueryBuilder(dto));
@@ -31,7 +33,8 @@ public final class SearchUtil {
 				);
 			}
 
-			SearchRequest request = new SearchRequest(indexName);
+			org.elasticsearch.action.search.SearchRequest request = new org.elasticsearch.action.search.SearchRequest(
+				indexName);
 			request.source(builder);
 
 			return request;
@@ -50,20 +53,18 @@ public final class SearchUtil {
 		if (Collections.isEmpty(fields)) {
 			return null;
 		}
-
+		String wildcardSearchTerm = "*" + dto.getSearchTerm() + "*";
 		if (fields.size() > 1) {
-			MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(dto.getSearchTerm())
-				.type(MultiMatchQueryBuilder.Type.CROSS_FIELDS)
-				.operator(Operator.AND);
-
-			fields.forEach(queryBuilder::field);
-
+			BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+			fields.forEach(field -> {
+				queryBuilder.should(new WildcardQueryBuilder(field, wildcardSearchTerm));
+			});
 			return queryBuilder;
 		}
 
 		return fields.stream()
 			.findFirst()
-			.map(field -> QueryBuilders.matchQuery(field, dto.getSearchTerm()).operator(Operator.AND))
+			.map(field -> QueryBuilders.boolQuery().should(new WildcardQueryBuilder(field, wildcardSearchTerm)))
 			.orElse(null);
 	}
 }

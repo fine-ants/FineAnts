@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -18,6 +19,7 @@ import codesquad.fineants.elasticsearch.document.StockSearch;
 import codesquad.fineants.elasticsearch.helper.Indices;
 import codesquad.fineants.elasticsearch.search.SearchRequestDTO;
 import codesquad.fineants.elasticsearch.search.util.SearchUtil;
+import codesquad.fineants.elasticsearch.service.response.StockSearchItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +30,7 @@ public class StockService {
 	private final ObjectMapper MAPPER;
 	private final RestHighLevelClient client;
 
-	public List<StockSearch> search(final SearchRequestDTO dto) {
+	public List<StockSearchItem> search(final SearchRequestDTO dto) {
 		final SearchRequest request = SearchUtil.buildSearchRequest(Indices.STOCK_INDEX, dto);
 
 		if (request == null) {
@@ -43,7 +45,10 @@ public class StockService {
 			for (SearchHit hit : searchHits) {
 				stocks.add(MAPPER.readValue(hit.getSourceAsString(), StockSearch.class));
 			}
-			return stocks;
+
+			return stocks.stream()
+				.map(StockSearchItem::from)
+				.collect(Collectors.toList());
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 			return Collections.emptyList();

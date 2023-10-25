@@ -7,12 +7,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import codesquad.fineants.elasticsearch.document.StockSearch;
 import codesquad.fineants.elasticsearch.search.SearchRequestDTO;
 import codesquad.fineants.elasticsearch.service.StockService;
+import codesquad.fineants.elasticsearch.service.response.StockSearchItem;
+import codesquad.fineants.spring.api.response.ApiResponse;
+import codesquad.fineants.spring.api.success.code.StockSuccessCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@RequestMapping("/api/stocksearch")
+@Slf4j
+@RequestMapping("/api/stocks")
 @RequiredArgsConstructor
 @RestController
 public class StockSearchController {
@@ -20,7 +24,8 @@ public class StockSearchController {
 	private final StockService service;
 
 	@PostMapping("/search")
-	public List<StockSearch> search(@RequestBody final SearchRequestDTO dto) {
-		return service.search(dto);
+	public ApiResponse<List<StockSearchItem>> search(@RequestBody final SearchRequestDTO dto) {
+		log.info("종목 검색 요청 : dto={}", dto);
+		return ApiResponse.success(StockSuccessCode.OK_SEARCH_STOCKS, service.search(dto));
 	}
 }
