@@ -5,7 +5,7 @@ import KakaoSignInButton from "@components/auth/KakaoSignInButton";
 import NaverSignInButton from "@components/auth/NaverSignInButton";
 import { CLIENT_URL } from "@constants/config";
 import useText from "@hooks/useText";
-import { validateEmail } from "@utils/textValidators";
+import { validateEmail } from "@utils/authInputValidators";
 import { WindowContext } from "context/WindowContext";
 import { FormEvent, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";

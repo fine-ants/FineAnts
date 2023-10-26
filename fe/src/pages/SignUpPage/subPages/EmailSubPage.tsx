@@ -1,7 +1,7 @@
 import { postEmailDuplicateCheck } from "@api/auth";
 import { HTTPSTATUS } from "@api/types";
 import useText from "@hooks/useText";
-import { validateEmail } from "@utils/textValidators";
+import { validateEmail } from "@utils/authInputValidators";
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import SubPage from "./SubPage";
