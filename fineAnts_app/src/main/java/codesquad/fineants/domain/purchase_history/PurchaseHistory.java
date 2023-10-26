@@ -14,8 +14,12 @@ import codesquad.fineants.domain.BaseEntity;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@Getter
+@ToString(exclude = {"portFolioHolding"})
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PurchaseHistory extends BaseEntity {
@@ -46,5 +50,13 @@ public class PurchaseHistory extends BaseEntity {
 	// 투자 금액 = 주당 매입가 * 개수
 	public long calculateInvestmentAmount() {
 		return purchasePricePerShare * numShares;
+	}
+
+	public PurchaseHistory change(PurchaseHistory history) {
+		this.purchaseDate = history.getPurchaseDate();
+		this.purchasePricePerShare = history.getPurchasePricePerShare();
+		this.numShares = history.getNumShares();
+		this.memo = history.getMemo();
+		return this;
 	}
 }

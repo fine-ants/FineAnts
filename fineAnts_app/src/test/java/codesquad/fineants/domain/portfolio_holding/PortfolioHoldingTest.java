@@ -6,9 +6,11 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import codesquad.fineants.domain.purchase_history.PurchaseHistory;
 
+@ActiveProfiles("test")
 class PortfolioHoldingTest {
 
 	@DisplayName("한 종목의 총 투자 금액을 계산한다")

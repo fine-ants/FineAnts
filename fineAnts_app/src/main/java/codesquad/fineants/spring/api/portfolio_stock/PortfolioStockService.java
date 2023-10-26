@@ -18,7 +18,7 @@ import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
-import codesquad.fineants.spring.api.errors.errorcode.PortfolioStockErrorCode;
+import codesquad.fineants.spring.api.errors.errorcode.PortfolioHoldingErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.StockErrorCode;
 import codesquad.fineants.spring.api.errors.exception.ForBiddenException;
 import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
@@ -79,7 +79,7 @@ public class PortfolioStockService {
 		try {
 			portFolioHoldingRepository.deleteById(portfolioHoldingId);
 		} catch (EmptyResultDataAccessException e) {
-			throw new NotFoundResourceException(PortfolioStockErrorCode.NOT_FOUND_PORTFOLIO_STOCK);
+			throw new NotFoundResourceException(PortfolioHoldingErrorCode.NOT_FOUND_PORTFOLIO_HOLDING);
 		}
 		return new PortfolioStockDeleteResponse(portfolioHoldingId);
 	}
