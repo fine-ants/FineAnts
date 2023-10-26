@@ -2,19 +2,16 @@ import { PortfolioHolding } from "@api/portfolio";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
-  Box,
   Collapse,
   IconButton,
-  Table,
-  TableBody,
   TableCell,
-  TableHead,
   TableRow,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import PortfolioHoldingLots from "./PortfolioHoldingLots";
 
 export default function PortfolioHoldingRow({
   portfolioId,
@@ -90,46 +87,15 @@ export default function PortfolioHoldingRow({
           <Typography>{annualDividend}</Typography>
         </HoldingTableCell>
       </HoldingTableRow>
-      <TableRow sx={{ border: "none" }}>
+      <HoldingLotRow>
         <TableCell
           style={{ padding: "0 0 0 68.5px", border: "none" }}
           colSpan={9}>
           <Collapse in={isOpen} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>매입 날짜</TableCell>
-                    <TableCell>매입가</TableCell>
-                    <TableCell align="right">매입 개수</TableCell>
-                    <TableCell align="right">메모</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {purchaseHistory.map(
-                    ({
-                      id,
-                      purchaseDate,
-                      numShares,
-                      purchasePricePerShare,
-                      memo,
-                    }) => (
-                      <TableRow key={id}>
-                        <TableCell component="th" scope="row">
-                          {purchaseDate}
-                        </TableCell>
-                        <TableCell>{purchasePricePerShare}</TableCell>
-                        <TableCell align="right">{numShares}</TableCell>
-                        <TableCell align="right">{memo}</TableCell>
-                      </TableRow>
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            </Box>
+            <PortfolioHoldingLots purchaseHistory={purchaseHistory} />
           </Collapse>
         </TableCell>
-      </TableRow>
+      </HoldingLotRow>
     </>
   );
 }
@@ -156,3 +122,5 @@ const Currency = styled(Typography)`
   color: #8b8b8b;
   font-size: 10px;
 `;
+
+const HoldingLotRow = styled(TableRow)``;
