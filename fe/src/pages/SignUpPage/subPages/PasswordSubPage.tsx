@@ -3,27 +3,34 @@ import { validatePassword } from "@utils/textValidators";
 import SubPage from "./SubPage";
 
 type Props = {
-  onNext: (data: string) => void;
+  onNext: (password: string, passwordConfirm: string) => void;
 };
 
 export default function PasswordSubPage({ onNext }: Props) {
-  const { value: password, onChange: onPasswordChange } = useText({
+  const {
+    value: password,
+    isError: isPasswordError,
+    onChange: onPasswordChange,
+  } = useText({
     validators: [validatePassword],
   });
-  const { value: passwordConfirm, onChange: onPasswordConfirmChange } = useText(
-    {
-      validators: [validatePassword],
-    }
-  );
 
-  // const isPasswordMatch = password === passwordConfirm;
+  const {
+    value: passwordConfirm,
+    isError: isPasswordConfirmError,
+    onChange: onPasswordConfirmChange,
+  } = useText({
+    validators: [validatePassword],
+  });
+
+  const isPasswordMismatch = !isPasswordError && password !== passwordConfirm;
 
   return (
     <SubPage>
       <div>
         <label htmlFor="passwordInput">비밀번호</label>
         <input
-          type="text"
+          type="password"
           placeholder="비밀번호"
           id="passwordInput"
           value={password}
@@ -35,17 +42,24 @@ export default function PasswordSubPage({ onNext }: Props) {
       <div>
         <label htmlFor="passwordConfirmInput">비밀번호 확인</label>
         <input
-          type="text"
+          type="password"
           placeholder="비밀번호 확인"
           id="passwordConfirmInput"
           value={passwordConfirm}
           onChange={(e) => onPasswordConfirmChange(e.target.value.trim())}
         />
-        {/* TODO: Error 비밀번호가 일치하지 않습니다 */}
+
+        {isPasswordMismatch && <p>비밀번호가 일치하지 않습니다.</p>}
       </div>
 
-      {/* TODO: Disabled condition */}
-      <button type="button" onClick={() => onNext(password)}>
+      <button
+        type="button"
+        onClick={() => onNext(password, passwordConfirm)}
+        disabled={
+          isPasswordError ||
+          isPasswordConfirmError ||
+          password !== passwordConfirm
+        }>
         다음
       </button>
     </SubPage>

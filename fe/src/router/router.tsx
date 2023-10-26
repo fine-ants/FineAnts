@@ -1,7 +1,11 @@
 import { User } from "@api/auth";
-import PortfolioPage from "@pages/PortfolioPage/PortfolioPage";
+import { GOOGLE_CLIENT_ID } from "@constants/config";
+import { WindowProvider } from "@context/WindowContext";
+import PortfolioPage from "@pages/PortfolioPage";
 import MyProfilePage from "@pages/ProfilePage/MyProfilePage";
+import SignInPage from "@pages/SignInPage";
 import SignUpPage from "@pages/SignUpPage/SignUpPage";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import {
   Navigate,
   Route,
@@ -25,18 +29,25 @@ export default (user: User | undefined) =>
           path={`${Routes.PROFILE}/:section`}
           element={<MyProfilePage />}
         />
+
+        {/* TOOD: 임시적으로 ProtectedRoute 외부에 선언 */}
         <Route path={Routes.PORTFOLIO} element={<PortfolioPage />} />
 
         <Route element={<ProtectedRoute user={user} />}>
           {/* <Route index path={Routes.DASHBOARD} element={<DashboardPage />} /> */}
-          {/* <Route path={Routes.PORTFOLIO} element={<PortfolioPage />} /> */}
-          {/* <Route path={Routes.PORTFOLIOSTOCK} element={<PortfolioStockPage />}/> */}
-
+          {/* <Route path={Routes.PORTFOLIOHOLDING} element={<PortfolioHoldingPage />}/> */}
           {/* <Route path={Routes.WATCHLIST} element={<WatchListPage />}/> */}
         </Route>
 
-        <Route element={<PublicOnlyRoute user={user} />}>
-          {/* <Route index path={Routes.SIGNIN} element={<SignInPage />} /> */}
+        <Route
+          element={
+            <WindowProvider>
+              <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+                <PublicOnlyRoute user={user} />
+              </GoogleOAuthProvider>
+            </WindowProvider>
+          }>
+          <Route index path={Routes.SIGNIN} element={<SignInPage />} />
           <Route path={Routes.SIGNUP} element={<SignUpPage />} />
         </Route>
 

@@ -1,3 +1,6 @@
+import GoogleSignInButton from "@components/auth/GoogleSignInButton";
+import KakaoSignInButton from "@components/auth/KakaoSignInButton";
+import NaverSignInButton from "@components/auth/NaverSignInButton";
 import { useNavigate } from "react-router-dom";
 import Routes from "router/Routes";
 
@@ -10,9 +13,10 @@ export default function MainSubPage({ onNext }: Props) {
 
   return (
     <div>
-      {/* TODO: Google Sign In Button */}
-      {/* TODO: Naver Sign In Button */}
-      {/* TODO: Kakao Sign In Button */}
+      <GoogleSignInButton />
+      <KakaoSignInButton />
+      <NaverSignInButton />
+
       <button type="button" onClick={onNext}>
         이메일/비밀번호
       </button>

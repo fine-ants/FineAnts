@@ -19,10 +19,10 @@ export default function Dropdown({ children }: { children: ReactNode }) {
 
 function DropdownToggle({
   children,
-  style,
+  style = dropdownToggleStyle,
 }: {
   children: ReactNode;
-  style: CSSProperties;
+  style?: CSSProperties;
 }) {
   const { toggle } = useContext(DropdownContext);
 
@@ -35,10 +35,10 @@ function DropdownToggle({
 
 function DropdownMenu({
   children,
-  style,
+  style = dropdownMenuStyle,
 }: {
   children: ReactNode;
-  style: CSSProperties;
+  style?: CSSProperties;
 }) {
   const { isOpen } = useContext(DropdownContext);
 
@@ -50,10 +50,10 @@ function DropdownMenu({
 }
 
 function DropdownItem({
-  style,
+  style = dropdownItemStyle,
   item,
 }: {
-  style: CSSProperties;
+  style?: CSSProperties;
   item: {
     name: string;
     onClick: () => void;
@@ -61,7 +61,7 @@ function DropdownItem({
 }) {
   return (
     <>
-      <li key={item.name} style={style} onClick={item.onClick}>
+      <li style={style} onClick={item.onClick}>
         {item.name}
       </li>
     </>
@@ -71,3 +71,35 @@ function DropdownItem({
 Dropdown.Toggle = DropdownToggle;
 Dropdown.Menu = DropdownMenu;
 Dropdown.Item = DropdownItem;
+
+const dropdownToggleStyle = {
+  width: "80px",
+  height: "40px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  fontSize: "16px",
+  fontWeight: "bold",
+  cursor: "pointer",
+  position: "relative" as "relative",
+};
+
+const dropdownMenuStyle = {
+  top: "0px",
+  backgroundColor: "#ffffff",
+  border: "1.5px solid #e5e5e5",
+  borderRadius: "8px",
+  padding: "10px",
+  display: "flex",
+  flexDirection: "column" as "column",
+  gap: "8px",
+  width: "200px",
+};
+
+const dropdownItemStyle = {
+  width: "inherit",
+  height: " 30px",
+  display: "flex",
+  alignItems: "center",
+  cursor: "pointer",
+};

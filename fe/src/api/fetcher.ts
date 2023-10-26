@@ -1,12 +1,8 @@
+import { BASE_API_URL } from "@constants/config";
 import { refreshAccessToken } from "api/auth";
 import { HTTPSTATUS } from "api/types";
 import axios from "axios";
 import Routes from "router/Routes";
-
-const BASE_API_URL =
-  process.env.NODE_ENV === "production"
-    ? import.meta.env.VITE_API_URL_PROD
-    : import.meta.env.VITE_API_URL_DEV;
 
 export const fetcher = axios.create({
   baseURL: `${BASE_API_URL}/api`,

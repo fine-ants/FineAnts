@@ -84,8 +84,6 @@ export function WatchlistItem({ id, item, index, moveStock }: Props) {
     console.log(`${item.name}으로 이동하는 함수`);
   };
 
-  console.log(isDragging);
-
   return (
     <StyledWatchlistItem
       onClick={moveToStockDetailPage}
