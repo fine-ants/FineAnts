@@ -138,6 +138,7 @@ class PurchaseHistoryRestControllerTest {
 		requestBody.put("memo", "첫구매");
 
 		String body = objectMapper.writeValueAsString(requestBody);
+
 		// when & then
 		mockMvc.perform(post(url)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -163,6 +164,7 @@ class PurchaseHistoryRestControllerTest {
 		requestBody.put("memo", "첫구매");
 
 		String body = objectMapper.writeValueAsString(requestBody);
+
 		// when & then
 		mockMvc.perform(post(url)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -188,6 +190,7 @@ class PurchaseHistoryRestControllerTest {
 		requestBody.put("memo", "첫구매");
 
 		String body = objectMapper.writeValueAsString(requestBody);
+
 		// when & then
 		mockMvc.perform(put(url)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -197,6 +200,22 @@ class PurchaseHistoryRestControllerTest {
 			.andExpect(jsonPath("code").value(equalTo(200)))
 			.andExpect(jsonPath("status").value(equalTo("OK")))
 			.andExpect(jsonPath("message").value(equalTo("매입 이력이 수정되었습니다")))
+			.andExpect(jsonPath("data").value(equalTo(null)));
+	}
+
+	@DisplayName("사용자가 매입 이력을 삭제한다")
+	@Test
+	void deletePurchaseHistory() throws Exception {
+		// given
+		String url = String.format("/api/portfolio/%d/holdings/%d/purchaseHistory/%d", portfolio.getId(),
+			portfolioHolding.getId(), purchaseHistory.getId());
+
+		// when & then
+		mockMvc.perform(delete(url))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("code").value(equalTo(200)))
+			.andExpect(jsonPath("status").value(equalTo("OK")))
+			.andExpect(jsonPath("message").value(equalTo("매입 이력이 삭제되었습니다")))
 			.andExpect(jsonPath("data").value(equalTo(null)));
 	}
 }

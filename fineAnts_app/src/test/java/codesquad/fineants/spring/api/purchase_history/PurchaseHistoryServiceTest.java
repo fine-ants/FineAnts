@@ -1,13 +1,13 @@
 package codesquad.fineants.spring.api.purchase_history;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquad.fineants.domain.member.Member;
@@ -30,9 +31,11 @@ import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
+import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.purchase_history.request.PurchaseHistoryCreateRequest;
 import codesquad.fineants.spring.api.purchase_history.request.PurchaseHistoryModifyRequest;
 import codesquad.fineants.spring.api.purchase_history.response.PurchaseHistoryCreateResponse;
+import codesquad.fineants.spring.api.purchase_history.response.PurchaseHistoryDeleteResponse;
 import codesquad.fineants.spring.api.purchase_history.response.PurchaseHistoryModifyResponse;
 
 @ActiveProfiles("test")
@@ -136,11 +139,15 @@ class PurchaseHistoryServiceTest {
 		PurchaseHistoryCreateResponse response = service.addPurchaseHistory(request,
 			portfolioHoldingId, AuthMember.from(member));
 
+		TypeReference<Map<String, Object>> typeReference = new TypeReference<>() {
+		};
+		String json = objectMapper.writeValueAsString(response);
+		Map<String, Object> map = objectMapper.readValue(json, typeReference);
 		// then
-
-		Assertions.assertAll(
+		assertAll(
 			() -> assertThat(response).extracting("id").isNotNull(),
-			() -> assertThat(purchaseHistoryRepository.findAll()).hasSize(1)
+			() -> assertThat(purchaseHistoryRepository.findById(
+				Long.valueOf(String.valueOf(map.get("id")))).isPresent()).isTrue()
 		);
 	}
 
@@ -165,10 +172,46 @@ class PurchaseHistoryServiceTest {
 
 		// then
 		PurchaseHistory changePurchaseHistory = purchaseHistoryRepository.findById(purchaseHistoryId).orElseThrow();
-		Assertions.assertAll(
+		assertAll(
 			() -> assertThat(response).extracting("id").isNotNull(),
 			() -> assertThat(response).extracting("numShares").isEqualTo(4L),
 			() -> assertThat(changePurchaseHistory.getNumShares()).isEqualTo(4L)
 		);
+	}
+
+	@DisplayName("사용자는 매입 이력을 삭제한다")
+	@Test
+	void deletePurchaseHistory() {
+		// given
+		Long portfolioHoldingId = portfolioHolding.getId();
+		Long purchaseHistoryId = purchaseHistory.getId();
+
+		// when
+		PurchaseHistoryDeleteResponse response = service.deletePurchaseHistory(portfolioHoldingId,
+			purchaseHistoryId, AuthMember.from(member));
+
+		// then
+		assertAll(
+			() -> assertThat(response).extracting("id").isNotNull(),
+			() -> assertThat(purchaseHistoryRepository.findById(purchaseHistoryId).isEmpty()).isTrue()
+		);
+	}
+
+	@DisplayName("사용자는 존재하지 않은 매입 이력 등록번호를 가지고 매입 이력을 삭제할 수 없다")
+	@Test
+	void deletePurchaseHistoryWithNotExistPurchaseHistoryId() {
+		// given
+		Long portfolioHoldingId = portfolioHolding.getId();
+		Long purchaseHistoryId = 9999L;
+
+		// when
+		Throwable throwable = catchThrowable(
+			() -> service.deletePurchaseHistory(portfolioHoldingId, purchaseHistoryId, AuthMember.from(member)));
+
+		// then
+		assertThat(throwable)
+			.isInstanceOf(NotFoundResourceException.class)
+			.extracting("message")
+			.isEqualTo("매입 이력을 찾을 수 없습니다.");
 	}
 }

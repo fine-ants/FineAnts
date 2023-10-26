@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PurchaseHistorySuccessCode implements SuccessCode {
 	CREATED_ADD_PURCHASE_HISTORY(HttpStatus.CREATED, "매입 이력이 추가되었습니다"),
-	OK_MODIFY_PURCHASE_HISTORY(HttpStatus.OK, "매입 이력이 수정되었습니다");
+	OK_MODIFY_PURCHASE_HISTORY(HttpStatus.OK, "매입 이력이 수정되었습니다"),
+	OK_DELETE_PURCHASE_HISTORY(HttpStatus.OK, "매입 이력이 삭제되었습니다");
 
 	private final HttpStatus httpStatus;
 	private final String message;
