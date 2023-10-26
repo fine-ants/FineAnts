@@ -1,7 +1,5 @@
 package codesquad.fineants.spring.api.portfolio;
 
-import static codesquad.fineants.domain.portfolio.QPortfolio.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,20 +9,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.querydsl.core.types.Predicate;
-
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.page.ScrollPaginationCollection;
 import codesquad.fineants.domain.portfolio.Portfolio;
-import codesquad.fineants.domain.portfolio.PortfolioPaginationRepository;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
-import codesquad.fineants.domain.portfolio_stock.PortFolioStock;
-import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
-import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
+import codesquad.fineants.domain.portfolio_holding.PortFolioHoldingRepository;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.spring.api.errors.errorcode.MemberErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
 import codesquad.fineants.spring.api.errors.exception.BadRequestException;
@@ -47,10 +42,9 @@ public class PortFolioService {
 
 	private final PortfolioRepository portfolioRepository;
 	private final MemberRepository memberRepository;
-	private final PortFolioStockRepository portFolioStockRepository;
-	private final TradeHistoryRepository tradeHistoryRepository;
+	private final PortFolioHoldingRepository portFolioHoldingRepository;
+	private final PurchaseHistoryRepository purchaseHistoryRepository;
 	private final PortfolioGainHistoryRepository portfolioGainHistoryRepository;
-	private final PortfolioPaginationRepository paginationRepository;
 
 	@Transactional
 	public PortFolioCreateResponse addPortFolio(PortfolioCreateRequest request, AuthMember authMember) {
@@ -120,14 +114,14 @@ public class PortFolioService {
 		Portfolio findPortfolio = findPortfolio(portfolioId);
 		validatePortfolioAuthorization(findPortfolio, authMember.getMemberId());
 
-		List<Long> portfolioStockIds = portFolioStockRepository.findAllByPortfolioId(findPortfolio.getId()).stream()
-			.map(PortFolioStock::getId)
+		List<Long> portfolioStockIds = portFolioHoldingRepository.findAllByPortfolio(findPortfolio).stream()
+			.map(PortfolioHolding::getId)
 			.collect(Collectors.toList());
 
-		int delTradeHistoryCnt = tradeHistoryRepository.deleteAllByPortFolioStockIdIn(portfolioStockIds);
+		int delTradeHistoryCnt = purchaseHistoryRepository.deleteAllByPortFolioHoldingIdIn(portfolioStockIds);
 		log.info("매매이력 삭제 개수 : {}", delTradeHistoryCnt);
 
-		int delPortfolioCnt = portFolioStockRepository.deleteAllByPortfolioId(findPortfolio.getId());
+		int delPortfolioCnt = portFolioHoldingRepository.deleteAllByPortfolioId(findPortfolio.getId());
 		log.info("포트폴리오 종목 삭제 개수 : {}", delPortfolioCnt);
 
 		portfolioRepository.deleteById(findPortfolio.getId());
@@ -153,19 +147,5 @@ public class PortFolioService {
 			portfolios, size);
 
 		return PortfoliosResponse.of(portfoliosCursor, latestHistory);
-	}
-
-	private Predicate equalMemberId(Long memberId) {
-		if (memberId == null) {
-			return null;
-		}
-		return portfolio.member.id.eq(memberId);
-	}
-
-	private Predicate lessThanPortfolioId(Long cursor) {
-		if (cursor == null) {
-			return null;
-		}
-		return portfolio.id.lt(cursor);
 	}
 }

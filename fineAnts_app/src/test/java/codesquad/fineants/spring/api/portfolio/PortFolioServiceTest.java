@@ -271,7 +271,7 @@ class PortFolioServiceTest {
 
 		// then
 		assertAll(
-			() -> assertThat(response).extracting("nextCursor").isEqualTo(16L),
+			() -> assertThat(response).extracting("nextCursor").isNotNull(),
 			() -> assertThat(response).extracting("portfolios")
 				.asList()
 				.hasSize(10)

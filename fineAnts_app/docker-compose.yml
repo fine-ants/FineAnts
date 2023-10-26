@@ -4,7 +4,7 @@ services:
     container_name: fineAnts_db
     image: mysql:latest
     ports:
-      - 3306:3306
+      - "3306:3306"
     environment:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
@@ -18,7 +18,7 @@ services:
     container_name: fineAnts_redis
     image: redis:latest
     ports:
-      - 6379:6379
+      - "6379:6379"
     networks:
       - backend_net
 networks:

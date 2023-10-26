@@ -1,4 +1,4 @@
-package codesquad.fineants.domain.trade_history;
+package codesquad.fineants.domain.purchase_history;
 
 import java.time.LocalDateTime;
 
@@ -11,40 +11,40 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import codesquad.fineants.domain.BaseEntity;
-import codesquad.fineants.domain.portfolio_stock.PortFolioStock;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TradeHistory extends BaseEntity {
+public class PurchaseHistory extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private LocalDateTime purchaseDate;
 	private Long purchasePricePerShare;
-	private Long numberOfShares;
+	private Long numShares;
 	private String memo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "portfolio_stock_id")
-	private PortFolioStock portFolioStock;
+	@JoinColumn(name = "portfolio_holding_id")
+	private PortfolioHolding portFolioHolding;
 
 	@Builder
-	public TradeHistory(Long id, LocalDateTime purchaseDate, Long purchasePricePerShare, Long numberOfShares,
+	public PurchaseHistory(Long id, LocalDateTime purchaseDate, Long purchasePricePerShare, Long numShares,
 		String memo,
-		PortFolioStock portFolioStock) {
+		PortfolioHolding portFolioHolding) {
 		this.id = id;
 		this.purchaseDate = purchaseDate;
 		this.purchasePricePerShare = purchasePricePerShare;
-		this.numberOfShares = numberOfShares;
+		this.numShares = numShares;
 		this.memo = memo;
-		this.portFolioStock = portFolioStock;
+		this.portFolioHolding = portFolioHolding;
 	}
 
 	// 투자 금액 = 주당 매입가 * 개수
 	public long calculateInvestmentAmount() {
-		return purchasePricePerShare * numberOfShares;
+		return purchasePricePerShare * numShares;
 	}
 }

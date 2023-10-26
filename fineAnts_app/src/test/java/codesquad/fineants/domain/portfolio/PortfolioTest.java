@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import codesquad.fineants.domain.portfolio_stock.PortFolioStock;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.domain.purchase_history.PurchaseHistory;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock_dividend.StockDividend;
-import codesquad.fineants.domain.trade_history.TradeHistory;
 
 class PortfolioTest {
 
@@ -20,25 +20,25 @@ class PortfolioTest {
 	@Test
 	void calculateTotalGain() {
 		// given
-		PortFolioStock portFolioStock = PortFolioStock.builder()
-			.numberOfShares(10L)
+		PortfolioHolding portFolioHolding = PortfolioHolding.builder()
+			.numShares(10L)
 			.currentPrice(20000L)
 			.build();
 
-		TradeHistory tradeHistory1 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		TradeHistory tradeHistory2 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		portFolioStock.addTradeHistory(tradeHistory1);
-		portFolioStock.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(purchaseHistory1);
+		portFolioHolding.addTradeHistory(purchaseHistory2);
 
 		Portfolio portfolio = Portfolio.builder()
 			.budget(1000000L)
@@ -46,7 +46,7 @@ class PortfolioTest {
 			.maximumLoss(900000L)
 			.build();
 
-		portfolio.addPortfolioStock(portFolioStock);
+		portfolio.addPortfolioStock(portFolioHolding);
 
 		// when
 		Long result = portfolio.calculateTotalGain();
@@ -59,25 +59,25 @@ class PortfolioTest {
 	@Test
 	void calculateTotalReturnRate() {
 		// given
-		PortFolioStock portFolioStock = PortFolioStock.builder()
-			.numberOfShares(10L)
+		PortfolioHolding portFolioHolding = PortfolioHolding.builder()
+			.numShares(10L)
 			.currentPrice(20000L)
 			.build();
 
-		TradeHistory tradeHistory1 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		TradeHistory tradeHistory2 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		portFolioStock.addTradeHistory(tradeHistory1);
-		portFolioStock.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(purchaseHistory1);
+		portFolioHolding.addTradeHistory(purchaseHistory2);
 
 		Portfolio portfolio = Portfolio.builder()
 			.budget(1000000L)
@@ -85,13 +85,13 @@ class PortfolioTest {
 			.maximumLoss(900000L)
 			.build();
 
-		portfolio.addPortfolioStock(portFolioStock);
+		portfolio.addPortfolioStock(portFolioHolding);
 
 		// when
-		Double result = portfolio.calculateTotalReturnRate();
+		Integer result = portfolio.calculateTotalGainRate();
 
 		// then
-		assertThat(result).isEqualTo(1.0);
+		assertThat(result).isEqualTo(100);
 	}
 
 	@DisplayName("포트폴리오의 당월 예상 배당을 계산한다")
@@ -101,8 +101,8 @@ class PortfolioTest {
 		Stock stock = Stock.builder()
 			.id(1L)
 			.companyName("삼성전자")
-			.engCompanyName("SamsungElectronics")
-			.stockcode("KR7001360007")
+			.companyNameEng("SamsungElectronics")
+			.stockCode("KR7001360007")
 			.tickerSymbol("005930")
 			.market(Market.KOSPI)
 			.build();
@@ -136,28 +136,28 @@ class PortfolioTest {
 		stock.addStockDividend(stockDividend3);
 		stock.addStockDividend(stockDividend4);
 
-		PortFolioStock portFolioStock = PortFolioStock.builder()
-			.numberOfShares(10L)
+		PortfolioHolding portFolioHolding = PortfolioHolding.builder()
+			.numShares(10L)
 			.currentPrice(20000L)
 			.stock(stock)
 			.build();
 
-		TradeHistory tradeHistory1 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
-			.portFolioStock(portFolioStock)
+			.portFolioHolding(portFolioHolding)
 			.build();
 
-		TradeHistory tradeHistory2 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
-			.numberOfShares(5L)
+			.numShares(5L)
 			.purchasePricePerShare(10000L)
-			.portFolioStock(portFolioStock)
+			.portFolioHolding(portFolioHolding)
 			.build();
 
-		portFolioStock.addTradeHistory(tradeHistory1);
-		portFolioStock.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(purchaseHistory1);
+		portFolioHolding.addTradeHistory(purchaseHistory2);
 
 		Portfolio portfolio = Portfolio.builder()
 			.budget(1000000L)
@@ -165,7 +165,7 @@ class PortfolioTest {
 			.maximumLoss(900000L)
 			.build();
 
-		portfolio.addPortfolioStock(portFolioStock);
+		portfolio.addPortfolioStock(portFolioHolding);
 
 		// when
 		Long result = portfolio.calculateExpectedMonthlyDividend(LocalDate.of(2023, 10, 22).atStartOfDay());
