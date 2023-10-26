@@ -1,7 +1,7 @@
 import usePortfolioDetailsQuery from "@api/portfolio/queries/usePortfolioDetailsQuery";
 import plusIcon from "@assets/icons/plus.svg";
 import PortfolioHoldingsTable from "@components/Portfolio/PortfolioHoldingsTable";
-import { Button, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import BasePage from "./BasePage";
@@ -45,11 +45,13 @@ export default function PortfolioPage() {
               </Typography>
 
               {/* TODO: onClick */}
-              <Button
+              <AddHoldingButton
                 variant="outlined"
                 startIcon={<img src={plusIcon} alt="종목 추가" />}>
-                <span>종목 추가</span>
-              </Button>
+                <Typography variant="button" sx={{ color: "#2C2C2E" }}>
+                  종목 추가
+                </Typography>
+              </AddHoldingButton>
             </header>
 
             <PortfolioHoldingsTable
@@ -73,11 +75,20 @@ const RightPanel = styled.div``;
 
 const PortfolioOverviewContainer = styled.div``;
 
-const PortfolioHoldingsContainer = styled.div`
-  width: 850px;
+const PortfolioHoldingsContainer = styled(Box)`
+  width: 988px;
+  padding: 16px 24px 22px;
+  box-shadow: 0px 0px 12px 0px #00000014;
+  border-radius: 8px;
 
   header {
+    margin-bottom: 16px;
     display: flex;
     justify-content: space-between;
   }
+`;
+
+const AddHoldingButton = styled(Button)`
+  border: 1px solid #8e8e93;
+  border-radius: 8px;
 `;
