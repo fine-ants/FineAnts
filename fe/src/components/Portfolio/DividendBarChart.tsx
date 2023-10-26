@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Bar, BarChart, Cell, ResponsiveContainer, XAxis } from "recharts";
+import styled from "styled-components";
 
 export default function DividendBarChart() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -14,15 +15,7 @@ export default function DividendBarChart() {
   }));
 
   return (
-    <div
-      style={{
-        width: "600px",
-        height: "300px",
-        padding: "16px 24px",
-        backgroundColor: "white",
-        borderRadius: "8px",
-        border: "1px solid #E0E0E0",
-      }}>
+    <StyledDividendBarChart>
       <div>
         <div style={{ fontSize: "22px", fontWeight: "semiBold" }}>
           월 배당금
@@ -38,7 +31,6 @@ export default function DividendBarChart() {
             fontSize={"16px"}
             tick={{ fill: "#375180" }}
           />
-
           <Bar
             dataKey="displayAmount"
             activeBar={true}
@@ -62,7 +54,7 @@ export default function DividendBarChart() {
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </StyledDividendBarChart>
   );
 }
 
@@ -106,6 +98,15 @@ function CustomBarLabel(props: any) {
     </text>
   );
 }
+
+const StyledDividendBarChart = styled.div`
+  width: 600px;
+  height: 300px;
+  padding: 16px 24px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+`;
 
 // ?: API를 따로 만들건지 포트폴리오 종목 조회에서 아래에 필요한 값들을 추가할것인지
 const data = [

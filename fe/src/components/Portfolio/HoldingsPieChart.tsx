@@ -29,15 +29,13 @@ type PieEntry = {
   value: number;
 };
 
+type Props = {
+  data: PortfolioHolding[];
+};
+
 const TOTAL_VALUATION_INDEX = -1;
 
-export default function HoldingsPieChart({
-  data,
-}: {
-  data: PortfolioHolding[];
-}) {
-  console.log(data);
-
+export default function HoldingsPieChart({ data }: Props) {
   const pieData = data.map((item, index) => {
     return {
       name: item.companyName,
@@ -61,12 +59,12 @@ export default function HoldingsPieChart({
 
   return (
     <StyledHoldingsPieChart>
-      {activeIndex === TOTAL_VALUATION_INDEX ? (
+      {activeIndex === TOTAL_VALUATION_INDEX && (
         <TotalValue>
           <p>총 자산 현황</p>
           <div>{addComma(totalValuation)}</div>
         </TotalValue>
-      ) : null}
+      )}
       <PieChartWrapper>
         <PieChart width={250} height={250}>
           <Pie
