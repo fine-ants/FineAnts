@@ -16,12 +16,12 @@ public class PortfolioStockItem {
 	private StockItem stock;
 	@JsonUnwrapped
 	private PortfolioHoldingDetailItem portfolioHolding;
-	private List<PurchaseHistory> purchaseHistory;
+	private List<PurchaseHistoryItem> purchaseHistory;
 
 	public static PortfolioStockItem from(PortfolioHolding portfolioHolding) {
 		StockItem stockItem = StockItem.from(portfolioHolding.getStock());
 		PortfolioHoldingDetailItem holdingDetailItem = PortfolioHoldingDetailItem.from(portfolioHolding);
-		List<PurchaseHistory> purchaseHistory = new ArrayList<>();
+		List<PurchaseHistoryItem> purchaseHistory = new ArrayList<>();
 		return new PortfolioStockItem(stockItem, holdingDetailItem, purchaseHistory);
 	}
 }

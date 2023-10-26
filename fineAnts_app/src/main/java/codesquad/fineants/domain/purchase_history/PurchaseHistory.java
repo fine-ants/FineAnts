@@ -51,4 +51,12 @@ public class PurchaseHistory extends BaseEntity {
 	public long calculateInvestmentAmount() {
 		return purchasePricePerShare * numShares;
 	}
+
+	public PurchaseHistory change(PurchaseHistory history) {
+		this.purchaseDate = history.getPurchaseDate();
+		this.purchasePricePerShare = history.getPurchasePricePerShare();
+		this.numShares = history.getNumShares();
+		this.memo = history.getMemo();
+		return this;
+	}
 }
