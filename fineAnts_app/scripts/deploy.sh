@@ -22,4 +22,7 @@ fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo ">>> deploy DEPLOY_JAR"    >> /home/ec2-user/action/deploy.log
-nohup java -Dspring.profiles.active=dev -jar $DEPLOY_JAR >> /home/ec2-user/deploy.log 2>/home/ec2-user/action/deploy_err.log &
+sudo chmod 666 /var/run/docker.sock
+docker-compose -f /home/ec2-user/action/docker-compose-dev.yml down -v
+docker-compose -f /home/ec2-user/action/docker-compose-dev.yml pull
+docker-compose -f /home/ec2-user/action/docker-compose-dev.yml up -d
