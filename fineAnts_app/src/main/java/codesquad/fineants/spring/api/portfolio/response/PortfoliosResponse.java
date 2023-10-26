@@ -1,6 +1,7 @@
 package codesquad.fineants.spring.api.portfolio.response;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import codesquad.fineants.domain.page.ScrollPaginationCollection;
@@ -16,29 +17,32 @@ public class PortfoliosResponse {
 	private final Long nextCursor;
 
 	public static PortfoliosResponse of(ScrollPaginationCollection<Portfolio> portfoliosScroll,
-		PortfolioGainHistory history) {
+		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap) {
 		if (portfoliosScroll.isLastScroll()) {
-			return PortfoliosResponse.newLastScroll(portfoliosScroll.getCurrentScrollItems(), history);
+			return PortfoliosResponse.newLastScroll(portfoliosScroll.getCurrentScrollItems(), portfolioGainHistoryMap);
 		}
-		return newScrollHasNext(portfoliosScroll.getCurrentScrollItems(), history,
+		return newScrollHasNext(portfoliosScroll.getCurrentScrollItems(), portfolioGainHistoryMap,
 			portfoliosScroll.getNextCursor().getId());
 	}
 
-	private static PortfoliosResponse newLastScroll(List<Portfolio> portfolios, PortfolioGainHistory history) {
-		return newScrollHasNext(portfolios, history, null);
+	private static PortfoliosResponse newLastScroll(List<Portfolio> portfolios,
+		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap) {
+		return newScrollHasNext(portfolios, portfolioGainHistoryMap, null);
 	}
 
-	private static PortfoliosResponse newScrollHasNext(List<Portfolio> portfolios, PortfolioGainHistory history,
+	private static PortfoliosResponse newScrollHasNext(List<Portfolio> portfolios,
+		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap,
 		Long nextCursor) {
 		if (nextCursor != null) {
-			return new PortfoliosResponse(getContents(portfolios, history), true, nextCursor);
+			return new PortfoliosResponse(getContents(portfolios, portfolioGainHistoryMap), true, nextCursor);
 		}
-		return new PortfoliosResponse(getContents(portfolios, history), false, nextCursor);
+		return new PortfoliosResponse(getContents(portfolios, portfolioGainHistoryMap), false, null);
 	}
 
-	private static List<PortFolioItem> getContents(List<Portfolio> portfolios, PortfolioGainHistory history) {
+	private static List<PortFolioItem> getContents(List<Portfolio> portfolios,
+		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap) {
 		return portfolios.stream()
-			.map(portfolio -> PortFolioItem.of(portfolio, history))
+			.map(portfolio -> PortFolioItem.of(portfolio, portfolioGainHistoryMap.get(portfolio)))
 			.collect(Collectors.toList());
 	}
 }

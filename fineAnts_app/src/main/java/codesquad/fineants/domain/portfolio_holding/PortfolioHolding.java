@@ -58,6 +58,10 @@ public class PortfolioHolding extends BaseEntity {
 	}
 
 	public static PortfolioHolding empty(Portfolio portfolio, Stock stock) {
+		return of(portfolio, stock, 0L);
+	}
+
+	public static PortfolioHolding of(Portfolio portfolio, Stock stock, Long currentPrice) {
 		return PortfolioHolding.builder()
 			.numShares(0L)
 			.annualDividend(0L)
