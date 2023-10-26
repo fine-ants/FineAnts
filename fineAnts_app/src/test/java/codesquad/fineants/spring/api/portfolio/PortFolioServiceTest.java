@@ -3,7 +3,9 @@ package codesquad.fineants.spring.api.portfolio;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -16,6 +18,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +33,9 @@ import codesquad.fineants.spring.api.errors.exception.ConflictException;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
 import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
+import codesquad.fineants.spring.api.portfolio.response.PortfoliosResponse;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class PortFolioServiceTest {
 	@Autowired
@@ -164,10 +169,6 @@ class PortFolioServiceTest {
 			.budget(1000000L)
 			.targetGain(1500000L)
 			.maximumLoss(900000L)
-			.investedAmount(0L)
-			.balance(1000000L)
-			.totalAnnualDividend(0L)
-			.annualInvestmentDividend(0L)
 			.member(member)
 			.build());
 
@@ -201,10 +202,6 @@ class PortFolioServiceTest {
 			.budget(1000000L)
 			.targetGain(1500000L)
 			.maximumLoss(900000L)
-			.investedAmount(0L)
-			.balance(1000000L)
-			.totalAnnualDividend(0L)
-			.annualInvestmentDividend(0L)
 			.member(member)
 			.build());
 
@@ -240,10 +237,6 @@ class PortFolioServiceTest {
 			.budget(1000000L)
 			.targetGain(1500000L)
 			.maximumLoss(900000L)
-			.investedAmount(0L)
-			.balance(1000000L)
-			.totalAnnualDividend(0L)
-			.annualInvestmentDividend(0L)
 			.member(member)
 			.build());
 
@@ -254,5 +247,36 @@ class PortFolioServiceTest {
 		boolean result = portfolioRepository.existsById(portfolio.getId());
 
 		assertThat(result).isFalse();
+	}
+
+	@DisplayName("사용자가 나의 포트폴리오들을 처음 조회한다")
+	@Test
+	void readMyAllPortfolio() {
+		// given
+		List<Portfolio> portfolios = new ArrayList<>();
+		for (int i = 1; i <= 25; i++) {
+			portfolios.add(Portfolio.builder()
+				.name("내꿈은 워렌버핏" + i)
+				.securitiesFirm("토스")
+				.budget(1000000L)
+				.targetGain(1500000L)
+				.maximumLoss(900000L)
+				.member(member)
+				.build());
+		}
+		portfolioRepository.saveAll(portfolios);
+		int size = 10;
+		Long nextCursor = Long.MAX_VALUE;
+
+		// when
+		PortfoliosResponse response = service.readMyAllPortfolio(AuthMember.from(member), size, nextCursor);
+
+		// then
+		assertAll(
+			() -> assertThat(response).extracting("nextCursor").isNotNull(),
+			() -> assertThat(response).extracting("portfolios")
+				.asList()
+				.hasSize(10)
+		);
 	}
 }

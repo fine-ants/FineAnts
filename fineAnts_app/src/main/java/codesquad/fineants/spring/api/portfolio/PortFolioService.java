@@ -1,19 +1,25 @@
 package codesquad.fineants.spring.api.portfolio;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
+import codesquad.fineants.domain.page.ScrollPaginationCollection;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
-import codesquad.fineants.domain.portfolio_stock.PortFolioStock;
-import codesquad.fineants.domain.portfolio_stock.PortFolioStockRepository;
-import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
+import codesquad.fineants.domain.portfolio_holding.PortFolioHoldingRepository;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.spring.api.errors.errorcode.MemberErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
 import codesquad.fineants.spring.api.errors.exception.BadRequestException;
@@ -23,9 +29,8 @@ import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
 import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
-import codesquad.fineants.spring.api.portfolio.response.PortFolioItem;
-import codesquad.fineants.spring.api.portfolio.response.PortfolioListResponse;
 import codesquad.fineants.spring.api.portfolio.response.PortfolioModifyResponse;
+import codesquad.fineants.spring.api.portfolio.response.PortfoliosResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,8 +42,9 @@ public class PortFolioService {
 
 	private final PortfolioRepository portfolioRepository;
 	private final MemberRepository memberRepository;
-	private final PortFolioStockRepository portFolioStockRepository;
-	private final TradeHistoryRepository tradeHistoryRepository;
+	private final PortFolioHoldingRepository portFolioHoldingRepository;
+	private final PurchaseHistoryRepository purchaseHistoryRepository;
+	private final PortfolioGainHistoryRepository portfolioGainHistoryRepository;
 
 	@Transactional
 	public PortFolioCreateResponse addPortFolio(PortfolioCreateRequest request, AuthMember authMember) {
@@ -108,14 +114,14 @@ public class PortFolioService {
 		Portfolio findPortfolio = findPortfolio(portfolioId);
 		validatePortfolioAuthorization(findPortfolio, authMember.getMemberId());
 
-		List<Long> portfolioStockIds = portFolioStockRepository.findAllByPortfolioId(findPortfolio.getId()).stream()
-			.map(PortFolioStock::getId)
+		List<Long> portfolioStockIds = portFolioHoldingRepository.findAllByPortfolio(findPortfolio).stream()
+			.map(PortfolioHolding::getId)
 			.collect(Collectors.toList());
 
-		int delTradeHistoryCnt = tradeHistoryRepository.deleteAllByPortFolioStockIdIn(portfolioStockIds);
+		int delTradeHistoryCnt = purchaseHistoryRepository.deleteAllByPortFolioHoldingIdIn(portfolioStockIds);
 		log.info("매매이력 삭제 개수 : {}", delTradeHistoryCnt);
 
-		int delPortfolioCnt = portFolioStockRepository.deleteAllByPortfolioId(findPortfolio.getId());
+		int delPortfolioCnt = portFolioHoldingRepository.deleteAllByPortfolioId(findPortfolio.getId());
 		log.info("포트폴리오 종목 삭제 개수 : {}", delPortfolioCnt);
 
 		portfolioRepository.deleteById(findPortfolio.getId());
@@ -127,12 +133,19 @@ public class PortFolioService {
 			.orElseThrow(() -> new NotFoundResourceException(PortfolioErrorCode.NOT_FOUND_PORTFOLIO));
 	}
 
-	public PortfolioListResponse readAllByMember(AuthMember authMember) {
-		List<PortFolioItem> portFolioItems = portfolioRepository.findAllByMemberIdOrderByIdDesc(
-				authMember.getMemberId())
-			.stream()
-			.map(PortFolioItem::from)
-			.collect(Collectors.toList());
-		return new PortfolioListResponse(portFolioItems);
+	public PortfoliosResponse readMyAllPortfolio(AuthMember authMember, int size, Long nextCursor) {
+		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByCreateAtIsLessThanEqualOrderByCreateAtDesc(
+				LocalDateTime.now())
+			.orElseGet(PortfolioGainHistory::empty);
+
+		PageRequest pageRequest = PageRequest.of(0, size + 1);
+		Page<Portfolio> page = portfolioRepository.findAllByMemberIdAndIdLessThanOrderByIdDesc(authMember.getMemberId(),
+			nextCursor, pageRequest);
+		List<Portfolio> portfolios = page.getContent();
+
+		ScrollPaginationCollection<Portfolio> portfoliosCursor = ScrollPaginationCollection.of(
+			portfolios, size);
+
+		return PortfoliosResponse.of(portfoliosCursor, latestHistory);
 	}
 }

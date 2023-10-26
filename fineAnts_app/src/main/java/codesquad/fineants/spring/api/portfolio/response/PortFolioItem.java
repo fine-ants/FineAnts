@@ -1,45 +1,54 @@
 package codesquad.fineants.spring.api.portfolio.response;
 
+import java.time.LocalDateTime;
+
 import codesquad.fineants.domain.portfolio.Portfolio;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class PortFolioItem {
 	private Long id;
+	private String securitiesFirm;
 	private String name;
 	private Long budget;
 	private Long totalGain;
-	private Double totalReturnRate;
+	private Integer totalGainRate;
 	private Long dailyGain;
-	private Double dailyReturnRate;
+	private Integer dailyGainRate;
 	private Long expectedMonthlyDividend;
-	private Integer numberOfShares;
+	private Integer numShares;
 
 	@Builder(access = AccessLevel.PRIVATE)
-	private PortFolioItem(Long id, String name, Long budget, Long totalGain, Double totalReturnRate, Long dailyGain,
-		Double dailyReturnRate, Long expectedMonthlyDividend, Integer numberOfShares) {
+	private PortFolioItem(Long id, String securitiesFirm, String name, Long budget, Long totalGain,
+		Integer totalGainRate,
+		Long dailyGain, Integer dailyGainRate, Long expectedMonthlyDividend, Integer numShares) {
 		this.id = id;
+		this.securitiesFirm = securitiesFirm;
 		this.name = name;
 		this.budget = budget;
 		this.totalGain = totalGain;
-		this.totalReturnRate = totalReturnRate;
+		this.totalGainRate = totalGainRate;
 		this.dailyGain = dailyGain;
-		this.dailyReturnRate = dailyReturnRate;
+		this.dailyGainRate = dailyGainRate;
 		this.expectedMonthlyDividend = expectedMonthlyDividend;
-		this.numberOfShares = numberOfShares;
+		this.numShares = numShares;
 	}
 
-	public static PortFolioItem from(Portfolio portfolio) {
+	public static PortFolioItem of(Portfolio portfolio, PortfolioGainHistory prevHistory) {
 		return PortFolioItem.builder()
 			.id(portfolio.getId())
+			.securitiesFirm(portfolio.getSecuritiesFirm())
 			.name(portfolio.getName())
 			.budget(portfolio.getBudget())
 			.totalGain(portfolio.calculateTotalGain())
-			.totalReturnRate(0.0)
-			.dailyGain(0L)
-			.dailyReturnRate(0.0)
-			.expectedMonthlyDividend(0L)
-			.numberOfShares(0)
+			.totalGainRate(portfolio.calculateTotalGainRate())
+			.dailyGain(portfolio.calculateDailyGain(prevHistory))
+			.dailyGainRate(portfolio.calculateDailyGainRate(prevHistory))
+			.expectedMonthlyDividend(portfolio.calculateExpectedMonthlyDividend(LocalDateTime.now()))
+			.numShares(portfolio.getNumberOfShares())
 			.build();
 	}
 }
