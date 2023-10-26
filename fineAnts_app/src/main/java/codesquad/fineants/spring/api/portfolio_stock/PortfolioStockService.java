@@ -48,7 +48,7 @@ public class PortfolioStockService {
 		Portfolio portfolio = findPortfolio(portfolioId);
 		validatePortfolioAuthorization(portfolio, authMember.getMemberId());
 
-		Stock stock = stockRepository.findById(request.getStockId())
+		Stock stock = stockRepository.findByTickerSymbol(request.getTickerSymbol())
 			.orElseThrow(() -> new NotFoundResourceException(StockErrorCode.NOT_FOUND_STOCK));
 		PortfolioHolding portFolioHolding = portFolioHoldingRepository.save(PortfolioHolding.empty(portfolio, stock));
 

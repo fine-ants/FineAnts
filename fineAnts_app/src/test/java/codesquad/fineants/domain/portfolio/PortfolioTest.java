@@ -101,8 +101,8 @@ class PortfolioTest {
 		Stock stock = Stock.builder()
 			.id(1L)
 			.companyName("삼성전자")
-			.engCompanyName("SamsungElectronics")
-			.stockcode("KR7001360007")
+			.companyNameEng("SamsungElectronics")
+			.stockCode("KR7001360007")
 			.tickerSymbol("005930")
 			.market(Market.KOSPI)
 			.build();

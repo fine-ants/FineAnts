@@ -28,8 +28,8 @@ public class Stock extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String companyName;
-	private String engCompanyName;
-	private String stockcode;
+	private String companyNameEng;
+	private String stockCode;
 	private String tickerSymbol;
 	@Enumerated(value = EnumType.STRING)
 	private Market market;
@@ -38,12 +38,12 @@ public class Stock extends BaseEntity {
 	private final List<StockDividend> stockDividends = new ArrayList<>();
 
 	@Builder
-	public Stock(Long id, String companyName, String engCompanyName, String stockcode, String tickerSymbol,
+	public Stock(Long id, String companyName, String companyNameEng, String stockCode, String tickerSymbol,
 		Market market) {
 		this.id = id;
 		this.companyName = companyName;
-		this.engCompanyName = engCompanyName;
-		this.stockcode = stockcode;
+		this.companyNameEng = companyNameEng;
+		this.stockCode = stockCode;
 		this.tickerSymbol = tickerSymbol;
 		this.market = market;
 	}
