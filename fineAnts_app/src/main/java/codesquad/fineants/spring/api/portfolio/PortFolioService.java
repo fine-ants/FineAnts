@@ -2,6 +2,7 @@ package codesquad.fineants.spring.api.portfolio;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -134,18 +135,22 @@ public class PortFolioService {
 	}
 
 	public PortfoliosResponse readMyAllPortfolio(AuthMember authMember, int size, Long nextCursor) {
-		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByCreateAtIsLessThanEqualOrderByCreateAtDesc(
-				LocalDateTime.now())
-			.orElseGet(PortfolioGainHistory::empty);
 
 		PageRequest pageRequest = PageRequest.of(0, size + 1);
 		Page<Portfolio> page = portfolioRepository.findAllByMemberIdAndIdLessThanOrderByIdDesc(authMember.getMemberId(),
 			nextCursor, pageRequest);
 		List<Portfolio> portfolios = page.getContent();
 
+		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap = portfolios.stream()
+			.collect(Collectors.toMap(
+				portfolio -> portfolio,
+				portfolio -> portfolioGainHistoryRepository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
+					portfolio, LocalDateTime.now()).orElseGet(PortfolioGainHistory::empty)
+			));
+
 		ScrollPaginationCollection<Portfolio> portfoliosCursor = ScrollPaginationCollection.of(
 			portfolios, size);
 
-		return PortfoliosResponse.of(portfoliosCursor, latestHistory);
+		return PortfoliosResponse.of(portfoliosCursor, portfolioGainHistoryMap);
 	}
 }
