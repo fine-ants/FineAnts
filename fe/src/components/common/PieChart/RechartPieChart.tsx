@@ -163,17 +163,6 @@ const renderActiveShape = (props: any) => {
   );
 };
 
-const StyledPortfolioPieChart = styled.div`
-  width: 460px;
-  height: 384px;
-  background-color: #ffffff;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  border-radius: 10px;
-  border: 1px solid #000000;
-`;
-
 const TotalValue = styled.div`
   display: flex;
   flex-direction: column;

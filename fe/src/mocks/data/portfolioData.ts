@@ -5,9 +5,9 @@ export const successfulPortfolioData = {
   status: "OK",
   message: "카테고리 목록 조회를 성공하였습니다",
   data: [
-    { name: "내꿈은워렌버핏", value: 2500000, fill: "#0088FE" },
-    { name: "단타왕", value: 3235500, fill: "#00C49F" },
-    { name: "물린게아니고장기투자", value: 1573500, fill: "#FFBB28" },
+    { name: "내꿈은워렌버핏", value: 2500000 },
+    { name: "단타왕", value: 3235500 },
+    { name: "물린게아니고장기투자", value: 1573500 },
   ],
 };
 

@@ -14,7 +14,10 @@ type Props = {
   currentRangeIndex: number;
 };
 
-export default function TotalValueLineChart(props: Props) {
+export default function TotalValueLineChart({
+  data,
+  currentRangeIndex,
+}: Props) {
   const seriesRef = useRef<ISeriesApi<"Area">>(null);
   const chartRef = useRef<any>(null);
 
@@ -22,7 +25,7 @@ export default function TotalValueLineChart(props: Props) {
     if (chartRef.current) {
       chartRef.current.timeScale().fitContent();
     }
-  }, [props.currentRangeIndex]);
+  }, [currentRangeIndex]);
 
   const barSpacings = [6, 7, 9, 16, 33, 62];
   // TODO: 숫자들은 상수로 빼기 ex) "1DSpace", "1WSpace", "1MSpace", or "1D", "1W", "1M"
@@ -61,7 +64,7 @@ export default function TotalValueLineChart(props: Props) {
       },
     },
     timeScale: {
-      barSpacing: barSpacings[props.currentRangeIndex],
+      barSpacing: barSpacings[currentRangeIndex],
     },
   };
 
@@ -73,10 +76,11 @@ export default function TotalValueLineChart(props: Props) {
       <div style={{ position: "relative" }}>
         <Chart {...options} ref={chartRef}>
           <AreaSeries
-            data={props.data}
-            topColor="#2962FF"
-            bottomColor="rgba(41, 98, 255, 0.28)"
-            lineColor="#2962FF"
+            data={data}
+            topColor="#2175ec"
+            // bottomColor="rgba(41, 98, 255, 0.28)"
+            bottomColor="#8fcbff"
+            lineColor="#2175ec"
             lineWidth={2}
             crosshairMarkerVisible={true}
             crosshairMarkerRadius={4}
