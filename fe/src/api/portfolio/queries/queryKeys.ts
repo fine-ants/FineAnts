@@ -1,9 +1,10 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import { getPortfolioChart } from "..";
 
 export const portfolioKeys = createQueryKeys("portfolio", {
+  details: (portfolioId: number) => ({
+    queryKey: [portfolioId],
+  }),
   chart: () => ({
     queryKey: ["portfolioChart"],
-    queryFn: getPortfolioChart,
   }),
 });
