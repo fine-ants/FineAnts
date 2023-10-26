@@ -34,6 +34,7 @@ public class PurchaseHistoryService {
 		PortfolioHolding portfolioHolding = findPortfolioHolding(portfolioHoldingId);
 		validatePortfolioAuthorization(portfolioHolding.getPortfolio(), authMember.getMemberId());
 		PurchaseHistory savePurchaseHistory = repository.save(request.toEntity(portfolioHolding));
+		log.info("매입이력 저장 결과 : {}", savePurchaseHistory);
 		return PurchaseHistoryCreateResponse.from(savePurchaseHistory);
 	}
 

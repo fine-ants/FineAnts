@@ -7,9 +7,14 @@ import javax.validation.constraints.Positive;
 
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import codesquad.fineants.domain.purchase_history.PurchaseHistory;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Getter
 @ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PurchaseHistoryCreateRequest {
 	@NotNull(message = "매입날짜는 날짜 형식의 필수 정보입니다")
 	private LocalDateTime purchaseDate;

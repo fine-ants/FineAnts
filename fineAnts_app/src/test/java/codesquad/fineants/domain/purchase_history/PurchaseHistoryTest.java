@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 class PurchaseHistoryTest {
 
 	@DisplayName("매입 내역의 투자 금액을 구한다")
