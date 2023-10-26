@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 public class PortFolioItem {
 	private Long id;
+	private String securitiesFirm;
 	private String name;
 	private Long budget;
 	private Long totalGain;
@@ -21,9 +22,11 @@ public class PortFolioItem {
 	private Integer numShares;
 
 	@Builder(access = AccessLevel.PRIVATE)
-	private PortFolioItem(Long id, String name, Long budget, Long totalGain, Integer totalGainRate, Long dailyGain,
-		Integer dailyGainRate, Long expectedMonthlyDividend, Integer numShares) {
+	private PortFolioItem(Long id, String securitiesFirm, String name, Long budget, Long totalGain,
+		Integer totalGainRate,
+		Long dailyGain, Integer dailyGainRate, Long expectedMonthlyDividend, Integer numShares) {
 		this.id = id;
+		this.securitiesFirm = securitiesFirm;
 		this.name = name;
 		this.budget = budget;
 		this.totalGain = totalGain;
@@ -37,6 +40,7 @@ public class PortFolioItem {
 	public static PortFolioItem of(Portfolio portfolio, PortfolioGainHistory prevHistory) {
 		return PortFolioItem.builder()
 			.id(portfolio.getId())
+			.securitiesFirm(portfolio.getSecuritiesFirm())
 			.name(portfolio.getName())
 			.budget(portfolio.getBudget())
 			.totalGain(portfolio.calculateTotalGain())
