@@ -52,7 +52,46 @@ export const successfulPortfolioDetailsData = {
         annualDividend: 6000,
         annualDividendYield: 10,
 
-        tradeHistories: [
+        purchaseHistory: [
+          {
+            id: 3,
+            purchaseDate: "2023-10-23T15:00:00",
+            numShares: 3,
+            purchasePricePerShare: 50000.0,
+            memo: null,
+          },
+          {
+            id: 2,
+            purchaseDate: "2023-10-23T14:00:00",
+            numShares: 3,
+            purchasePricePerShare: 50000.0,
+            memo: "더살거야",
+          },
+          {
+            id: 1,
+            purchaseDate: "2023-10-23T10:00:00",
+            numShares: 4,
+            purchasePricePerShare: 50000.0,
+            memo: "첫구매",
+          },
+        ],
+      },
+      {
+        companyName: "삼성전자보통주",
+        tickerSymbol: "005930",
+        portfolioHoldingId: 1,
+        currentValuation: 600000,
+        currentPrice: 60000,
+        averageCostPerShare: 50000.0,
+        numShares: 10,
+        dailyChange: 10000,
+        dailyChangeRate: 10,
+        totalGain: 100000,
+        totalReturnRate: 16,
+        annualDividend: 6000,
+        annualDividendYield: 10,
+
+        purchaseHistory: [
           {
             id: 3,
             purchaseDate: "2023-10-23T15:00:00",

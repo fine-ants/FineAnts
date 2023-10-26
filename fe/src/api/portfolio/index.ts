@@ -46,10 +46,10 @@ export type PortfolioHolding = {
   totalReturnRate: number;
   annualDividend: number;
   annualDividendYield: number;
-  tradeHistories: TradeHistory[];
+  purchaseHistory: PurchaseHistoryField[];
 };
 
-export type TradeHistory = {
+export type PurchaseHistoryField = {
   id: number;
   purchaseDate: string;
   numShares: number;
