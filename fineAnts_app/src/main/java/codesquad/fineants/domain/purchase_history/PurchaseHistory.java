@@ -1,4 +1,4 @@
-package codesquad.fineants.domain.trade_history;
+package codesquad.fineants.domain.purchase_history;
 
 import java.time.LocalDateTime;
 
@@ -11,14 +11,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import codesquad.fineants.domain.BaseEntity;
-import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TradeHistory extends BaseEntity {
+public class PurchaseHistory extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -32,7 +32,7 @@ public class TradeHistory extends BaseEntity {
 	private PortfolioHolding portFolioHolding;
 
 	@Builder
-	public TradeHistory(Long id, LocalDateTime purchaseDate, Long purchasePricePerShare, Long numShares,
+	public PurchaseHistory(Long id, LocalDateTime purchaseDate, Long purchasePricePerShare, Long numShares,
 		String memo,
 		PortfolioHolding portFolioHolding) {
 		this.id = id;

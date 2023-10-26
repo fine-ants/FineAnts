@@ -1,4 +1,4 @@
-package codesquad.fineants.domain.portfolio_stock;
+package codesquad.fineants.domain.portfolio_holding;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import codesquad.fineants.domain.trade_history.TradeHistory;
+import codesquad.fineants.domain.purchase_history.PurchaseHistory;
 
 class PortfolioHoldingTest {
 
@@ -20,20 +20,20 @@ class PortfolioHoldingTest {
 			.currentPrice(10000L)
 			.build();
 
-		TradeHistory tradeHistory1 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		TradeHistory tradeHistory2 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		portFolioHolding.addTradeHistory(tradeHistory1);
-		portFolioHolding.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(purchaseHistory1);
+		portFolioHolding.addTradeHistory(purchaseHistory2);
 
 		// when
 		long result = portFolioHolding.calculateTotalInvestmentAmount();
@@ -51,20 +51,20 @@ class PortfolioHoldingTest {
 			.currentPrice(10000L)
 			.build();
 
-		TradeHistory tradeHistory1 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		TradeHistory tradeHistory2 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		portFolioHolding.addTradeHistory(tradeHistory1);
-		portFolioHolding.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(purchaseHistory1);
+		portFolioHolding.addTradeHistory(purchaseHistory2);
 
 		// when
 		Double result = portFolioHolding.calculateAverageCostPerShare();
@@ -82,20 +82,20 @@ class PortfolioHoldingTest {
 			.currentPrice(20000L)
 			.build();
 
-		TradeHistory tradeHistory1 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		TradeHistory tradeHistory2 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		portFolioHolding.addTradeHistory(tradeHistory1);
-		portFolioHolding.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(purchaseHistory1);
+		portFolioHolding.addTradeHistory(purchaseHistory2);
 
 		// when
 		long result = portFolioHolding.calculateTotalGain();
@@ -113,26 +113,26 @@ class PortfolioHoldingTest {
 			.currentPrice(20000L)
 			.build();
 
-		TradeHistory tradeHistory1 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		TradeHistory tradeHistory2 = TradeHistory.builder()
+		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
 			.purchasePricePerShare(10000L)
 			.build();
 
-		portFolioHolding.addTradeHistory(tradeHistory1);
-		portFolioHolding.addTradeHistory(tradeHistory2);
+		portFolioHolding.addTradeHistory(purchaseHistory1);
+		portFolioHolding.addTradeHistory(purchaseHistory2);
 
 		// when
 		double result = portFolioHolding.calculateTotalReturnRate();
 
 		// then
-		assertThat(result).isEqualTo(1.0);
+		assertThat(result).isEqualTo(100.0);
 	}
 
 }

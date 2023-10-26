@@ -23,13 +23,13 @@ import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
-import codesquad.fineants.domain.portfolio_stock.PortFolioHoldingRepository;
-import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
+import codesquad.fineants.domain.portfolio_holding.PortFolioHoldingRepository;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.domain.purchase_history.PurchaseHistory;
+import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
-import codesquad.fineants.domain.trade_history.TradeHistory;
-import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
 import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.portfolio_stock.request.PortfolioStockCreateRequest;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStockCreateResponse;
@@ -57,7 +57,7 @@ class PortfolioHoldingServiceTest {
 	private ObjectMapper objectMapper;
 
 	@Autowired
-	private TradeHistoryRepository tradeHistoryRepository;
+	private PurchaseHistoryRepository purchaseHistoryRepository;
 
 	private Member member;
 
@@ -88,8 +88,8 @@ class PortfolioHoldingServiceTest {
 		Stock stock = Stock.builder()
 			.companyName("삼성전자보통주")
 			.tickerSymbol("005930")
-			.engCompanyName("SamsungElectronics")
-			.stockcode("KR7005930003")
+			.companyNameEng("SamsungElectronics")
+			.stockCode("KR7005930003")
 			.market(Market.KOSPI)
 			.build();
 		this.stock = stockRepository.save(stock);
@@ -97,7 +97,7 @@ class PortfolioHoldingServiceTest {
 
 	@AfterEach
 	void tearDown() {
-		tradeHistoryRepository.deleteAllInBatch();
+		purchaseHistoryRepository.deleteAllInBatch();
 		portFolioHoldingRepository.deleteAllInBatch();
 		portfolioRepository.deleteAllInBatch();
 		memberRepository.deleteAllInBatch();
@@ -110,7 +110,7 @@ class PortfolioHoldingServiceTest {
 		// given
 		Long portfolioId = portfolio.getId();
 		Map<String, Object> requestBodyMap = new HashMap<>();
-		requestBodyMap.put("stockId", stock.getId());
+		requestBodyMap.put("tickerSymbol", stock.getTickerSymbol());
 		PortfolioStockCreateRequest request = objectMapper.readValue(
 			objectMapper.writeValueAsString(requestBodyMap), PortfolioStockCreateRequest.class);
 
@@ -155,8 +155,8 @@ class PortfolioHoldingServiceTest {
 			PortfolioHolding.empty(portfolio, stock)
 		);
 
-		tradeHistoryRepository.save(
-			TradeHistory.builder()
+		purchaseHistoryRepository.save(
+			PurchaseHistory.builder()
 				.purchaseDate(LocalDateTime.now())
 				.purchasePricePerShare(10000L)
 				.numShares(1L)
@@ -173,7 +173,7 @@ class PortfolioHoldingServiceTest {
 		assertAll(
 			() -> assertThat(response).extracting("portfolioHoldingId").isNotNull(),
 			() -> assertThat(portFolioHoldingRepository.findById(portfolioHoldingId).isEmpty()).isTrue(),
-			() -> assertThat(tradeHistoryRepository.findAllByPortFolioHoldingId(portfolioHoldingId)).isEmpty()
+			() -> assertThat(purchaseHistoryRepository.findAllByPortFolioHoldingId(portfolioHoldingId)).isEmpty()
 		);
 	}
 

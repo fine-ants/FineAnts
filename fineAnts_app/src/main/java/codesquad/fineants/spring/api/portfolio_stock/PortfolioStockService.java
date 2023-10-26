@@ -12,11 +12,11 @@ import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
-import codesquad.fineants.domain.portfolio_stock.PortFolioHoldingRepository;
-import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
+import codesquad.fineants.domain.portfolio_holding.PortFolioHoldingRepository;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
-import codesquad.fineants.domain.trade_history.TradeHistoryRepository;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioStockErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.StockErrorCode;
@@ -37,7 +37,7 @@ public class PortfolioStockService {
 	private final PortfolioRepository portfolioRepository;
 	private final StockRepository stockRepository;
 	private final PortFolioHoldingRepository portFolioHoldingRepository;
-	private final TradeHistoryRepository tradeHistoryRepository;
+	private final PurchaseHistoryRepository purchaseHistoryRepository;
 	private final PortfolioGainHistoryRepository portfolioGainHistoryRepository;
 
 	@Transactional
@@ -48,7 +48,7 @@ public class PortfolioStockService {
 		Portfolio portfolio = findPortfolio(portfolioId);
 		validatePortfolioAuthorization(portfolio, authMember.getMemberId());
 
-		Stock stock = stockRepository.findById(request.getStockId())
+		Stock stock = stockRepository.findByTickerSymbol(request.getTickerSymbol())
 			.orElseThrow(() -> new NotFoundResourceException(StockErrorCode.NOT_FOUND_STOCK));
 		PortfolioHolding portFolioHolding = portFolioHoldingRepository.save(PortfolioHolding.empty(portfolio, stock));
 
@@ -75,7 +75,7 @@ public class PortfolioStockService {
 		Portfolio portfolio = findPortfolio(portfolioId);
 		validatePortfolioAuthorization(portfolio, authMember.getMemberId());
 
-		tradeHistoryRepository.deleteAllByPortFolioHoldingIdIn(List.of(portfolioHoldingId));
+		purchaseHistoryRepository.deleteAllByPortFolioHoldingIdIn(List.of(portfolioHoldingId));
 		try {
 			portFolioHoldingRepository.deleteById(portfolioHoldingId);
 		} catch (EmptyResultDataAccessException e) {

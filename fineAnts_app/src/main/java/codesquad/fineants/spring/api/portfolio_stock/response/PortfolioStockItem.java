@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
@@ -16,12 +16,12 @@ public class PortfolioStockItem {
 	private StockItem stock;
 	@JsonUnwrapped
 	private PortfolioHoldingDetailItem portfolioHolding;
-	private List<TradeHistoryItem> tradeHistories;
+	private List<PurchaseHistory> purchaseHistory;
 
 	public static PortfolioStockItem from(PortfolioHolding portfolioHolding) {
 		StockItem stockItem = StockItem.from(portfolioHolding.getStock());
 		PortfolioHoldingDetailItem holdingDetailItem = PortfolioHoldingDetailItem.from(portfolioHolding);
-		List<TradeHistoryItem> tradeHistories = new ArrayList<>();
-		return new PortfolioStockItem(stockItem, holdingDetailItem, tradeHistories);
+		List<PurchaseHistory> purchaseHistory = new ArrayList<>();
+		return new PortfolioStockItem(stockItem, holdingDetailItem, purchaseHistory);
 	}
 }

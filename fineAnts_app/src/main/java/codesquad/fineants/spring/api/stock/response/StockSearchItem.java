@@ -7,14 +7,14 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class StockSearchItem {
-	private String companyName;
-	private String engCompanyName;
-	private String stockcode;
+	private String stockCode;
 	private String tickerSymbol;
+	private String companyName;
+	private String companyNameEng;
 	private Market market;
 
 	public static StockSearchItem from(Stock stock) {
-		return new StockSearchItem(stock.getCompanyName(), stock.getEngCompanyName(), stock.getStockcode(),
-			stock.getTickerSymbol(), stock.getMarket());
+		return new StockSearchItem(stock.getStockCode(), stock.getTickerSymbol(), stock.getCompanyName(),
+			stock.getCompanyNameEng(), stock.getMarket());
 	}
 }
