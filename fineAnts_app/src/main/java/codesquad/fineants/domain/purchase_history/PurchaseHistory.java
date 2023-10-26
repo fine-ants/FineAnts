@@ -14,8 +14,10 @@ import codesquad.fineants.domain.BaseEntity;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PurchaseHistory extends BaseEntity {

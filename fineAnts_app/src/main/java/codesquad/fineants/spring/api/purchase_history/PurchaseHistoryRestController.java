@@ -1,0 +1,32 @@
+package codesquad.fineants.spring.api.purchase_history;
+
+import javax.validation.Valid;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import codesquad.fineants.domain.oauth.support.AuthMember;
+import codesquad.fineants.domain.oauth.support.AuthPrincipalMember;
+import codesquad.fineants.spring.api.purchase_history.request.PurchaseHistoryCreateRequest;
+import codesquad.fineants.spring.api.response.ApiResponse;
+import codesquad.fineants.spring.api.success.code.PurchaseHistorySuccessCode;
+import lombok.RequiredArgsConstructor;
+
+@RequestMapping("/api/portfolio/{portfolioId}/holdings/{portfolioHoldingId}/purchaseHistory")
+@RequiredArgsConstructor
+@RestController
+public class PurchaseHistoryRestController {
+
+	private final PurchaseHistoryService service;
+
+	@PostMapping
+	public ApiResponse<Void> addPurchaseHistory(@Valid @RequestBody PurchaseHistoryCreateRequest request,
+		@PathVariable Long portfolioHoldingId,
+		@AuthPrincipalMember AuthMember authMember) {
+		service.addPurchaseHistory(request, portfolioHoldingId, authMember);
+		return ApiResponse.success(PurchaseHistorySuccessCode.CREATED_ADD_PURCHASE_HISTORY);
+	}
+}
