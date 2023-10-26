@@ -1,6 +1,6 @@
 package codesquad.fineants.spring.api.portfolio_stock.response;
 
-import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 

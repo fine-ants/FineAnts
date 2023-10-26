@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
-import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 

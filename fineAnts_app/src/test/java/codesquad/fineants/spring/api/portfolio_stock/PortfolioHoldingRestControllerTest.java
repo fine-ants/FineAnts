@@ -28,7 +28,7 @@ import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.oauth.support.AuthPrincipalArgumentResolver;
 import codesquad.fineants.domain.portfolio.Portfolio;
-import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.spring.api.errors.handler.GlobalExceptionHandler;
@@ -125,7 +125,7 @@ class PortfolioHoldingRestControllerTest {
 			any(AuthMember.class))).willReturn(response);
 
 		Map<String, Object> requestBodyMap = new HashMap<>();
-		requestBodyMap.put("stockId", stock.getId());
+		requestBodyMap.put("tickerSymbol", stock.getTickerSymbol());
 
 		String body = objectMapper.writeValueAsString(requestBodyMap);
 		Long portfolioId = portfolio.getId();

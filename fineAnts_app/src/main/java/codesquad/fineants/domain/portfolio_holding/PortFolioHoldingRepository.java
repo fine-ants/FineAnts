@@ -1,4 +1,4 @@
-package codesquad.fineants.domain.portfolio_stock;
+package codesquad.fineants.domain.portfolio_holding;
 
 import java.util.List;
 

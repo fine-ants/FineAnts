@@ -1,4 +1,4 @@
-package codesquad.fineants.domain.portfolio_stock;
+package codesquad.fineants.domain.portfolio_holding;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,8 +15,8 @@ import javax.persistence.OneToMany;
 
 import codesquad.fineants.domain.BaseEntity;
 import codesquad.fineants.domain.portfolio.Portfolio;
+import codesquad.fineants.domain.purchase_history.PurchaseHistory;
 import codesquad.fineants.domain.stock.Stock;
-import codesquad.fineants.domain.trade_history.TradeHistory;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@ToString(exclude = {"stock", "portfolio", "tradeHistories"})
+@ToString(exclude = {"stock", "portfolio", "purchaseHistory"})
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PortfolioHolding extends BaseEntity {
@@ -44,7 +44,7 @@ public class PortfolioHolding extends BaseEntity {
 	private Stock stock;
 
 	@OneToMany(mappedBy = "portFolioHolding")
-	private final List<TradeHistory> tradeHistories = new ArrayList<>();
+	private final List<PurchaseHistory> purchaseHistory = new ArrayList<>();
 
 	@Builder
 	public PortfolioHolding(Long id, Long numShares, Long annualDividend, Long currentPrice, Portfolio portfolio,
@@ -68,9 +68,9 @@ public class PortfolioHolding extends BaseEntity {
 	}
 
 	//== 연관관계 메소드 ==//
-	public void addTradeHistory(TradeHistory tradeHistory) {
-		if (!tradeHistories.contains(tradeHistory)) {
-			tradeHistories.add(tradeHistory);
+	public void addTradeHistory(PurchaseHistory purchaseHistory) {
+		if (!this.purchaseHistory.contains(purchaseHistory)) {
+			this.purchaseHistory.add(purchaseHistory);
 		}
 	}
 
@@ -89,8 +89,8 @@ public class PortfolioHolding extends BaseEntity {
 
 	// 총 투자 금액 = 투자 금액들의 합계
 	public long calculateTotalInvestmentAmount() {
-		return tradeHistories.stream()
-			.mapToLong(TradeHistory::calculateInvestmentAmount)
+		return purchaseHistory.stream()
+			.mapToLong(PurchaseHistory::calculateInvestmentAmount)
 			.sum();
 	}
 

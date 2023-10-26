@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
-import codesquad.fineants.domain.portfolio_stock.PortfolioHolding;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -76,7 +76,7 @@ public class Portfolio {
 		return member.getId().equals(memberId);
 	}
 
-	// 포트폴리오 총 손익 = 모든 종목 총 손옥의 합계
+	// 포트폴리오 총 손익 = 모든 종목 총 손익의 합계
 	// 종목 총 손익 = (종목 현재가 - 종목 평균 매입가) * 개수
 	// 종목 평균 매입가 = 종목의 총 투자 금액 / 총 주식 개수
 	public Long calculateTotalGain() {
