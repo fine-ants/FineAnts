@@ -8,8 +8,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { formatDate } from "@utils/date";
 import { useState } from "react";
+import PortfolioHoldingLotRow from "./PortfolioHoldingLotRow";
+import PortfolioHoldingLotRowEdit from "./PortfolioHoldingLotRowEdit";
 
 type Props = {
   purchaseHistory: PurchaseHistoryField[];
@@ -20,6 +21,11 @@ export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
 
   const onEditLotsButtonClick = () => {
     setIsEditing(true);
+  };
+
+  const onLotChangesSave = () => {
+    // TODO: Send request to save changes
+    setIsEditing(false);
   };
 
   return (
@@ -34,25 +40,26 @@ export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {purchaseHistory.map(
-            ({ id, purchaseDate, numShares, purchasePricePerShare, memo }) => (
-              <TableRow key={id}>
-                <TableCell component="th" scope="row">
-                  {formatDate(purchaseDate)}
-                </TableCell>
-                <TableCell>{purchasePricePerShare}</TableCell>
-                <TableCell align="right">{numShares}</TableCell>
-                <TableCell align="right">{memo}</TableCell>
-              </TableRow>
-            )
-          )}
+          {purchaseHistory.map((lot) => {
+            return isEditing ? (
+              <PortfolioHoldingLotRowEdit key={lot.id} {...lot} />
+            ) : (
+              <PortfolioHoldingLotRow key={lot.id} {...lot} />
+            );
+          })}
         </TableBody>
         <TableFooter>
           <TableRow>
             <TableCell align="right" colSpan={4}>
-              <Button variant="text" onClick={onEditLotsButtonClick}>
-                수정
-              </Button>
+              {isEditing ? (
+                <Button variant="text" onClick={onLotChangesSave}>
+                  저장
+                </Button>
+              ) : (
+                <Button variant="text" onClick={onEditLotsButtonClick}>
+                  수정
+                </Button>
+              )}
             </TableCell>
           </TableRow>
         </TableFooter>
