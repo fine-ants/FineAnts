@@ -2,6 +2,7 @@ import usePortfolioChartQuery from "@api/portfolio/queries/usePortfolioChartQuer
 import Legend from "@components/common/PieChart/Legend";
 import RechartPieChart from "@components/common/PieChart/RechartPieChart";
 import { CSSProperties } from "react";
+import { colorPalette } from "styles/ColorPalette";
 
 type Props = {
   width: number;
@@ -16,15 +17,18 @@ export default function PortfolioPieChart({
 }: Props) {
   const { data: pieData } = usePortfolioChartQuery();
 
-  return pieData ? (
+  const coloredPieData = pieData?.map((item, index) => ({
+    ...item,
+    fill: colorPalette[index],
+  }));
+
+  return coloredPieData ? (
     <>
-      <RechartPieChart width={width} height={height} pieData={pieData} />
-      <Legend style={legendStyle} pieData={pieData} />
+      <RechartPieChart width={width} height={height} pieData={coloredPieData} />
+      <Legend style={legendStyle} pieData={coloredPieData} />
     </>
   ) : (
     <div>로딩중</div>
     // TODO: loading indicator
   );
 }
-
-// ?: 레전드의 위치를 유연하게 관리하면서 같은 pieData를 공유한다면 컴파운드가 딱인 것 같은데 어떻게 생각하시는지
