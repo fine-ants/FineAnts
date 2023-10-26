@@ -11,10 +11,13 @@ import codesquad.fineants.domain.purchase_history.PurchaseHistory;
 import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.PortfolioHoldingErrorCode;
+import codesquad.fineants.spring.api.errors.errorcode.PurchaseHistoryErrorCode;
 import codesquad.fineants.spring.api.errors.exception.ForBiddenException;
 import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.purchase_history.request.PurchaseHistoryCreateRequest;
+import codesquad.fineants.spring.api.purchase_history.request.PurchaseHistoryModifyRequest;
 import codesquad.fineants.spring.api.purchase_history.response.PurchaseHistoryCreateResponse;
+import codesquad.fineants.spring.api.purchase_history.response.PurchaseHistoryModifyResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,5 +50,23 @@ public class PurchaseHistoryService {
 		if (!portfolio.hasAuthorization(memberId)) {
 			throw new ForBiddenException(PortfolioErrorCode.NOT_HAVE_AUTHORIZATION);
 		}
+	}
+
+	@Transactional
+	public PurchaseHistoryModifyResponse modifyPurchaseHistory(PurchaseHistoryModifyRequest request,
+		Long portfolioHoldingId, Long purchaseHistoryId, AuthMember authMember) {
+		Portfolio portfolio = findPortfolioHolding(portfolioHoldingId).getPortfolio();
+		validatePortfolioAuthorization(portfolio, authMember.getMemberId());
+
+		PortfolioHolding portfolioHolding = findPortfolioHolding(portfolioHoldingId);
+		PurchaseHistory originalPurchaseHistory = findPurchaseHistory(purchaseHistoryId);
+		PurchaseHistory changePurchaseHistory = request.toEntity(portfolioHolding);
+
+		return PurchaseHistoryModifyResponse.from(originalPurchaseHistory.change(changePurchaseHistory));
+	}
+
+	private PurchaseHistory findPurchaseHistory(Long purchaseHistoryId) {
+		return repository.findById(purchaseHistoryId)
+			.orElseThrow(() -> new NotFoundResourceException(PurchaseHistoryErrorCode.NOT_FOUND_PURCHASE_HISTORY));
 	}
 }

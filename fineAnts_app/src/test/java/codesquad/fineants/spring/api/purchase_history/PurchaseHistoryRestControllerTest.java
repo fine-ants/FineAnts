@@ -30,6 +30,7 @@ import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.oauth.support.AuthPrincipalArgumentResolver;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.domain.purchase_history.PurchaseHistory;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.spring.api.errors.handler.GlobalExceptionHandler;
@@ -62,6 +63,8 @@ class PurchaseHistoryRestControllerTest {
 	private Stock stock;
 
 	private PortfolioHolding portfolioHolding;
+
+	private PurchaseHistory purchaseHistory;
 
 	@BeforeEach
 	void setup() {
@@ -113,6 +116,13 @@ class PurchaseHistoryRestControllerTest {
 			.portfolio(portfolio)
 			.stock(stock)
 			.build();
+		purchaseHistory = PurchaseHistory.builder()
+			.id(1L)
+			.purchaseDate(LocalDateTime.now())
+			.purchasePricePerShare(50000L)
+			.numShares(3L)
+			.memo("첫구매")
+			.build();
 	}
 
 	@DisplayName("사용자가 매입 이력을 추가한다")
@@ -163,5 +173,30 @@ class PurchaseHistoryRestControllerTest {
 			.andExpect(jsonPath("status").value(equalTo("Bad Request")))
 			.andExpect(jsonPath("message").value(equalTo("잘못된 입력형식입니다")))
 			.andExpect(jsonPath("data").isArray());
+	}
+
+	@DisplayName("사용자가 매입 이력을 수정한다")
+	@Test
+	void modifyPurchaseHistory() throws Exception {
+		// given
+		String url = String.format("/api/portfolio/%d/holdings/%d/purchaseHistory/%d", portfolio.getId(),
+			portfolioHolding.getId(), purchaseHistory.getId());
+		Map<String, Object> requestBody = new HashMap<>();
+		requestBody.put("purchaseDate", LocalDateTime.now().toString());
+		requestBody.put("numShares", 4);
+		requestBody.put("purchasePricePerShare", 50000);
+		requestBody.put("memo", "첫구매");
+
+		String body = objectMapper.writeValueAsString(requestBody);
+		// when & then
+		mockMvc.perform(put(url)
+				.contentType(MediaType.APPLICATION_JSON)
+				.characterEncoding(StandardCharsets.UTF_8)
+				.content(body))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("code").value(equalTo(200)))
+			.andExpect(jsonPath("status").value(equalTo("OK")))
+			.andExpect(jsonPath("message").value(equalTo("매입 이력이 수정되었습니다")))
+			.andExpect(jsonPath("data").value(equalTo(null)));
 	}
 }

@@ -25,12 +25,15 @@ import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
 import codesquad.fineants.domain.portfolio_holding.PortFolioHoldingRepository;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.domain.purchase_history.PurchaseHistory;
 import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
 import codesquad.fineants.spring.api.purchase_history.request.PurchaseHistoryCreateRequest;
+import codesquad.fineants.spring.api.purchase_history.request.PurchaseHistoryModifyRequest;
 import codesquad.fineants.spring.api.purchase_history.response.PurchaseHistoryCreateResponse;
+import codesquad.fineants.spring.api.purchase_history.response.PurchaseHistoryModifyResponse;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -65,6 +68,8 @@ class PurchaseHistoryServiceTest {
 
 	private PortfolioHolding portfolioHolding;
 
+	private PurchaseHistory purchaseHistory;
+
 	@BeforeEach
 	void init() {
 		Member member = Member.builder()
@@ -96,6 +101,13 @@ class PurchaseHistoryServiceTest {
 
 		PortfolioHolding portfolioHolding = PortfolioHolding.empty(portfolio, stock);
 		this.portfolioHolding = portFolioHoldingRepository.save(portfolioHolding);
+
+		this.purchaseHistory = purchaseHistoryRepository.save(PurchaseHistory.builder()
+			.purchaseDate(LocalDateTime.now())
+			.numShares(3L)
+			.purchasePricePerShare(50000L)
+			.memo("첫구매")
+			.build());
 	}
 
 	@AfterEach
@@ -129,6 +141,34 @@ class PurchaseHistoryServiceTest {
 		Assertions.assertAll(
 			() -> assertThat(response).extracting("id").isNotNull(),
 			() -> assertThat(purchaseHistoryRepository.findAll()).hasSize(1)
+		);
+	}
+
+	@DisplayName("사용자는 매입 이력을 수정한다")
+	@Test
+	void modifyPurchaseHistory() throws JsonProcessingException {
+		// given
+		Map<String, Object> requestBody = new HashMap<>();
+		requestBody.put("purchaseDate", LocalDateTime.now());
+		requestBody.put("numShares", 4L);
+		requestBody.put("purchasePricePerShare", 50000);
+		requestBody.put("memo", "첫구매");
+
+		PurchaseHistoryModifyRequest request = objectMapper.readValue(
+			objectMapper.writeValueAsString(requestBody), PurchaseHistoryModifyRequest.class);
+		Long portfolioHoldingId = portfolioHolding.getId();
+		Long purchaseHistoryId = purchaseHistory.getId();
+
+		// when
+		PurchaseHistoryModifyResponse response = service.modifyPurchaseHistory(request,
+			portfolioHoldingId, purchaseHistoryId, AuthMember.from(member));
+
+		// then
+		PurchaseHistory changePurchaseHistory = purchaseHistoryRepository.findById(purchaseHistoryId).orElseThrow();
+		Assertions.assertAll(
+			() -> assertThat(response).extracting("id").isNotNull(),
+			() -> assertThat(response).extracting("numShares").isEqualTo(4L),
+			() -> assertThat(changePurchaseHistory.getNumShares()).isEqualTo(4L)
 		);
 	}
 }
