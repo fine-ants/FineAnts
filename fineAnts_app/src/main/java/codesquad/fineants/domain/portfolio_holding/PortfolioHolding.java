@@ -33,7 +33,7 @@ public class PortfolioHolding extends BaseEntity {
 	private Long id;
 	private Long numShares;             // 주식 개수
 	private Long annualDividend;        // 연간배당금
-	private Long currentPrice;     // 현재가
+	private Long currentPrice;            // 현재가
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "portfolio_id")
@@ -65,7 +65,7 @@ public class PortfolioHolding extends BaseEntity {
 		return PortfolioHolding.builder()
 			.numShares(0L)
 			.annualDividend(0L)
-			.currentPrice(0L)
+			.currentPrice(currentPrice)
 			.portfolio(portfolio)
 			.stock(stock)
 			.build();
@@ -75,6 +75,7 @@ public class PortfolioHolding extends BaseEntity {
 	public void addTradeHistory(PurchaseHistory purchaseHistory) {
 		if (!this.purchaseHistory.contains(purchaseHistory)) {
 			this.purchaseHistory.add(purchaseHistory);
+			this.numShares += purchaseHistory.getNumShares();
 		}
 	}
 

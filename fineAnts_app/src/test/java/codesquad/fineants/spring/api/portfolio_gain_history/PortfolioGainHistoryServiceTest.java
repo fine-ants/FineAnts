@@ -99,15 +99,12 @@ class PortfolioGainHistoryServiceTest {
 		stockRepository.deleteAllInBatch();
 	}
 
-	//TODO: PortfolioHolding 객체에서 numShares와 같은 통계정보 갱신화가 필요함
 	@DisplayName("모든 포트폴리오의 손익 내역을 추가한다")
 	@Test
 	void addPortfolioGainHistory() {
 		// given
 		Portfolio savePortfolio = portfolioRepository.save(portfolio);
 		PortfolioHolding portfolioHolding = PortfolioHolding.of(savePortfolio, stock, 60000L);
-		portFolioHoldingRepository.save(portfolioHolding);
-
 		PurchaseHistory purchaseHistory = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(3L)
@@ -115,6 +112,8 @@ class PortfolioGainHistoryServiceTest {
 			.memo("첫구매")
 			.portFolioHolding(portfolioHolding)
 			.build();
+		portfolioHolding.addTradeHistory(purchaseHistory);
+		portFolioHoldingRepository.save(portfolioHolding);
 		purchaseHistoryRepository.save(purchaseHistory);
 
 		// when

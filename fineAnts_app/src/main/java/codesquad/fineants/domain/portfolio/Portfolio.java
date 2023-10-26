@@ -102,8 +102,13 @@ public class Portfolio {
 	}
 
 	// 포트폴리오 당일 손익 = 모든 종목들의 평가 금액 합계 - 이전일 포트폴리오의 모든 종목들의 평가 금액 합계
+	// 단, 이전일의 포트포릴오의 모든 종목들의 평가금액이 없는 경우 총 투자금액으로 뺀다
 	public Long calculateDailyGain(PortfolioGainHistory previousHistory) {
-		return calculateTotalCurrentValuation() - previousHistory.getCurrentValuation();
+		Long previousCurrentValuation = previousHistory.getCurrentValuation();
+		if (previousCurrentValuation == 0) {
+			return calculateTotalCurrentValuation() - calculateTotalInvestmentAmount();
+		}
+		return calculateTotalCurrentValuation() - previousCurrentValuation;
 	}
 
 	// 포트폴리오 평가 금액(현재 가치) = 모든 종목들의 평가금액 합계

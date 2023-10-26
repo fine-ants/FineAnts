@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PortfolioGainHistoryCreateResponse {
 	private List<Long> ids;
