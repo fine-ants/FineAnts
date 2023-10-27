@@ -47,14 +47,14 @@ class PortfolioHoldingTest {
 		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
 		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
@@ -77,14 +77,14 @@ class PortfolioHoldingTest {
 		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
 		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
@@ -107,14 +107,14 @@ class PortfolioHoldingTest {
 		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
 		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
@@ -137,14 +137,14 @@ class PortfolioHoldingTest {
 		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
 		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 

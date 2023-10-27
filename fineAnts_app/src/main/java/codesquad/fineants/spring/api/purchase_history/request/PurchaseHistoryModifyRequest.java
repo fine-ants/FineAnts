@@ -23,7 +23,7 @@ public class PurchaseHistoryModifyRequest {
 	private Long numShares;
 	@NotNull(message = "매입가는 필수 정보입니다")
 	@Positive(message = "매입가는 양수여야 합니다")
-	private Long purchasePricePerShare;
+	private Double purchasePricePerShare;
 	private String memo;
 
 	public PurchaseHistory toEntity(PortfolioHolding portfolioHolding) {

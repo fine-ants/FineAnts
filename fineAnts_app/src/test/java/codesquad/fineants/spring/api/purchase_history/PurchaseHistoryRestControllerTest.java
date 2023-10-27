@@ -119,7 +119,7 @@ class PurchaseHistoryRestControllerTest {
 		purchaseHistory = PurchaseHistory.builder()
 			.id(1L)
 			.purchaseDate(LocalDateTime.now())
-			.purchasePricePerShare(50000L)
+			.purchasePricePerShare(50000.0)
 			.numShares(3L)
 			.memo("첫구매")
 			.build();
