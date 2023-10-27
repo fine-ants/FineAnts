@@ -110,3 +110,18 @@ export const putPortfolioHoldingPurchase = async ({
   );
   return res.data;
 };
+
+export const deletePortfolioHoldingPurchase = async ({
+  portfolioId,
+  portfolioHoldingId,
+  purchaseHistoryId,
+}: {
+  portfolioId: number;
+  portfolioHoldingId: number;
+  purchaseHistoryId: number;
+}) => {
+  const res = await fetcher.delete<Response<null>>(
+    `/portfolio/${portfolioId}/holdings/${portfolioHoldingId}/purchaseHistory/${purchaseHistoryId}`
+  );
+  return res.data;
+};

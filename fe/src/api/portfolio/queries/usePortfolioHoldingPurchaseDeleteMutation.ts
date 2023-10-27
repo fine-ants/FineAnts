@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { putPortfolioHoldingPurchase } from "..";
+import { deletePortfolioHoldingPurchase } from "..";
 import { portfolioKeys } from "./queryKeys";
 
-export default function usePortfolioHoldingPurchaseEditMutation(filters: {
+export default function usePortfolioHoldingPurchaseDeleteMutation(filters: {
   portfolioId: number;
   portfolioHoldingId: number;
   purchaseHistoryId: number;
@@ -11,7 +11,7 @@ export default function usePortfolioHoldingPurchaseEditMutation(filters: {
 
   return useMutation({
     mutationKey: portfolioKeys.editHoldingPurchase(filters).queryKey,
-    mutationFn: putPortfolioHoldingPurchase,
+    mutationFn: deletePortfolioHoldingPurchase,
     onSuccess: () => {
       // TODO: toast
       queryClient.invalidateQueries(
