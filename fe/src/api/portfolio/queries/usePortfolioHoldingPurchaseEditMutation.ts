@@ -2,18 +2,19 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { putPortfolioHoldingPurchase } from "..";
 import { portfolioKeys } from "./queryKeys";
 
-export default function usePortfolioHoldingPurchaseEditMutation(
-  portfolioId: number
-) {
+export default function usePortfolioHoldingPurchaseEditMutation(filters: {
+  portfolioId: number;
+  portfolioHoldingId: number;
+}) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: portfolioKeys.editHoldingPurchase().queryKey,
+    mutationKey: portfolioKeys.editHoldingPurchase(filters).queryKey,
     mutationFn: putPortfolioHoldingPurchase,
     onSuccess: () => {
       // TODO: toast
       queryClient.invalidateQueries(
-        portfolioKeys.details(portfolioId).queryKey
+        portfolioKeys.details(filters.portfolioId).queryKey
       );
     },
   });
