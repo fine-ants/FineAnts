@@ -2,10 +2,12 @@ package codesquad.fineants.spring.api.portfolio_stock.response;
 
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
+import lombok.AccessLevel;
 import lombok.Builder;
 
 public class PortfolioDetailResponse {
 	private Long id;
+	private String securitiesFirm;
 	private String name;
 	private Long budget;
 	private Long targetGain;
@@ -23,12 +25,13 @@ public class PortfolioDetailResponse {
 	private Integer annualInvestmentDividendYield;
 	private Long provisionalLossBalance;
 
-	@Builder
-	public PortfolioDetailResponse(Long id, String name, Long budget, Long targetGain, Integer targetReturnRate,
-		Long maximumLoss, Integer maximumLossRate, Long investedAmount, Long totalGain, Integer totalGainRate,
-		Long dailyGain, Integer dailyGainRate, Long balance, Long totalAnnualDividend, Integer totalAnnualDividendYield,
-		Integer annualInvestmentDividendYield, Long provisionalLossBalance) {
+	@Builder(access = AccessLevel.PRIVATE)
+	private PortfolioDetailResponse(Long id, String securitiesFirm, String name, Long budget, Long targetGain,
+		Integer targetReturnRate, Long maximumLoss, Integer maximumLossRate, Long investedAmount, Long totalGain,
+		Integer totalGainRate, Long dailyGain, Integer dailyGainRate, Long balance, Long totalAnnualDividend,
+		Integer totalAnnualDividendYield, Integer annualInvestmentDividendYield, Long provisionalLossBalance) {
 		this.id = id;
+		this.securitiesFirm = securitiesFirm;
 		this.name = name;
 		this.budget = budget;
 		this.targetGain = targetGain;
@@ -50,6 +53,7 @@ public class PortfolioDetailResponse {
 	public static PortfolioDetailResponse from(Portfolio portfolio, PortfolioGainHistory history) {
 		return PortfolioDetailResponse.builder()
 			.id(portfolio.getId())
+			.securitiesFirm(portfolio.getSecuritiesFirm())
 			.name(portfolio.getName())
 			.budget(portfolio.getBudget())
 			.targetGain(portfolio.getTargetGain())
