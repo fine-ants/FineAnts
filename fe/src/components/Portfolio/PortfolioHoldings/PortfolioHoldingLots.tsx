@@ -1,8 +1,10 @@
 import { PurchaseHistoryField } from "@api/portfolio";
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableRow,
 } from "@mui/material";
@@ -13,6 +15,10 @@ type Props = {
 };
 
 export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
+  const onAddPurchaseClick = () => {
+    // TODO: Open modal
+  };
+
   return (
     <>
       <Table size="small" aria-label="purchases">
@@ -30,6 +36,13 @@ export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
             <PortfolioHoldingLotRow key={lot.id} {...lot} />
           ))}
         </TableBody>
+        <TableFooter>
+          <TableCell align="right" colSpan={5} sx={{ border: "none" }}>
+            <Button variant="text" onClick={onAddPurchaseClick}>
+              매입 이력 추가
+            </Button>
+          </TableCell>
+        </TableFooter>
       </Table>
     </>
   );
