@@ -102,8 +102,13 @@ public class Portfolio {
 	}
 
 	// 포트폴리오 당일 손익 = 모든 종목들의 평가 금액 합계 - 이전일 포트폴리오의 모든 종목들의 평가 금액 합계
+	// 단, 이전일의 포트포릴오의 모든 종목들의 평가금액이 없는 경우 총 투자금액으로 뺀다
 	public Long calculateDailyGain(PortfolioGainHistory previousHistory) {
-		return calculateTotalCurrentValuation() - previousHistory.getCurrentValue();
+		Long previousCurrentValuation = previousHistory.getCurrentValuation();
+		if (previousCurrentValuation == 0) {
+			return calculateTotalCurrentValuation() - calculateTotalInvestmentAmount();
+		}
+		return calculateTotalCurrentValuation() - previousCurrentValuation;
 	}
 
 	// 포트폴리오 평가 금액(현재 가치) = 모든 종목들의 평가금액 합계
@@ -115,11 +120,11 @@ public class Portfolio {
 
 	// 포트폴리오 당일 손익율 = (당일 포트폴리오 가치 총합 - 이전 포트폴리오 가치 총합) / 이전 포트폴리오 가치 총합
 	public Integer calculateDailyGainRate(PortfolioGainHistory prevHistory) {
-		Long currentValue = prevHistory.getCurrentValue();
+		Long currentValue = prevHistory.getCurrentValuation();
 		if (currentValue == 0) {
 			return 0;
 		}
-		return (int)((calculateTotalCurrentValuation() - prevHistory.getCurrentValue()) / currentValue) * 100;
+		return (int)((calculateTotalCurrentValuation() - prevHistory.getCurrentValuation()) / currentValue) * 100;
 	}
 
 	// 포트폴리오 당월 예상 배당금 = 각 종목들에 해당월의 배당금 합계
@@ -167,5 +172,17 @@ public class Portfolio {
 			return 0;
 		}
 		return (int)(calculateTotalAnnualDividend() / totalInvestmentAmount) * 100;
+	}
+
+	public PortfolioGainHistory createPortfolioGainHistory(PortfolioGainHistory history) {
+		Long totalGain = calculateTotalGain();
+		Long dailyGain = calculateDailyGain(history);
+		Long currentValuation = calculateTotalCurrentValuation();
+		return PortfolioGainHistory.builder()
+			.totalGain(totalGain)
+			.dailyGain(dailyGain)
+			.currentValuation(currentValuation)
+			.portfolio(this)
+			.build();
 	}
 }

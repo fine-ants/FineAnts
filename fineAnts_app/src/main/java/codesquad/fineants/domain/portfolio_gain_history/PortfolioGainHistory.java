@@ -24,18 +24,18 @@ public class PortfolioGainHistory extends BaseEntity {
 	private Long id;
 	private Long totalGain;
 	private Long dailyGain;
-	private Long currentValue;
+	private Long currentValuation;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "portfolio_id")
 	private Portfolio portfolio;
 
 	@Builder
-	public PortfolioGainHistory(Long id, Long totalGain, Long dailyGain, Long currentValue, Portfolio portfolio) {
+	public PortfolioGainHistory(Long id, Long totalGain, Long dailyGain, Long currentValuation, Portfolio portfolio) {
 		this.id = id;
 		this.totalGain = totalGain;
 		this.dailyGain = dailyGain;
-		this.currentValue = currentValue;
+		this.currentValuation = currentValuation;
 		this.portfolio = portfolio;
 	}
 
@@ -43,7 +43,7 @@ public class PortfolioGainHistory extends BaseEntity {
 		return PortfolioGainHistory.builder()
 			.totalGain(0L)
 			.dailyGain(0L)
-			.currentValue(0L)
+			.currentValuation(0L)
 			.build();
 	}
 }

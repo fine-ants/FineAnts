@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import codesquad.fineants.domain.portfolio.Portfolio;
+
 public interface PortfolioGainHistoryRepository extends JpaRepository<PortfolioGainHistory, Long> {
-	Optional<PortfolioGainHistory> findFirstByCreateAtIsLessThanEqualOrderByCreateAtDesc(LocalDateTime createAt);
+	Optional<PortfolioGainHistory> findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
+		Portfolio portfolio, LocalDateTime createAt);
 }

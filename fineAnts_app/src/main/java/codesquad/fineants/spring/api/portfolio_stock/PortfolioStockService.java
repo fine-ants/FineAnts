@@ -87,8 +87,8 @@ public class PortfolioStockService {
 	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId, AuthMember authMember) {
 		Portfolio portfolio = findPortfolio(portfolioId);
 		List<PortfolioHolding> portfolioHoldings = portFolioHoldingRepository.findAllByPortfolio(portfolio);
-		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByCreateAtIsLessThanEqualOrderByCreateAtDesc(
-				LocalDateTime.now())
+		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
+				portfolio, LocalDateTime.now())
 			.orElseGet(PortfolioGainHistory::empty);
 		return PortfolioHoldingsResponse.of(portfolio, latestHistory, portfolioHoldings);
 	}
