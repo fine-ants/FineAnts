@@ -11,7 +11,7 @@ public class PurchaseHistoryModifyResponse {
 
 	private Long id;
 	private LocalDateTime purchaseDate;
-	private Long purchasePricePerShare;
+	private Double purchasePricePerShare;
 	private Long numShares;
 	private String memo;
 

@@ -27,7 +27,7 @@ public class PurchaseHistory extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private LocalDateTime purchaseDate;
-	private Long purchasePricePerShare;
+	private Double purchasePricePerShare;
 	private Long numShares;
 	private String memo;
 
@@ -36,7 +36,7 @@ public class PurchaseHistory extends BaseEntity {
 	private PortfolioHolding portFolioHolding;
 
 	@Builder
-	public PurchaseHistory(Long id, LocalDateTime purchaseDate, Long purchasePricePerShare, Long numShares,
+	public PurchaseHistory(Long id, LocalDateTime purchaseDate, Double purchasePricePerShare, Long numShares,
 		String memo,
 		PortfolioHolding portFolioHolding) {
 		this.id = id;
@@ -49,7 +49,7 @@ public class PurchaseHistory extends BaseEntity {
 
 	// 투자 금액 = 주당 매입가 * 개수
 	public long calculateInvestmentAmount() {
-		return purchasePricePerShare * numShares;
+		return purchasePricePerShare.longValue() * numShares;
 	}
 
 	public PurchaseHistory change(PurchaseHistory history) {

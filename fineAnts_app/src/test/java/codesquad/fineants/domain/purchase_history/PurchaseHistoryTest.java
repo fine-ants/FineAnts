@@ -18,7 +18,7 @@ class PurchaseHistoryTest {
 		PurchaseHistory purchaseHistory = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.build();
 
 		// when

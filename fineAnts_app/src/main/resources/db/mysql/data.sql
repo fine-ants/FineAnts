@@ -19,7 +19,7 @@ VALUES (1, 1000000, 900000, '내꿈은 워렌버핏', '토스', 1500000, 1);
 
 INSERT INTO fineAnts.portfolio_holding (id, create_at, modified_at, annual_dividend, current_price, num_shares,
                                         portfolio_id, stock_id)
-VALUES (1, '2023-10-26 15:25:39.409612', '2023-10-26 15:25:39.409612', 0, 0, 0, 1, 890);
+VALUES (1, '2023-10-26 15:25:39.409612', '2023-10-26 15:25:39.409612', 0, 50000, 3, 1, 890);
 
 INSERT INTO fineAnts.purchase_history (id, create_at, modified_at, memo, num_shares, purchase_date,
                                        purchase_price_per_share, portfolio_holding_id)

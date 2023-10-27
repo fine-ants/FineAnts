@@ -108,11 +108,11 @@ class PortfolioGainHistoryServiceTest {
 		PurchaseHistory purchaseHistory = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(3L)
-			.purchasePricePerShare(50000L)
+			.purchasePricePerShare(50000.0)
 			.memo("첫구매")
 			.portFolioHolding(portfolioHolding)
 			.build();
-		portfolioHolding.addTradeHistory(purchaseHistory);
+		portfolioHolding.addPurchaseHistory(purchaseHistory);
 		portFolioHoldingRepository.save(portfolioHolding);
 		purchaseHistoryRepository.save(purchaseHistory);
 

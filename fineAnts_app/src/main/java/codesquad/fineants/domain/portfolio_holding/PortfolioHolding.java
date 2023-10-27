@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,7 +23,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @ToString(exclude = {"stock", "portfolio", "purchaseHistory"})
 @Entity
@@ -43,7 +46,7 @@ public class PortfolioHolding extends BaseEntity {
 	@JoinColumn(name = "stock_id")
 	private Stock stock;
 
-	@OneToMany(mappedBy = "portFolioHolding")
+	@OneToMany(mappedBy = "portFolioHolding", cascade = CascadeType.PERSIST)
 	private final List<PurchaseHistory> purchaseHistory = new ArrayList<>();
 
 	@Builder
@@ -72,7 +75,7 @@ public class PortfolioHolding extends BaseEntity {
 	}
 
 	//== 연관관계 메소드 ==//
-	public void addTradeHistory(PurchaseHistory purchaseHistory) {
+	public void addPurchaseHistory(PurchaseHistory purchaseHistory) {
 		if (!this.purchaseHistory.contains(purchaseHistory)) {
 			this.purchaseHistory.add(purchaseHistory);
 			this.numShares += purchaseHistory.getNumShares();
@@ -101,15 +104,18 @@ public class PortfolioHolding extends BaseEntity {
 
 	// 종목 총 손익율 = 총 손익 / 총 투자 금액
 	public Integer calculateTotalReturnRate() {
-		long totalInvestmentAmount = calculateTotalInvestmentAmount();
+		double totalInvestmentAmount = (double)calculateTotalInvestmentAmount();
 		if (totalInvestmentAmount == 0) {
 			return 0;
 		}
-		return (int)(calculateTotalGain() / totalInvestmentAmount) * 100;
+		double totalGain = (double)calculateTotalGain();
+		int result = (int)((totalGain / totalInvestmentAmount) * 100);
+		log.debug("totalReturnRate : {}", result);
+		return result;
 	}
 
 	// 평가 금액(현재 가치) = 현재가 * 개수
-	public Long calculateCurrentValuation() {
+	public long calculateCurrentValuation() {
 		return currentPrice * numShares;
 	}
 
@@ -121,16 +127,19 @@ public class PortfolioHolding extends BaseEntity {
 		return stock.readDividend(monthDateTime) * numShares;
 	}
 
-	// TODO: 개념 파악후 구현
-	// 당일 손익 = 현재 가치 - 이전 자산의 가치
+	// 당일 손익 = 현재 평가금액 - 총 투자 금액
 	public Long calculateDailyChange() {
-		return 0L;
+		return calculateCurrentValuation() - calculateTotalInvestmentAmount();
 	}
 
-	// TODO: 개념 파악후 구현
-	// 당일 손익율
+	// 당일 손익율 = ((현재 평가금액 - 총 투자 금액) / 총 투자 금액) * 100
 	public Integer calculateDailyChangeRate() {
-		return 0;
+		long currentValuation = calculateCurrentValuation();
+		long totalInvestmentAmount = calculateTotalInvestmentAmount();
+		if (totalInvestmentAmount == 0) {
+			return 0;
+		}
+		return (int)(((double)(currentValuation - totalInvestmentAmount) / (double)totalInvestmentAmount) * 100);
 	}
 
 	// 연간배당율 = (연간배당금 / 현재 가치) * 100

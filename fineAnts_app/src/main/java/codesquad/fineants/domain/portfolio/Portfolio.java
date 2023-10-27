@@ -79,19 +79,23 @@ public class Portfolio {
 	// 포트폴리오 총 손익 = 모든 종목 총 손익의 합계
 	// 종목 총 손익 = (종목 현재가 - 종목 평균 매입가) * 개수
 	// 종목 평균 매입가 = 종목의 총 투자 금액 / 총 주식 개수
-	public Long calculateTotalGain() {
+	public long calculateTotalGain() {
 		return portfolioHoldings.stream()
 			.mapToLong(PortfolioHolding::calculateTotalGain)
 			.sum();
 	}
 
-	// 포트폴리오 총 손익율 = (포트폴리오 총 손익 / 포트폴리오 총 투자 금액)
+	// 포트폴리오 총 손익율 = (포트폴리오 총 손익 / 포트폴리오 총 투자 금액) * 100%
 	public Integer calculateTotalGainRate() {
-		Long totalInvestmentAmount = calculateTotalInvestmentAmount();
+		long totalInvestmentAmount = calculateTotalInvestmentAmount();
 		if (totalInvestmentAmount == 0) {
 			return 0;
 		}
-		return (int)(calculateTotalGain() / totalInvestmentAmount) * 100;
+		long totalGain = calculateTotalGain();
+		log.info("totalGain : {}", totalGain);
+		log.info("totalInvestmentAmount : {}", totalInvestmentAmount);
+		log.info("result : {}", (int)(((double)calculateTotalGain() / (double)totalInvestmentAmount) * 100));
+		return (int)(((double)calculateTotalGain() / (double)totalInvestmentAmount) * 100);
 	}
 
 	// 포트폴리오 총 투자 금액 = 각 종목들의 구입가들의 합계
@@ -119,12 +123,16 @@ public class Portfolio {
 	}
 
 	// 포트폴리오 당일 손익율 = (당일 포트폴리오 가치 총합 - 이전 포트폴리오 가치 총합) / 이전 포트폴리오 가치 총합
+	// 단, 이전 포트폴리오가 없는 경우 ((당일 포트폴리오 가치 총합 - 당일 포트폴리오 총 투자 금액) / 당일 포트폴리오 총 투자 금액) * 100%
 	public Integer calculateDailyGainRate(PortfolioGainHistory prevHistory) {
-		Long currentValue = prevHistory.getCurrentValuation();
-		if (currentValue == 0) {
-			return 0;
+		double prevCurrentValuation = prevHistory.getCurrentValuation();
+		if (prevCurrentValuation == 0) {
+			double currentValuation = calculateTotalCurrentValuation();
+			double totalInvestmentAmount = calculateTotalInvestmentAmount();
+			return (int)(((currentValuation - totalInvestmentAmount) / totalInvestmentAmount) * 100);
 		}
-		return (int)((calculateTotalCurrentValuation() - prevHistory.getCurrentValuation()) / currentValue) * 100;
+		double currentValuation = calculateTotalCurrentValuation();
+		return (int)(((currentValuation - prevCurrentValuation) / prevCurrentValuation) * 100);
 	}
 
 	// 포트폴리오 당월 예상 배당금 = 각 종목들에 해당월의 배당금 합계
