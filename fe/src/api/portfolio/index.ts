@@ -69,6 +69,22 @@ export const getPortfolioDetails = async (portfolioId: number) => {
   return res.data;
 };
 
+export const postPortfolioHolding = async ({
+  portfolioId,
+  body,
+}: {
+  portfolioId: number;
+  body: {
+    tickerSymbol: string;
+  };
+}) => {
+  const res = await fetcher.post<Response<null>>(
+    `/portfolio/${portfolioId}/holdings`,
+    body
+  );
+  return res.data;
+};
+
 export const postPortfolioHoldingPurchase = async ({
   portfolioId,
   portfolioHoldingId,

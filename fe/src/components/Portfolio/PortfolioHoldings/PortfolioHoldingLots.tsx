@@ -37,11 +37,13 @@ export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
           ))}
         </TableBody>
         <TableFooter>
-          <TableCell align="right" colSpan={5} sx={{ border: "none" }}>
-            <Button variant="text" onClick={onAddPurchaseClick}>
-              매입 이력 추가
-            </Button>
-          </TableCell>
+          <TableRow>
+            <TableCell align="right" colSpan={5} sx={{ border: "none" }}>
+              <Button variant="text" onClick={onAddPurchaseClick}>
+                매입 이력 추가
+              </Button>
+            </TableCell>
+          </TableRow>
         </TableFooter>
       </Table>
     </>
