@@ -24,12 +24,15 @@ public class PortfolioDetailResponse {
 	private Integer totalAnnualDividendYield;
 	private Integer annualInvestmentDividendYield;
 	private Long provisionalLossBalance;
+	private Boolean targetGainNotification;
+	private Boolean maxLossNotification;
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private PortfolioDetailResponse(Long id, String securitiesFirm, String name, Long budget, Long targetGain,
 		Integer targetReturnRate, Long maximumLoss, Integer maximumLossRate, Long investedAmount, Long totalGain,
 		Integer totalGainRate, Long dailyGain, Integer dailyGainRate, Long balance, Long totalAnnualDividend,
-		Integer totalAnnualDividendYield, Integer annualInvestmentDividendYield, Long provisionalLossBalance) {
+		Integer totalAnnualDividendYield, Integer annualInvestmentDividendYield, Long provisionalLossBalance,
+		Boolean targetGainNotification, Boolean maxLossNotification) {
 		this.id = id;
 		this.securitiesFirm = securitiesFirm;
 		this.name = name;
@@ -48,6 +51,8 @@ public class PortfolioDetailResponse {
 		this.totalAnnualDividendYield = totalAnnualDividendYield;
 		this.annualInvestmentDividendYield = annualInvestmentDividendYield;
 		this.provisionalLossBalance = provisionalLossBalance;
+		this.targetGainNotification = targetGainNotification;
+		this.maxLossNotification = maxLossNotification;
 	}
 
 	public static PortfolioDetailResponse from(Portfolio portfolio, PortfolioGainHistory history) {
@@ -70,6 +75,8 @@ public class PortfolioDetailResponse {
 			.totalAnnualDividendYield(portfolio.calculateTotalAnnualDividendYield())
 			.annualInvestmentDividendYield(portfolio.calculateAnnualInvestmentDividendYield())
 			.provisionalLossBalance(0L)
+			.targetGainNotification(false)
+			.maxLossNotification(false)
 			.build();
 	}
 }
