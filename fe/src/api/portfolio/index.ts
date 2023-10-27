@@ -88,3 +88,25 @@ export const postPortfolioHoldingPurchase = async ({
   );
   return res.data;
 };
+
+export const putPortfolioHoldingPurchase = async ({
+  portfolioId,
+  portfolioHoldingId,
+  purchaseHistoryId,
+  body,
+}: {
+  portfolioId: number;
+  portfolioHoldingId: number;
+  purchaseHistoryId: number;
+  body: {
+    purchaseDate: string;
+    numShares: number;
+    purchasePricePerShare: number;
+  };
+}) => {
+  const res = await fetcher.put<Response<null>>(
+    `/portfolio/${portfolioId}/holdings/${portfolioHoldingId}/purchaseHistory/${purchaseHistoryId}`,
+    body
+  );
+  return res.data;
+};

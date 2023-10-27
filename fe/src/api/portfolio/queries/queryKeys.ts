@@ -10,4 +10,7 @@ export const portfolioKeys = createQueryKeys("portfolio", {
   addHoldingPurchase: () => ({
     queryKey: ["addHoldingPurchase"],
   }),
+  editHoldingPurchase: () => ({
+    queryKey: ["editHoldingPurchase"],
+  }),
 });
