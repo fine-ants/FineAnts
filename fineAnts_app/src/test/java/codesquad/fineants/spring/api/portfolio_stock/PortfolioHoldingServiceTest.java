@@ -158,7 +158,7 @@ class PortfolioHoldingServiceTest {
 		purchaseHistoryRepository.save(
 			PurchaseHistory.builder()
 				.purchaseDate(LocalDateTime.now())
-				.purchasePricePerShare(10000L)
+				.purchasePricePerShare(10000.0)
 				.numShares(1L)
 				.memo("첫구매")
 				.build()

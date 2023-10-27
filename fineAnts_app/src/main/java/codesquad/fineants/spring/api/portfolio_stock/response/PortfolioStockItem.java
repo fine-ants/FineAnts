@@ -1,7 +1,7 @@
 package codesquad.fineants.spring.api.portfolio_stock.response;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
@@ -21,7 +21,9 @@ public class PortfolioStockItem {
 	public static PortfolioStockItem from(PortfolioHolding portfolioHolding) {
 		StockItem stockItem = StockItem.from(portfolioHolding.getStock());
 		PortfolioHoldingDetailItem holdingDetailItem = PortfolioHoldingDetailItem.from(portfolioHolding);
-		List<PurchaseHistoryItem> purchaseHistory = new ArrayList<>();
+		List<PurchaseHistoryItem> purchaseHistory = portfolioHolding.getPurchaseHistory().stream()
+			.map(PurchaseHistoryItem::from)
+			.collect(Collectors.toList());
 		return new PortfolioStockItem(stockItem, holdingDetailItem, purchaseHistory);
 	}
 }

@@ -49,14 +49,14 @@ class PortfolioTest {
 		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
 		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
@@ -81,13 +81,13 @@ class PortfolioTest {
 		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.build();
 
 		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.build();
 
 		portFolioHolding.addTradeHistory(purchaseHistory1);
@@ -140,14 +140,14 @@ class PortfolioTest {
 		PurchaseHistory purchaseHistory1 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
 		PurchaseHistory purchaseHistory2 = PurchaseHistory.builder()
 			.purchaseDate(LocalDateTime.now())
 			.numShares(5L)
-			.purchasePricePerShare(10000L)
+			.purchasePricePerShare(10000.0)
 			.portFolioHolding(portFolioHolding)
 			.build();
 
