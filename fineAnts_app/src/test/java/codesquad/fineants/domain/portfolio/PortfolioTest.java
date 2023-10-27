@@ -60,8 +60,8 @@ class PortfolioTest {
 			.portFolioHolding(portFolioHolding)
 			.build();
 
-		portFolioHolding.addTradeHistory(purchaseHistory1);
-		portFolioHolding.addTradeHistory(purchaseHistory2);
+		portFolioHolding.addPurchaseHistory(purchaseHistory1);
+		portFolioHolding.addPurchaseHistory(purchaseHistory2);
 
 		portfolio.addPortfolioStock(portFolioHolding);
 
@@ -90,8 +90,8 @@ class PortfolioTest {
 			.purchasePricePerShare(10000.0)
 			.build();
 
-		portFolioHolding.addTradeHistory(purchaseHistory1);
-		portFolioHolding.addTradeHistory(purchaseHistory2);
+		portFolioHolding.addPurchaseHistory(purchaseHistory1);
+		portFolioHolding.addPurchaseHistory(purchaseHistory2);
 
 		portfolio.addPortfolioStock(portFolioHolding);
 
@@ -151,8 +151,8 @@ class PortfolioTest {
 			.portFolioHolding(portFolioHolding)
 			.build();
 
-		portFolioHolding.addTradeHistory(purchaseHistory1);
-		portFolioHolding.addTradeHistory(purchaseHistory2);
+		portFolioHolding.addPurchaseHistory(purchaseHistory1);
+		portFolioHolding.addPurchaseHistory(purchaseHistory2);
 
 		portfolio.addPortfolioStock(portFolioHolding);
 

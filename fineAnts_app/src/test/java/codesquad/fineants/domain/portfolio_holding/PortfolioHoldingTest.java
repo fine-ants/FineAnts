@@ -58,8 +58,8 @@ class PortfolioHoldingTest {
 			.portFolioHolding(portFolioHolding)
 			.build();
 
-		portFolioHolding.addTradeHistory(purchaseHistory1);
-		portFolioHolding.addTradeHistory(purchaseHistory2);
+		portFolioHolding.addPurchaseHistory(purchaseHistory1);
+		portFolioHolding.addPurchaseHistory(purchaseHistory2);
 
 		// when
 		long result = portFolioHolding.calculateTotalInvestmentAmount();
@@ -88,8 +88,8 @@ class PortfolioHoldingTest {
 			.portFolioHolding(portFolioHolding)
 			.build();
 
-		portFolioHolding.addTradeHistory(purchaseHistory1);
-		portFolioHolding.addTradeHistory(purchaseHistory2);
+		portFolioHolding.addPurchaseHistory(purchaseHistory1);
+		portFolioHolding.addPurchaseHistory(purchaseHistory2);
 
 		// when
 		Double result = portFolioHolding.calculateAverageCostPerShare();
@@ -118,8 +118,8 @@ class PortfolioHoldingTest {
 			.portFolioHolding(portFolioHolding)
 			.build();
 
-		portFolioHolding.addTradeHistory(purchaseHistory1);
-		portFolioHolding.addTradeHistory(purchaseHistory2);
+		portFolioHolding.addPurchaseHistory(purchaseHistory1);
+		portFolioHolding.addPurchaseHistory(purchaseHistory2);
 
 		// when
 		long result = portFolioHolding.calculateTotalGain();
@@ -148,8 +148,8 @@ class PortfolioHoldingTest {
 			.portFolioHolding(portFolioHolding)
 			.build();
 
-		portFolioHolding.addTradeHistory(purchaseHistory1);
-		portFolioHolding.addTradeHistory(purchaseHistory2);
+		portFolioHolding.addPurchaseHistory(purchaseHistory1);
+		portFolioHolding.addPurchaseHistory(purchaseHistory2);
 
 		// when
 		double result = portFolioHolding.calculateTotalReturnRate();

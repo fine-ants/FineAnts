@@ -112,7 +112,7 @@ class PortfolioGainHistoryServiceTest {
 			.memo("첫구매")
 			.portFolioHolding(portfolioHolding)
 			.build();
-		portfolioHolding.addTradeHistory(purchaseHistory);
+		portfolioHolding.addPurchaseHistory(purchaseHistory);
 		portFolioHoldingRepository.save(portfolioHolding);
 		purchaseHistoryRepository.save(purchaseHistory);
 
