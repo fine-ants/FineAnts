@@ -42,7 +42,9 @@ export default function TVTickerTapeWidget() {
     container?.appendChild(script);
 
     return () => {
-      container?.removeChild(script);
+      if (container && container.contains(script)) {
+        container.removeChild(script);
+      }
     };
   }, []);
 

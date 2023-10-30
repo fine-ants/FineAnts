@@ -1,7 +1,10 @@
+import { PortfolioHolding } from "@api/portfolio";
 import { useCallback, useState } from "react";
 import styled from "styled-components";
 import { PieChart, Pie, Sector } from "recharts";
 import { thousandsDelimiter } from "@utils/thousandsDelimiter";
+import Legend from "@components/common/PieChart/Legend";
+import { chartColorPalette } from "styles/chartColorPalette";
 
 type PieEntry = {
   percent: number;
@@ -27,16 +30,22 @@ type PieEntry = {
 };
 
 type Props = {
-  width: number;
-  height: number;
-  pieData: { name: string; value: number }[];
+  data: PortfolioHolding[];
 };
 
-const TOTAL_INDEX = -1;
-const TOTAL_ASSET = 6000030; // TODO: api 아직 없음
+const DEFAULT_ACTIVE_INDEX = -1;
 
-export default function RechartPieChart({ width, height, pieData }: Props) {
-  const [activeIndex, setActiveIndex] = useState(TOTAL_INDEX);
+export default function HoldingsPieChart({ data }: Props) {
+  const pieData = data.map((item, index) => {
+    return {
+      name: item.companyName,
+      value: item.currentValuation,
+      fill: chartColorPalette[index],
+    };
+  });
+  const totalValuation = pieData.reduce((acc, cur) => acc + cur.value, 0);
+
+  const [activeIndex, setActiveIndex] = useState(DEFAULT_ACTIVE_INDEX);
   const onPieEnter = useCallback(
     (_: PieEntry, index: number) => {
       setActiveIndex(index);
@@ -45,27 +54,27 @@ export default function RechartPieChart({ width, height, pieData }: Props) {
   );
 
   const onPieLeave = useCallback(() => {
-    setActiveIndex(TOTAL_INDEX);
+    setActiveIndex(DEFAULT_ACTIVE_INDEX);
   }, [setActiveIndex]);
 
   return (
-    <>
-      {activeIndex === TOTAL_INDEX ? (
+    <StyledHoldingsPieChart>
+      {activeIndex === DEFAULT_ACTIVE_INDEX && (
         <TotalValue>
           <p>총 자산 현황</p>
-          <div>{thousandsDelimiter(TOTAL_ASSET)}</div>
+          <div>{thousandsDelimiter(totalValuation)}</div>
         </TotalValue>
-      ) : null}
+      )}
       <PieChartWrapper>
-        <PieChart width={width} height={height}>
+        <PieChart width={250} height={250}>
           <Pie
             activeIndex={activeIndex}
             activeShape={renderActiveShape}
             data={pieData}
-            cx={200}
-            cy={168}
-            innerRadius={80}
-            outerRadius={132}
+            cx={125}
+            cy={125}
+            innerRadius={65}
+            outerRadius={100}
             fill="#FFFFFF"
             dataKey="value"
             onMouseEnter={onPieEnter}
@@ -73,34 +82,25 @@ export default function RechartPieChart({ width, height, pieData }: Props) {
           />
         </PieChart>
       </PieChartWrapper>
-    </>
+      <Legend
+        pieData={pieData}
+        style={{ top: "130px", position: "relative" }}
+      />
+    </StyledHoldingsPieChart>
   );
 }
 
 const renderActiveShape = (props: any) => {
-  // const RADIAN = Math.PI / 180;
   const {
     cx,
     cy,
-    // midAngle,
     innerRadius,
     outerRadius,
     startAngle,
     endAngle,
     fill,
     payload,
-    // percent,
-    // value,
   } = props;
-  // const sin = Math.sin(-RADIAN * midAngle);
-  // const cos = Math.cos(-RADIAN * midAngle);
-  // const sx = cx + (outerRadius + 10) * cos;
-  // const sy = cy + (outerRadius + 10) * sin;
-  // const mx = cx + (outerRadius + 30) * cos;
-  // const my = cy + (outerRadius + 30) * sin;
-  // const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  // const ey = my;
-  // const textAnchor = cos >= 0 ? "start" : "end";
 
   return (
     <g>
@@ -129,49 +129,30 @@ const renderActiveShape = (props: any) => {
         endAngle={endAngle}
         fill={fill}
       />
-      // TODO: 차트 활용할 때 다시 한 번 참고해보려고 남겨둠
-      {/* <Sector
-        cx={cx}
-        cy={cy}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        innerRadius={outerRadius + 6}
-        outerRadius={outerRadius + 10}
-        fill={fill}
-      /> */}
-      {/* <path
-        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
-        stroke={fill}
-        fill="none"
-      /> */}
-      {/* <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" /> */}
-      {/* <text
-        x={ex + (cos >= 0 ? 1 : -1) * 2}
-        y={ey}
-        textAnchor={textAnchor}
-        fill="#333">{`${(percent * 100).toFixed(2)}%`}</text> */}
-      {/* <text
-        x={ex + (cos >= 0 ? 1 : -1) * 12}
-        y={ey}
-        dy={18}
-        textAnchor={textAnchor}
-        fill="#999">
-        {`${(percent * 100).toFixed(2)}%`}
-      </text> */}
     </g>
   );
 };
 
+const StyledHoldingsPieChart = styled.div`
+  width: 600px;
+  height: 318px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+`;
 const TotalValue = styled.div`
   display: flex;
   flex-direction: column;
 
   position: absolute;
-  top: 40%;
-  left: 43%;
+  top: 39%;
+  left: 45%;
   z-index: 3;
   > p {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold;
     color: #000000;
   }
@@ -179,12 +160,15 @@ const TotalValue = styled.div`
   > div {
     display: flex;
     justify-content: center;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: bold;
     color: #000000;
   }
 `;
 
 const PieChartWrapper = styled.div`
+  top: 10px;
+  width: 250px;
+  height: 250px;
   position: absolute;
 `;
