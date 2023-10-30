@@ -2,7 +2,7 @@ import usePortfolioChartQuery from "@api/portfolio/queries/usePortfolioChartQuer
 import Legend from "@components/common/PieChart/Legend";
 import RechartPieChart from "@components/common/PieChart/RechartPieChart";
 import { CSSProperties } from "react";
-import { colorPalette } from "styles/ColorPalette";
+import { chartColorPalette } from "styles/chartColorPalette";
 
 type Props = {
   width: number;
@@ -17,9 +17,10 @@ export default function PortfolioPieChart({
 }: Props) {
   const { data: pieData } = usePortfolioChartQuery();
 
-  const coloredPieData = pieData?.map((item, index) => ({
-    ...item,
-    fill: colorPalette[index],
+  const coloredPieData = pieData?.portfolios.map((item, index) => ({
+    name: item.name,
+    value: item.budget,
+    fill: chartColorPalette[index],
   }));
 
   return coloredPieData ? (

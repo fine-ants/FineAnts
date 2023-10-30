@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import LegendItem from "./LegendItem";
-import { PieChartType } from "@api/portfolio";
+
 import { CSSProperties } from "react";
-import { colorPalette } from "styles/ColorPalette";
+import { chartColorPalette } from "styles/chartColorPalette";
 
 type Props = {
-  pieData: PieChartType[];
+  pieData: { name: string; value: number }[];
   style?: CSSProperties;
 };
 export default function Legend({ pieData, style }: Props) {
@@ -15,7 +15,7 @@ export default function Legend({ pieData, style }: Props) {
         pieData.map((item, index) => (
           <LegendItem
             key={item.name}
-            color={colorPalette[index]}
+            color={chartColorPalette[index]}
             title={item.name}
           />
         ))

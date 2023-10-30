@@ -36,7 +36,7 @@ export default function DividendBarChart() {
             activeBar={true}
             barSize={32}
             label={<CustomBarLabel />}
-            shape={<RoundedBar />}>
+            shape={(props) => <RoundedBar {...props} radius={8} />}>
             {data.map((data, index) => (
               <Cell
                 cursor="pointer"
@@ -59,9 +59,8 @@ export default function DividendBarChart() {
 }
 
 function RoundedBar(props: any) {
-  const { fill, x, y, width, height, index, onClick } = props;
-
-  const radius = 8;
+  console.log(props);
+  const { fill, x, y, width, height, index, onClick, radius } = props;
 
   const path = useMemo(() => {
     return `M${x},${y + radius}

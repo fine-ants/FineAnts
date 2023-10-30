@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 import { CSSProperties } from "styled-components";
 
@@ -22,11 +23,11 @@ function NavItem({
   style: CSSProperties;
   item: { name: string; path: string };
 }) {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <li key={item.name}>
-      <div style={style} onClick={() => console.log(item.path)}>
+      <div style={style} onClick={() => navigate(item.path)}>
         {item.name}
       </div>
     </li>

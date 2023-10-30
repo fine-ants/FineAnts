@@ -8,7 +8,7 @@ type Props = {
 export default function LegendItem({ color, title }: Props) {
   return (
     <StyledLegendItem>
-      <Square $color={color} />
+      <LegendItemColor $color={color} />
       {title}
     </StyledLegendItem>
   );
@@ -22,7 +22,7 @@ const StyledLegendItem = styled.div`
   font-size: 12px;
 `;
 
-const Square = styled.div<{ $color: string }>`
+const LegendItemColor = styled.div<{ $color: string }>`
   display: flex;
   top: -1px;
   position: relative;

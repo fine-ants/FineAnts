@@ -1,11 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function UserControls() {
+  const navigate = useNavigate();
   return (
     <StyledUserControls>
       <ControlButton>알</ControlButton>
       <ControlButton>환</ControlButton>
-      <ControlButton>프</ControlButton>
+      <ControlButton onClick={() => navigate("/profile/edit")}>
+        프
+      </ControlButton>
     </StyledUserControls>
   );
 }

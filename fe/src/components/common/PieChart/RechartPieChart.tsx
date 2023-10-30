@@ -1,8 +1,7 @@
 import { useCallback, useState } from "react";
 import styled from "styled-components";
 import { PieChart, Pie, Sector } from "recharts";
-import { addComma } from "@utils/addComma";
-import { PieChartType } from "@api/portfolio";
+import { thousandsDelimiter } from "@utils/thousandsDelimiter";
 
 type PieEntry = {
   percent: number;
@@ -30,7 +29,7 @@ type PieEntry = {
 type Props = {
   width: number;
   height: number;
-  pieData: PieChartType[];
+  pieData: { name: string; value: number }[];
 };
 
 const TOTAL_INDEX = -1;
@@ -54,7 +53,7 @@ export default function RechartPieChart({ width, height, pieData }: Props) {
       {activeIndex === TOTAL_INDEX ? (
         <TotalValue>
           <p>총 자산 현황</p>
-          <div>{addComma(TOTAL_ASSET)}</div>
+          <div>{thousandsDelimiter(TOTAL_ASSET)}</div>
         </TotalValue>
       ) : null}
       <PieChartWrapper>
@@ -119,7 +118,7 @@ const renderActiveShape = (props: any) => {
         y={cy + 18}
         textAnchor="middle"
         fill={"black"}>
-        {addComma(payload.value)}
+        {thousandsDelimiter(payload.value)}
       </text>
       <Sector
         cx={cx}
@@ -188,5 +187,4 @@ const TotalValue = styled.div`
 
 const PieChartWrapper = styled.div`
   position: absolute;
-  z-index: 2;
 `;

@@ -2,9 +2,9 @@ import { PortfolioHolding } from "@api/portfolio";
 import { useCallback, useState } from "react";
 import styled from "styled-components";
 import { PieChart, Pie, Sector } from "recharts";
-import { addComma } from "@utils/addComma";
+import { thousandsDelimiter } from "@utils/thousandsDelimiter";
 import Legend from "@components/common/PieChart/Legend";
-import { colorPalette } from "styles/ColorPalette";
+import { chartColorPalette } from "styles/chartColorPalette";
 
 type PieEntry = {
   percent: number;
@@ -33,19 +33,19 @@ type Props = {
   data: PortfolioHolding[];
 };
 
-const TOTAL_VALUATION_INDEX = -1;
+const DEFAULT_ACTIVE_INDEX = -1;
 
 export default function HoldingsPieChart({ data }: Props) {
   const pieData = data.map((item, index) => {
     return {
       name: item.companyName,
       value: item.currentValuation,
-      fill: colorPalette[index],
+      fill: chartColorPalette[index],
     };
   });
   const totalValuation = pieData.reduce((acc, cur) => acc + cur.value, 0);
 
-  const [activeIndex, setActiveIndex] = useState(TOTAL_VALUATION_INDEX);
+  const [activeIndex, setActiveIndex] = useState(DEFAULT_ACTIVE_INDEX);
   const onPieEnter = useCallback(
     (_: PieEntry, index: number) => {
       setActiveIndex(index);
@@ -54,15 +54,15 @@ export default function HoldingsPieChart({ data }: Props) {
   );
 
   const onPieLeave = useCallback(() => {
-    setActiveIndex(TOTAL_VALUATION_INDEX);
+    setActiveIndex(DEFAULT_ACTIVE_INDEX);
   }, [setActiveIndex]);
 
   return (
     <StyledHoldingsPieChart>
-      {activeIndex === TOTAL_VALUATION_INDEX && (
+      {activeIndex === DEFAULT_ACTIVE_INDEX && (
         <TotalValue>
           <p>총 자산 현황</p>
-          <div>{addComma(totalValuation)}</div>
+          <div>{thousandsDelimiter(totalValuation)}</div>
         </TotalValue>
       )}
       <PieChartWrapper>
@@ -118,7 +118,7 @@ const renderActiveShape = (props: any) => {
         y={cy + 18}
         textAnchor="middle"
         fill={"black"}>
-        {addComma(payload.value)}
+        {thousandsDelimiter(payload.value)}
       </text>
       <Sector
         cx={cx}
@@ -171,5 +171,4 @@ const PieChartWrapper = styled.div`
   width: 250px;
   height: 250px;
   position: absolute;
-  z-index: 2;
 `;

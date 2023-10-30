@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Routes from "../../router/Routes";
 import PortfoliosPage from "./PortfoliosPage";
 import ProfileEditPage from "./ProfileEditPage";
+import Header from "@components/common/Header";
+import Footer from "@components/common/Footer";
 
 export default function MyProfilePage() {
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ export default function MyProfilePage() {
 
   return (
     <>
+      <Header />
       <ToggleButtonGroup
         color="primary"
         value={section}
@@ -29,6 +32,7 @@ export default function MyProfilePage() {
       </ToggleButtonGroup>
 
       {section === "edit" ? <ProfileEditPage /> : <PortfoliosPage />}
+      <Footer />
     </>
   );
 }

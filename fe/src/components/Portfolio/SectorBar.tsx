@@ -1,11 +1,11 @@
 import Legend from "@components/common/PieChart/Legend";
 import styled from "styled-components";
-import { colorPalette } from "styles/ColorPalette";
+import { chartColorPalette } from "styles/chartColorPalette";
 
 export default function SectorBar() {
   const coloredData = data.map((item, index) => ({
     ...item,
-    fill: colorPalette[index],
+    fill: chartColorPalette[index],
   }));
 
   const totalValuation = coloredData.reduce((acc, cur) => acc + cur.value, 0);
@@ -21,7 +21,7 @@ export default function SectorBar() {
             style={{
               width: (d.value / totalValuation) * sectorBarWidth,
               height: "100%",
-              backgroundColor: colorPalette[index],
+              backgroundColor: chartColorPalette[index],
             }}></div>
         ))}
       </Bar>
