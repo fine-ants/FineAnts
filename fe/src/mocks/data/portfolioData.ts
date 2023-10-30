@@ -52,6 +52,7 @@ export const successfulPortfolioDetailsData = {
   data: {
     portfolioDetails: {
       id: 3,
+      securitiesFirm: "toss",
       name: "내꿈은 워렌버핏",
       budget: 1000000,
       targetGain: 1500000,

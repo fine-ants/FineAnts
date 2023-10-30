@@ -1,6 +1,7 @@
 import usePortfolioDetailsQuery from "@api/portfolio/queries/usePortfolioDetailsQuery";
 import plusIcon from "@assets/icons/plus.svg";
 import PortfolioHoldingsTable from "@components/Portfolio/PortfolioHoldings/PortfolioHoldingsTable";
+import PortfolioOverview from "@components/Portfolio/PortfolioOverview";
 import { Box, Button, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -48,7 +49,9 @@ export default function PortfolioPage() {
         </LeftPanel>
 
         <RightPanel>
-          <PortfolioOverviewContainer>{/*  */}</PortfolioOverviewContainer>
+          <PortfolioOverviewContainer>
+            <PortfolioOverview data={portfolioDetails} />
+          </PortfolioOverviewContainer>
 
           <PortfolioHoldingsContainer>
             <header>

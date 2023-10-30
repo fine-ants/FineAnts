@@ -25,6 +25,7 @@ export type Portfolio = {
 
 export type PortfolioDetails = {
   id: number;
+  securitiesFirm: string;
   name: string;
   budget: number;
   targetGain: number;
