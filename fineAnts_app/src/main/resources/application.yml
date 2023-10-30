@@ -75,7 +75,6 @@ spring:
 logging:
   level:
     codesquard: info
-
 ---
 spring:
   config:
@@ -103,7 +102,7 @@ spring:
 
 logging:
   level:
-    codesquard: debug
+    codesquard: info
 ---
 
 spring:

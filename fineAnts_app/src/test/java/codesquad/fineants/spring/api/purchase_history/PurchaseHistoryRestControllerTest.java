@@ -110,7 +110,6 @@ class PurchaseHistoryRestControllerTest {
 
 		portfolioHolding = PortfolioHolding.builder()
 			.id(1L)
-			.numShares(0L)
 			.annualDividend(0L)
 			.currentPrice(null)
 			.portfolio(portfolio)

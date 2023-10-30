@@ -40,7 +40,7 @@ public class PortfolioHoldingDetailItem {
 			.currentValuation(portfolioHolding.calculateCurrentValuation())
 			.currentPrice(portfolioHolding.getCurrentPrice())
 			.averageCostPerShare(portfolioHolding.calculateAverageCostPerShare())
-			.numShares(portfolioHolding.getNumShares())
+			.numShares(portfolioHolding.calculateNumShares())
 			.dailyChange(portfolioHolding.calculateDailyChange())
 			.dailyChangeRate(portfolioHolding.calculateDailyChangeRate())
 			.totalGain(portfolioHolding.calculateTotalGain())

@@ -45,9 +45,8 @@ public class PortfolioStockRestController {
 	}
 
 	@GetMapping
-	public ApiResponse<PortfolioHoldingsResponse> readMyPortfolioStocks(@PathVariable Long portfolioId,
-		@AuthPrincipalMember AuthMember authMember) {
-		PortfolioHoldingsResponse response = portfolioStockService.readMyPortfolioStocks(portfolioId, authMember);
+	public ApiResponse<PortfolioHoldingsResponse> readMyPortfolioStocks(@PathVariable Long portfolioId) {
+		PortfolioHoldingsResponse response = portfolioStockService.readMyPortfolioStocks(portfolioId);
 		return ApiResponse.success(PortfolioStockSuccessCode.OK_READ_PORTFOLIO_STOCKS, response);
 	}
 }

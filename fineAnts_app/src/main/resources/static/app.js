@@ -1,14 +1,27 @@
 const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/portfolio'
+    brokerURL: 'ws://localhost:8080/stock'
 });
 
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/realTimeSigningPrice', (response) => {
-        console.log(response);
-        let body = JSON.parse(response.body);
-        showGreeting(body.mksc_shrn_iscd + ', ' + body.stck_cntg_hour + ', ' + body.stck_prpr);
+
+    const tickerSymbols = ['005930'];
+    tickerSymbols.forEach(tickerSymbol => {
+        console.log('subscribe ' + tickerSymbol);
+        stompClient.subscribe('/sub/portfolio/1/currentPrice/' + tickerSymbol, (response) => {
+            let jsonBody = JSON.parse(response.body);
+            console.log(jsonBody)
+            showPrice(jsonBody);
+        });
+    });
+
+    const bodyMap = {
+        tickerSymbols: tickerSymbols
+    };
+    stompClient.publish({
+        destination: "/pub/portfolio/1/currentPrice",
+        body: JSON.stringify(bodyMap)
     });
 };
 
@@ -44,12 +57,17 @@ function disconnect() {
 
 function sendName() {
     console.log($("#name").val())
+    const bodyMap = {
+        tickerSymbols: [$("#name").val()],
+    };
+    console.log(JSON.stringify(bodyMap));
     stompClient.publish({
-        destination: "/app/realTimeSigningPrice/" + $("#name").val()
+        destination: "/pub/currentPrice",
+        body: JSON.stringify(bodyMap)
     });
 }
 
-function showGreeting(message) {
+function showPrice(message) {
     $("#greetings").append("<tr><td>" + message + "</td></tr>");
 }
 
