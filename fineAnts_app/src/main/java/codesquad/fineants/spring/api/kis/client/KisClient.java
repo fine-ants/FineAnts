@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -34,17 +33,6 @@ public class KisClient {
 		this.webClient = WebClient.builder().baseUrl(baseUrl);
 		this.appkey = properties.getAppkey();
 		this.secretkey = properties.getSecretkey();
-	}
-
-	public String approval() {
-		MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
-		headerMap.add("content-type", MediaType.APPLICATION_JSON.toString());
-
-		Map<String, String> requestBodyMap = new HashMap<>();
-		requestBodyMap.put("grant_type", "client_credentials");
-		requestBodyMap.put("appkey", appkey);
-		requestBodyMap.put("secretkey", secretkey);
-		return (String)postPerform(approvalURI, headerMap, requestBodyMap).get("approval_key");
 	}
 
 	private Map<String, Object> postPerform(String uri, MultiValueMap<String, String> headerMap,
@@ -88,6 +76,7 @@ public class KisClient {
 
 	public Map<String, Object> readRealTimeCurrentPrice(String tickerSymbol, String authorization) {
 		MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
+		log.info("authorzation : {}", authorization);
 		headerMap.add("authorization", authorization);
 		headerMap.add("appkey", appkey);
 		headerMap.add("appsecret", secretkey);

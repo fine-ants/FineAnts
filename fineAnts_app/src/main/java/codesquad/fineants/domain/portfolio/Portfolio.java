@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -197,14 +196,14 @@ public class Portfolio {
 	}
 
 	public List<PortfolioHolding> changeCurrentPriceFromHoldings(Map<String, Long> currentPriceMap) {
-		return portfolioHoldings.stream()
-			.map(portfolioHolding -> {
-				String tickerSymbol = portfolioHolding.getStock().getTickerSymbol();
-				if (currentPriceMap.containsKey(tickerSymbol)) {
-					long currentPrice = currentPriceMap.get(tickerSymbol);
-					portfolioHolding.changeCurrentPrice(currentPrice);
-				}
-				return portfolioHolding;
-			}).collect(Collectors.toList());
+		List<PortfolioHolding> result = new ArrayList<>();
+		for (PortfolioHolding portfolioHolding : portfolioHoldings) {
+			String tickerSymbol = portfolioHolding.getStock().getTickerSymbol();
+			if (currentPriceMap.containsKey(tickerSymbol)) {
+				portfolioHolding.changeCurrentPrice(currentPriceMap.get(tickerSymbol));
+				result.add(portfolioHolding);
+			}
+		}
+		return result;
 	}
 }
