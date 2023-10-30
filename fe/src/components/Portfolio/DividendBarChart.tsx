@@ -58,6 +58,7 @@ export default function DividendBarChart() {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function RoundedBar(props: any) {
   const { fill, x, y, width, height, index, onClick, radius } = props;
 
@@ -81,6 +82,7 @@ function RoundedBar(props: any) {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CustomBarLabel(props: any) {
   const { x, y, width, index } = props;
 

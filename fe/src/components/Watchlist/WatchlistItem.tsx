@@ -1,7 +1,7 @@
 import { StockItem } from "@pages/WatchlistPage";
 import { Identifier, XYCoord } from "dnd-core";
 import { useRef } from "react";
-import { useDrag, useDrop } from "react-dnd";
+import { DragSourceMonitor, useDrag, useDrop } from "react-dnd";
 import styled from "styled-components";
 
 type Props = {
@@ -67,7 +67,7 @@ export function WatchlistItem({ id, item, index, moveStock }: Props) {
     item: () => {
       return { id, index };
     },
-    collect: (monitor: any) => ({
+    collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
     options: {
