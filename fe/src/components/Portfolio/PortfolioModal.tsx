@@ -52,10 +52,27 @@ export default function PortfolioModal({
   const isEditMode = !!portfolioDetails;
   const isBudgetEmpty = budget === "0" || budget === "";
 
-  const onBudgetInputChange = (newVal: string) => {
-    onBudgetChange(newVal);
+  const withNumberOnly =
+    (handler: (value: string) => void) => (value: string) => {
+      if (!isNaN(Number(value)) || value === "") {
+        handler(value);
+      }
+    };
 
+  const calculateRate = (num1: number, num2: number) => {
+    return ((num1 - num2) / num2) * 100;
+  };
+
+  const calculateValue = (rate: number, base: number) => {
+    const value = base + (rate / 100) * base;
+
+    return Math.floor(value) === value ? value.toString() : value.toFixed(2);
+  };
+
+  const onBudgetInputChange = withNumberOnly((newVal: string) => {
     const isNewEmpty = newVal === "0" || newVal === "";
+
+    onBudgetChange(newVal);
 
     if (isNewEmpty) {
       onTargetGainChange("");
@@ -66,54 +83,36 @@ export default function PortfolioModal({
       onTargetGainHandler(targetGain);
       onMaximumLossHandler(maximumLoss);
     }
-  };
+  });
 
-  const onTargetGainHandler = (value: string) => {
-    const valueNumber = Number(value);
+  const onTargetGainHandler = withNumberOnly((value: string) => {
     const budgetNumber = Number(budget);
 
     onTargetGainChange(value);
     onTargetReturnRateChange(
-      (((valueNumber - budgetNumber) / budgetNumber) * 100).toString()
+      calculateRate(Number(value), budgetNumber).toString()
     );
-  };
+  });
 
-  const onTargetReturnRateHandler = (value: string) => {
-    const valueNumber = Number(value);
-    const budgetNumber = Number(budget);
-
-    const calculatedGain = (valueNumber / 100) * budgetNumber;
-    const gainDisplay =
-      Math.floor(calculatedGain) === calculatedGain
-        ? calculatedGain.toString()
-        : calculatedGain.toFixed(2);
-
+  const onTargetReturnRateHandler = withNumberOnly((value: string) => {
     onTargetReturnRateChange(value);
-    onTargetGainChange(gainDisplay);
-  };
+    onTargetGainChange(calculateValue(Number(value), Number(budget)));
+  });
 
-  const onMaximumLossHandler = (value: string) => {
-    const valueNumber = Number(value);
+  const onMaximumLossHandler = withNumberOnly((value: string) => {
     const budgetNumber = Number(budget);
+    const valueNumber = Number(value);
 
     onMaximumLossChange(value);
     onMaximumLossRateChange(
       (((budgetNumber - valueNumber) / budgetNumber) * 100).toString()
     );
-  };
-  const maximumLossRateHandler = (value: string) => {
-    const valueNumber = Number(value);
-    const budgetNumber = Number(budget);
+  });
 
-    const calculatedLoss = budgetNumber - (valueNumber / 100) * budgetNumber;
-    const lossDisplay =
-      Math.floor(calculatedLoss) === calculatedLoss
-        ? calculatedLoss.toString()
-        : calculatedLoss.toFixed(2);
-
+  const maximumLossRateHandler = withNumberOnly((value: string) => {
     onMaximumLossRateChange(value);
-    onMaximumLossChange(lossDisplay);
-  };
+    onMaximumLossChange(calculateValue(-Number(value), Number(budget)));
+  });
 
   const handleChange = (event: SelectChangeEvent) => {
     setSecuritiesFirm(event.target.value);
@@ -152,7 +151,7 @@ export default function PortfolioModal({
             <StyledInput
               placeholder="포트폴리오 제목을 입력해 주세요"
               value={name}
-              onChange={(e) => onNameChange(e.target.value.trim())}
+              onChange={(e) => onNameChange(e.target.value)}
             />
           </Row>
           <Row>
