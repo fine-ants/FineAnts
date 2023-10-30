@@ -6,13 +6,13 @@ stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
 
-    const tickerSymbols = ['005930', '035720'];
+    const tickerSymbols = ['005930'];
     tickerSymbols.forEach(tickerSymbol => {
         console.log('subscribe ' + tickerSymbol);
-        stompClient.subscribe('/sub/currentPrice/' + tickerSymbol, (response) => {
-            console.log(response);
-            let currentPrice = JSON.parse(response.body);
-            showPrice(currentPrice);
+        stompClient.subscribe('/sub/portfolio/1/currentPrice/' + tickerSymbol, (response) => {
+            let jsonBody = JSON.parse(response.body);
+            console.log(jsonBody)
+            showPrice(jsonBody);
         });
     });
 
@@ -20,7 +20,7 @@ stompClient.onConnect = (frame) => {
         tickerSymbols: tickerSymbols
     };
     stompClient.publish({
-        destination: "/pub/currentPrice",
+        destination: "/pub/portfolio/1/currentPrice",
         body: JSON.stringify(bodyMap)
     });
 };
