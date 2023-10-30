@@ -37,9 +37,7 @@ public class PurchaseHistoryService {
 		log.info("매입이력 추가 서비스 요청 : request={}, portfolioHoldingId={}", request, portfolioHoldingId);
 		PortfolioHolding portfolioHolding = findPortfolioHolding(portfolioHoldingId);
 		validatePortfolioAuthorization(portfolioHolding.getPortfolio(), authMember.getMemberId());
-
-		PurchaseHistory newPurchaseHistory = request.toEntity(portfolioHolding);
-		portfolioHolding.addPurchaseHistory(newPurchaseHistory);
+		PurchaseHistory newPurchaseHistory = repository.save(request.toEntity(portfolioHolding));
 		log.info("매입이력 저장 결과 : newPurchaseHistory={}", newPurchaseHistory);
 		return PurchaseHistoryCreateResponse.from(newPurchaseHistory);
 	}

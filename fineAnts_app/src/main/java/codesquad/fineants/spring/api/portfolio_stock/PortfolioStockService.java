@@ -84,7 +84,7 @@ public class PortfolioStockService {
 		return new PortfolioStockDeleteResponse(portfolioHoldingId);
 	}
 
-	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId, AuthMember authMember) {
+	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId) {
 		Portfolio portfolio = findPortfolio(portfolioId);
 		List<PortfolioHolding> portfolioHoldings = portFolioHoldingRepository.findAllByPortfolio(portfolio);
 		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -34,9 +33,8 @@ public class PortfolioHolding extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long numShares;             // 주식 개수
 	private Long annualDividend;        // 연간배당금
-	private Long currentPrice;            // 현재가
+	private Long currentPrice;          // 현재가
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "portfolio_id")
@@ -46,14 +44,12 @@ public class PortfolioHolding extends BaseEntity {
 	@JoinColumn(name = "stock_id")
 	private Stock stock;
 
-	@OneToMany(mappedBy = "portFolioHolding", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "portFolioHolding")
 	private final List<PurchaseHistory> purchaseHistory = new ArrayList<>();
 
 	@Builder
-	public PortfolioHolding(Long id, Long numShares, Long annualDividend, Long currentPrice, Portfolio portfolio,
-		Stock stock) {
+	private PortfolioHolding(Long id, Long annualDividend, Long currentPrice, Portfolio portfolio, Stock stock) {
 		this.id = id;
-		this.numShares = numShares;
 		this.annualDividend = annualDividend;
 		this.currentPrice = currentPrice;
 		this.portfolio = portfolio;
@@ -66,7 +62,6 @@ public class PortfolioHolding extends BaseEntity {
 
 	public static PortfolioHolding of(Portfolio portfolio, Stock stock, Long currentPrice) {
 		return PortfolioHolding.builder()
-			.numShares(0L)
 			.annualDividend(0L)
 			.currentPrice(currentPrice)
 			.portfolio(portfolio)
@@ -78,21 +73,27 @@ public class PortfolioHolding extends BaseEntity {
 	public void addPurchaseHistory(PurchaseHistory purchaseHistory) {
 		if (!this.purchaseHistory.contains(purchaseHistory)) {
 			this.purchaseHistory.add(purchaseHistory);
-			this.numShares += purchaseHistory.getNumShares();
 		}
 	}
 
 	// 종목 총 손익 = (종목 현재가 - 종목 평균 매입가) * 개수
 	public long calculateTotalGain() {
-		return (long)(currentPrice - calculateAverageCostPerShare()) * numShares;
+		return (long)(currentPrice - calculateAverageCostPerShare()) * calculateNumShares();
 	}
 
 	// 종목 평균 매입가 = 총 투자 금액 / 개수
 	public Double calculateAverageCostPerShare() {
+		long numShares = calculateNumShares();
 		if (numShares == 0) {
 			return 0.0;
 		}
 		return (double)(calculateTotalInvestmentAmount() / numShares);
+	}
+
+	public long calculateNumShares() {
+		return purchaseHistory.stream()
+			.mapToLong(PurchaseHistory::getNumShares)
+			.sum();
 	}
 
 	// 총 투자 금액 = 투자 금액들의 합계
@@ -116,7 +117,7 @@ public class PortfolioHolding extends BaseEntity {
 
 	// 평가 금액(현재 가치) = 현재가 * 개수
 	public long calculateCurrentValuation() {
-		return currentPrice * numShares;
+		return currentPrice * calculateNumShares();
 	}
 
 	public boolean hasMonthlyDividend(LocalDateTime monthDateTime) {
@@ -124,7 +125,7 @@ public class PortfolioHolding extends BaseEntity {
 	}
 
 	public long readDividend(LocalDateTime monthDateTime) {
-		return stock.readDividend(monthDateTime) * numShares;
+		return stock.readDividend(monthDateTime) * calculateNumShares();
 	}
 
 	// 당일 손익 = 현재 평가금액 - 총 투자 금액
