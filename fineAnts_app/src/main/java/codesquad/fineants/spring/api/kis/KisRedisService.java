@@ -2,6 +2,7 @@ package codesquad.fineants.spring.api.kis;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -38,18 +39,19 @@ public class KisRedisService {
 		redisTemplate.opsForValue().set(APPROVAL_KEY, approveKey, 1L, TimeUnit.DAYS);
 	}
 
-	public Map<String, Object> getAccessTokenMap() {
+	public Optional<Map<String, Object>> getAccessTokenMap() {
 		if (Boolean.FALSE.equals(redisTemplate.hasKey(ACCESS_TOKEN_MAP_KEY))) {
-			return null;
+			return Optional.empty();
 		}
 
 		Object result = redisTemplate.opsForValue().get(ACCESS_TOKEN_MAP_KEY);
 		if (result == null) {
-			return null;
+			return Optional.empty();
 		}
 		try {
-			return objectMapper.readValue((String)result, new TypeReference<>() {
+			Map<String, Object> accessTokenMap = objectMapper.readValue((String)result, new TypeReference<>() {
 			});
+			return Optional.ofNullable(accessTokenMap);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}

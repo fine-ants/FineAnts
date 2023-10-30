@@ -86,10 +86,8 @@ public class KisClient {
 		);
 	}
 
-	public Map<String, Object> readRealTimeCurrentPrice(String tickerSymbol, Map<String, Object> accessTokenMap) {
+	public Map<String, Object> readRealTimeCurrentPrice(String tickerSymbol, String authorization) {
 		MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
-		String authorization = String.format("%s %s", accessTokenMap.get("token_type"),
-			accessTokenMap.get("access_token"));
 		headerMap.add("authorization", authorization);
 		headerMap.add("appkey", appkey);
 		headerMap.add("appsecret", secretkey);

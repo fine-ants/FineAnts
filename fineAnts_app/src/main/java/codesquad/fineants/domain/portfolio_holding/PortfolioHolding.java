@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import codesquad.fineants.domain.BaseEntity;
 import codesquad.fineants.domain.portfolio.Portfolio;
@@ -33,8 +34,7 @@ public class PortfolioHolding extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long annualDividend;        // 연간배당금
-	private Long currentPrice;          // 현재가
+	private Long annualDividend;    // 연간배당금
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "portfolio_id")
@@ -46,6 +46,9 @@ public class PortfolioHolding extends BaseEntity {
 
 	@OneToMany(mappedBy = "portFolioHolding")
 	private final List<PurchaseHistory> purchaseHistory = new ArrayList<>();
+
+	@Transient
+	private Long currentPrice;    // 현재가
 
 	@Builder
 	private PortfolioHolding(Long id, Long annualDividend, Long currentPrice, Portfolio portfolio, Stock stock) {
@@ -150,5 +153,9 @@ public class PortfolioHolding extends BaseEntity {
 			return 0;
 		}
 		return (int)(annualDividend / currentValuation) * 100;
+	}
+
+	public void changeCurrentPrice(long currentPrice) {
+		this.currentPrice = currentPrice;
 	}
 }

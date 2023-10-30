@@ -3,7 +3,6 @@ package codesquad.fineants.spring.api.kis;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import codesquad.fineants.spring.api.kis.response.CurrentPriceResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -20,19 +20,6 @@ class KisServiceTest {
 
 	@Autowired
 	private KisService kisService;
-
-	@DisplayName("클라이언트는 접근토큰발급한다")
-	@Test
-	void tokenP() {
-		// given
-
-		// when
-		Map<String, Object> response = kisService.accessTokenMap();
-
-		log.info((String)response.get("access_token"));
-		// then
-		assertThat(response).containsKeys("access_token", "access_token_token_expired", "token_type", "expires_in");
-	}
 
 	@DisplayName("주식 현재가 시세를 가져온다")
 	@Test
@@ -55,4 +42,15 @@ class KisServiceTest {
 		// then
 	}
 
+	@DisplayName("AccessTokenAspect이 수행하여 새로운 엑세스 토큰을 갱신한다")
+	@Test
+	void readRealTimeCurrentPriceWithAspect() {
+		// given
+		String tickerSymbol = "005930";
+		// when
+		CurrentPriceResponse response = kisService.readRealTimeCurrentPrice(tickerSymbol);
+		// then
+		assertThat(response).extracting("tickerSymbol").isEqualTo(tickerSymbol);
+		assertThat(response).extracting("currentPrice").isNotNull();
+	}
 }

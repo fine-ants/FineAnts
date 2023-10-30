@@ -2,6 +2,7 @@ package codesquad.fineants.spring.api.portfolio_stock;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -87,6 +88,18 @@ public class PortfolioStockService {
 	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId) {
 		Portfolio portfolio = findPortfolio(portfolioId);
 		List<PortfolioHolding> portfolioHoldings = portFolioHoldingRepository.findAllByPortfolio(portfolio);
+		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
+				portfolio, LocalDateTime.now())
+			.orElseGet(PortfolioGainHistory::empty);
+		return PortfolioHoldingsResponse.of(portfolio, latestHistory, portfolioHoldings);
+	}
+
+	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId, Map<String, Long> currentPriceMap) {
+		Portfolio portfolio = findPortfolio(portfolioId);
+		List<PortfolioHolding> portfolioHoldings = portfolio.changeCurrentPriceFromHoldings(currentPriceMap);
+		log.info("currentPriceMap : {}", currentPriceMap);
+		log.info("portfolioHoldings : {}", portfolioHoldings);
+
 		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
 				portfolio, LocalDateTime.now())
 			.orElseGet(PortfolioGainHistory::empty);
