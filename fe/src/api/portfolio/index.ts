@@ -69,6 +69,14 @@ export type PurchaseHistoryField = {
   memo: string;
 };
 
+type PortfolioReqBody = {
+  name: string;
+  securitiesFirm: string;
+  budget: number;
+  targetGain: number;
+  maximumLoss: number;
+};
+
 export const getPortfolioChart = async () => {
   const res =
     await fetcher.get<Response<PortfolioPieChartDataItem>>("/portfolios");
@@ -78,6 +86,32 @@ export const getPortfolioChart = async () => {
 export const getPortfolioDetails = async (portfolioId: number) => {
   const res = await fetcher.get<Response<Portfolio>>(
     `/portfolio/${portfolioId}/holdings`
+  );
+  return res.data;
+};
+
+export const postPortfolio = async (body: PortfolioReqBody) => {
+  const res = await fetcher.post<Response<Portfolio>>(`/api/portfolios`, body);
+  return res.data;
+};
+
+export const putPortfolio = async ({
+  portfolioId,
+  body,
+}: {
+  portfolioId: number;
+  body: PortfolioReqBody;
+}) => {
+  const res = await fetcher.put<Response<Portfolio>>(
+    `/portfolios/${portfolioId}`,
+    body
+  );
+  return res.data;
+};
+
+export const deletePortfolio = async (portfolioId: number) => {
+  const res = await fetcher.delete<Response<Portfolio>>(
+    `/portfolios/${portfolioId}`
   );
   return res.data;
 };
