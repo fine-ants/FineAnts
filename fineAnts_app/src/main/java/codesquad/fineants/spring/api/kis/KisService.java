@@ -34,7 +34,7 @@ public class KisService {
 	private final SimpMessagingTemplate messagingTemplate;
 	private final PortfolioStockService portfolioStockService;
 	private final KisAccessTokenManager manager;
-	
+
 	// 제약조건 : kis 서버에 1초당 최대 5건, TR간격 0.1초 이하면 안됨
 	public CurrentPriceResponse readRealTimeCurrentPrice(String tickerSymbol) {
 		Map<String, String> output = (Map<String, String>)kisClient.readRealTimeCurrentPrice(tickerSymbol,
@@ -77,6 +77,9 @@ public class KisService {
 		});
 
 		for (PortfolioSubscription subscription : portfolioSubscriptions) {
+			if (!checkCurrentPriceMap(subscription.getTickerSymbols())) {
+				continue;
+			}
 			PortfolioHoldingsResponse response = portfolioStockService.readMyPortfolioStocks(
 				subscription.getPortfolioId(), currentPriceMap);
 			for (String tickerSymbol : subscription.getTickerSymbols()) {
@@ -85,5 +88,10 @@ public class KisService {
 				scheduler.addRequest(() -> messagingTemplate.convertAndSend(destination, response));
 			}
 		}
+	}
+
+	private boolean checkCurrentPriceMap(List<String> tickerSymbols) {
+		return tickerSymbols.stream()
+			.noneMatch(tickerSymbol -> currentPriceMap.getOrDefault(tickerSymbol, 0L) == 0L);
 	}
 }

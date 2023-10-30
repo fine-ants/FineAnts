@@ -8,6 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class KisClientScheduler {
 	private final ScheduledExecutorService executorService;
@@ -31,4 +34,5 @@ public class KisClientScheduler {
 	public void addRequest(Runnable request) {
 		requestQueue.offer(request);
 	}
+
 }
