@@ -18,8 +18,11 @@ type Props = {
   portfolioDetails?: PortfolioDetails;
 };
 
-export default function PortfolioModal(props: Props) {
-  const { onClose, portfolioDetails } = props;
+export default function PortfolioModal({
+  isOpen,
+  onClose,
+  portfolioDetails,
+}: Props) {
   const [securitiesFirm, setSecuritiesFirm] = useState(
     portfolioDetails ? portfolioDetails.securitiesFirm : "fineAnts"
   );
@@ -121,7 +124,7 @@ export default function PortfolioModal(props: Props) {
   };
 
   return (
-    <BaseModal {...props}>
+    <BaseModal isOpen={isOpen} onClose={onClose}>
       <Wrapper>
         <main />
         <Header>포트폴리오 {isEditMode ? `수정` : `추가`}</Header>
