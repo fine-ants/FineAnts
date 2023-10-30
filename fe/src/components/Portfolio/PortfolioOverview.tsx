@@ -1,5 +1,5 @@
 import { PortfolioDetails } from "@api/portfolio";
-import Confirm from "@components/Confirm";
+import ConfirmAlert from "@components/ConfirmAlert";
 import PortfolioModal from "@components/Portfolio/PortfolioModal";
 import ToggleSwitch from "@components/ToggleSwitch";
 import { Button } from "@mui/material";
@@ -49,7 +49,7 @@ export default function PortfolioOverview({ data }: Props) {
         />
       )}
       {isConfirmOpen && (
-        <Confirm
+        <ConfirmAlert
           isOpen={isConfirmOpen}
           title="포트폴리오 삭제"
           content="포트폴리오를 삭제 하시겠습니까?"

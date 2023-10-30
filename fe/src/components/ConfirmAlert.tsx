@@ -10,30 +10,30 @@ type Props = {
   onConfirm: () => void;
 };
 
-export default function Confirm(props: Props) {
+export default function ConfirmAlert(props: Props) {
   const { onConfirm, title, content, ...rest } = props;
   const { onClose } = props;
 
-  const onConfirmClose = () => {
+  const onConfirmAlertClose = () => {
     onConfirm();
     onClose();
   };
 
   return (
-    <BaseModal style={ConfirmStyle} {...rest}>
+    <BaseModal style={ConfirmAlertStyle} {...rest}>
       <Wrapper>
         <Title>{title}</Title>
         <Body>{content}</Body>
         <ButtonWrapper>
           <CancelButton onClick={onClose}>취소</CancelButton>
-          <Button onClick={onConfirmClose}>확인</Button>
+          <Button onClick={onConfirmAlertClose}>확인</Button>
         </ButtonWrapper>
       </Wrapper>
     </BaseModal>
   );
 }
 
-const ConfirmStyle = {
+const ConfirmAlertStyle = {
   width: "400px",
   height: "180px",
 };
