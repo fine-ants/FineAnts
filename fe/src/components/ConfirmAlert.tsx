@@ -10,17 +10,20 @@ type Props = {
   onConfirm: () => void;
 };
 
-export default function ConfirmAlert(props: Props) {
-  const { onConfirm, title, content, ...rest } = props;
-  const { onClose } = props;
-
+export default function ConfirmAlert({
+  isOpen,
+  title,
+  content,
+  onClose,
+  onConfirm,
+}: Props) {
   const onConfirmAlertClose = () => {
     onConfirm();
     onClose();
   };
 
   return (
-    <BaseModal style={ConfirmAlertStyle} {...rest}>
+    <BaseModal style={ConfirmAlertStyle} isOpen={isOpen} onClose={onClose}>
       <Wrapper>
         <Title>{title}</Title>
         <Body>{content}</Body>
