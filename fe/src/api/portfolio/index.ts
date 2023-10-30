@@ -80,3 +80,89 @@ export const getPortfolioDetails = async (portfolioId: number) => {
   );
   return res.data;
 };
+
+export const postPortfolioHolding = async ({
+  portfolioId,
+  body,
+}: {
+  portfolioId: number;
+  body: {
+    tickerSymbol: string;
+  };
+}) => {
+  const res = await fetcher.post<Response<null>>(
+    `/portfolio/${portfolioId}/holdings`,
+    body
+  );
+  return res.data;
+};
+
+export const deletePortfolioHolding = async ({
+  portfolioId,
+  portfolioHoldingId,
+}: {
+  portfolioId: number;
+  portfolioHoldingId: number;
+}) => {
+  const res = await fetcher.delete<Response<null>>(
+    `/portfolio/${portfolioId}/holdings/${portfolioHoldingId}`
+  );
+  return res.data;
+};
+
+export const postPortfolioHoldingPurchase = async ({
+  portfolioId,
+  portfolioHoldingId,
+  body,
+}: {
+  portfolioId: number;
+  portfolioHoldingId: number;
+  body: {
+    purchaseDate: string;
+    numShares: number;
+    purchasePricePerShare: number;
+  };
+}) => {
+  const res = await fetcher.post<Response<null>>(
+    `/portfolio/${portfolioId}/holdings/${portfolioHoldingId}/purchaseHistory`,
+    body
+  );
+  return res.data;
+};
+
+export const putPortfolioHoldingPurchase = async ({
+  portfolioId,
+  portfolioHoldingId,
+  purchaseHistoryId,
+  body,
+}: {
+  portfolioId: number;
+  portfolioHoldingId: number;
+  purchaseHistoryId: number;
+  body: {
+    purchaseDate: string;
+    numShares: number;
+    purchasePricePerShare: number;
+  };
+}) => {
+  const res = await fetcher.put<Response<null>>(
+    `/portfolio/${portfolioId}/holdings/${portfolioHoldingId}/purchaseHistory/${purchaseHistoryId}`,
+    body
+  );
+  return res.data;
+};
+
+export const deletePortfolioHoldingPurchase = async ({
+  portfolioId,
+  portfolioHoldingId,
+  purchaseHistoryId,
+}: {
+  portfolioId: number;
+  portfolioHoldingId: number;
+  purchaseHistoryId: number;
+}) => {
+  const res = await fetcher.delete<Response<null>>(
+    `/portfolio/${portfolioId}/holdings/${portfolioHoldingId}/purchaseHistory/${purchaseHistoryId}`
+  );
+  return res.data;
+};

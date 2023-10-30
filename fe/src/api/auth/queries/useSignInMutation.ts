@@ -17,7 +17,7 @@ export default function useSignInMutation() {
       localStorage.setItem("refreshToken", refreshToken);
 
       fetchUserInfo();
-      navigate(Routes.HOME);
+      navigate(Routes.DASHBOARD);
     },
   });
 }

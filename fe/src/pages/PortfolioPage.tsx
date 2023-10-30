@@ -17,6 +17,10 @@ export default function PortfolioPage() {
   const { data: portfolio, isLoading: isPortfolioDetailsLoading } =
     usePortfolioDetailsQuery(Number(id));
 
+  const onAddHoldingButtonClick = () => {
+    // TODO: Open search modal
+  };
+
   // TODO: Handle loading
   if (isPortfolioDetailsLoading) {
     return <div>Loading</div>;
@@ -52,10 +56,10 @@ export default function PortfolioPage() {
                 종목 목록
               </Typography>
 
-              {/* TODO: onClick */}
               <AddHoldingButton
                 variant="outlined"
-                startIcon={<img src={plusIcon} alt="종목 추가" />}>
+                startIcon={<img src={plusIcon} alt="종목 추가" />}
+                onClick={onAddHoldingButtonClick}>
                 <Typography variant="button" sx={{ color: "#2C2C2E" }}>
                   종목 추가
                 </Typography>

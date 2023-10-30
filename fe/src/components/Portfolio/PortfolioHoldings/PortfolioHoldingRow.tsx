@@ -86,6 +86,7 @@ export default function PortfolioHoldingRow({
           <Typography>{annualDividendYield}%</Typography>
           <Typography>{annualDividend}</Typography>
         </HoldingTableCell>
+        {/* TODO: 종목 삭제 버튼 */}
       </HoldingTableRow>
       <HoldingLotRow>
         <TableCell
