@@ -11,10 +11,16 @@ import {
 import PortfolioHoldingLotRow from "./PortfolioHoldingLotRow";
 
 type Props = {
+  portfolioId: number;
+  portfolioHoldingId: number;
   purchaseHistory: PurchaseHistoryField[];
 };
 
-export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
+export default function PortfolioHoldingLots({
+  portfolioId,
+  portfolioHoldingId,
+  purchaseHistory,
+}: Props) {
   const onAddPurchaseClick = () => {
     // TODO: Open modal
   };
@@ -33,7 +39,12 @@ export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
         </TableHead>
         <TableBody>
           {purchaseHistory.map((lot) => (
-            <PortfolioHoldingLotRow key={lot.id} {...lot} />
+            <PortfolioHoldingLotRow
+              key={lot.purchaseHistoryId}
+              portfolioId={portfolioId}
+              portfolioHoldingId={portfolioHoldingId}
+              lot={lot}
+            />
           ))}
         </TableBody>
         <TableFooter>

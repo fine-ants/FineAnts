@@ -16,7 +16,6 @@ export default function usePortfolioHoldingPurchaseDeleteMutation(filters: {
       // TODO: toast
       queryClient.invalidateQueries({
         queryKey: portfolioKeys.details(filters.portfolioId).queryKey,
-        exact: true,
       });
     },
   });
