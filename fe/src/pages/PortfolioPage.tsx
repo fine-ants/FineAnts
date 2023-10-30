@@ -1,16 +1,16 @@
 import usePortfolioDetailsQuery from "@api/portfolio/queries/usePortfolioDetailsQuery";
 import plusIcon from "@assets/icons/plus.svg";
+import DividendBarChart from "@components/Portfolio/DividendBarChart";
+import HoldingsPieChart from "@components/Portfolio/HoldingsPieChart";
 import PortfolioHoldingsTable from "@components/Portfolio/PortfolioHoldings/PortfolioHoldingsTable";
 import PortfolioOverview from "@components/Portfolio/PortfolioOverview";
+import SectorBar from "@components/Portfolio/SectorBar";
+import Footer from "@components/common/Footer";
+import Header from "@components/common/Header";
 import { Box, Button, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import BasePage from "./BasePage";
-import SectorBar from "@components/Portfolio/SectorBar";
-import DividendBarChart from "@components/Portfolio/DividendBarChart";
-import Header from "@components/common/Header";
-import Footer from "@components/common/Footer";
-import HoldingsPieChart from "@components/Portfolio/HoldingsPieChart";
 
 export default function PortfolioPage() {
   const { id } = useParams();

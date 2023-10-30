@@ -1,14 +1,11 @@
 import PortfolioOverview from "@components/Dashboard/PortfolioOverview";
+import PortfolioPieChart from "@components/Dashboard/PortfolioPieChart";
+import TimeRangeButton from "@components/Dashboard/TimeRangeButton";
+import TotalValuationLineChart from "@components/Dashboard/TotalValuationLineChart";
+import { useState } from "react";
+import styled from "styled-components";
 import Footer from "../components/common/Footer";
 import Header from "../components/common/Header";
-
-import styled from "styled-components";
-
-import TotalValueLineChart from "@components/Dashboard/TotalValueLineChart";
-
-import TimeRangeButton from "@components/Dashboard/TimeRangeButton";
-import { useState } from "react";
-import PortfolioPieChart from "@components/Dashboard/PortfolioPieChart";
 
 export default function DashboardPage() {
   const range = ["1D", "1W", "1M", "1Q", "1Y", "All"];
@@ -43,7 +40,7 @@ export default function DashboardPage() {
                 legendStyle={{ bottom: "15px" }}
               />
             </PortfolioPieChartContainer>
-            <TotalValueLineChart
+            <TotalValuationLineChart
               key={currentRangeIndex}
               currentRangeIndex={currentRangeIndex}
               data={data[currentRangeIndex]}

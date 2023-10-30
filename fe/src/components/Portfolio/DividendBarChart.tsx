@@ -59,7 +59,6 @@ export default function DividendBarChart() {
 }
 
 function RoundedBar(props: any) {
-  console.log(props);
   const { fill, x, y, width, height, index, onClick, radius } = props;
 
   const path = useMemo(() => {

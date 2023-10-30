@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
 import { ISeriesApi, LineWidth } from "lightweight-charts";
-import { Chart, AreaSeries } from "lightweight-charts-react-wrapper";
+import { AreaSeries, Chart } from "lightweight-charts-react-wrapper";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 //TODO: 예시로 사용하는 데이터가 time,value인데 수가 너무 많아서 나중에 자체 데이터 사용할 때 date,valueation으로 수정
