@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { addComma } from "../../utils/addComma";
+import { thousandsDelimiter } from "../../utils/thousandsDelimiter";
 
 type Portfolio = {
   id: number;
@@ -80,17 +80,17 @@ function PortfolioItem({ portfolio }: Props) {
         <SymbolImg src={portfolio.securitiesFirmImage} />
         <span>{portfolio.name}</span>
       </td>
-      <td>{addComma(portfolio.budget)}</td>
+      <td>{thousandsDelimiter(portfolio.budget)}</td>
       <td>
         <div>{portfolio.totalGain}%</div>
-        <div>{addComma(portfolio.totalReturnRate)}</div>
+        <div>{thousandsDelimiter(portfolio.totalReturnRate)}</div>
       </td>
       <td>
         <div>{portfolio.dailyGain}%</div>
-        <div>{addComma(portfolio.dailyReturnRate)}</div>
+        <div>{thousandsDelimiter(portfolio.dailyReturnRate)}</div>
       </td>
-      <td>{addComma(portfolio.expectedMonthlyDividend)}</td>
-      <td>{addComma(portfolio.numShares)}</td>
+      <td>{thousandsDelimiter(portfolio.expectedMonthlyDividend)}</td>
+      <td>{thousandsDelimiter(portfolio.numShares)}</td>
     </tr>
   );
 }

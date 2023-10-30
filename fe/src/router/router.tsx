@@ -15,6 +15,8 @@ import {
 import ProtectedRoute from "./ProtectedRoute";
 import PublicOnlyRoute from "./PublicOnlyRoute";
 import Routes from "./Routes";
+import DashboardPage from "@pages/DashboardPage";
+import WatchlistPage from "@pages/WatchlistPage";
 
 export default (user: User | undefined) =>
   createBrowserRouter(
@@ -29,14 +31,15 @@ export default (user: User | undefined) =>
           path={`${Routes.PROFILE}/:section`}
           element={<MyProfilePage />}
         />
-
-        {/* TOOD: 임시적으로 ProtectedRoute 외부에 선언 */}
         <Route path={Routes.PORTFOLIO} element={<PortfolioPage />} />
+        <Route index path={Routes.DASHBOARD} element={<DashboardPage />} />
+        <Route path={Routes.WATCHLIST} element={<WatchlistPage />} />
+        {/* TOOD: 임시적으로 ProtectedRoute 외부에 선언 */}
 
         <Route element={<ProtectedRoute user={user} />}>
           {/* <Route index path={Routes.DASHBOARD} element={<DashboardPage />} /> */}
           {/* <Route path={Routes.PORTFOLIOHOLDING} element={<PortfolioHoldingPage />}/> */}
-          {/* <Route path={Routes.WATCHLIST} element={<WatchListPage />}/> */}
+          {/* <Route path={Routes.WATCHLIST} element={<WatchlistPage />} /> */}
         </Route>
 
         <Route

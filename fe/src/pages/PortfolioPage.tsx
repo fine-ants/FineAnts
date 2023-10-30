@@ -6,12 +6,21 @@ import { Box, Button, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import BasePage from "./BasePage";
+import SectorBar from "@components/Portfolio/SectorBar";
+import DividendBarChart from "@components/Portfolio/DividendBarChart";
+import Header from "@components/common/Header";
+import Footer from "@components/common/Footer";
+import HoldingsPieChart from "@components/Portfolio/HoldingsPieChart";
 
 export default function PortfolioPage() {
   const { id } = useParams();
 
   const { data: portfolio, isLoading: isPortfolioDetailsLoading } =
     usePortfolioDetailsQuery(Number(id));
+
+  const onAddHoldingButtonClick = () => {
+    // TODO: Open search modal
+  };
 
   // TODO: Handle loading
   if (isPortfolioDetailsLoading) {
@@ -28,12 +37,15 @@ export default function PortfolioPage() {
   return (
     <StyledPortfolioPage>
       {/* Header */}
-
-      <main>
+      <Header />
+      <main style={{ display: "flex" }}>
         <LeftPanel>
           {/* Holdings Composition Chart */}
           {/* Dividend Bar Chart */}
           {/* Sector Spectrum Graph */}
+          <HoldingsPieChart data={portfolioHoldings} />
+          <DividendBarChart />
+          <SectorBar />
         </LeftPanel>
 
         <RightPanel>
@@ -47,10 +59,10 @@ export default function PortfolioPage() {
                 종목 목록
               </Typography>
 
-              {/* TODO: onClick */}
               <AddHoldingButton
                 variant="outlined"
-                startIcon={<img src={plusIcon} alt="종목 추가" />}>
+                startIcon={<img src={plusIcon} alt="종목 추가" />}
+                onClick={onAddHoldingButtonClick}>
                 <Typography variant="button" sx={{ color: "#2C2C2E" }}>
                   종목 추가
                 </Typography>
@@ -64,7 +76,7 @@ export default function PortfolioPage() {
           </PortfolioHoldingsContainer>
         </RightPanel>
       </main>
-
+      <Footer />
       {/* Footer */}
     </StyledPortfolioPage>
   );

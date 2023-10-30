@@ -1,18 +1,23 @@
 import styled from "styled-components";
 import LegendItem from "./LegendItem";
-import { PieChartType } from "@api/portfolio";
+
 import { CSSProperties } from "react";
+import { chartColorPalette } from "styles/chartColorPalette";
 
 type Props = {
+  pieData: { name: string; value: number }[];
   style?: CSSProperties;
-  pieData: PieChartType[];
 };
-export default function Legend({ style, pieData }: Props) {
+export default function Legend({ pieData, style }: Props) {
   return (
     <StyledLegend style={style}>
       {pieData ? (
-        pieData.map((item) => (
-          <LegendItem key={item.name} color={item.fill} title={item.name} />
+        pieData.map((item, index) => (
+          <LegendItem
+            key={item.name}
+            color={chartColorPalette[index]}
+            title={item.name}
+          />
         ))
       ) : (
         <div>로딩중</div>
@@ -24,11 +29,6 @@ export default function Legend({ style, pieData }: Props) {
 
 const StyledLegend = styled.div`
   display: flex;
-  width: 300px;
-  height: 35px;
-  // border: 1px solid black;
   position: absolute;
-  // bottom: 15px;
-  justify-content: center;
   gap: 15px;
 `;

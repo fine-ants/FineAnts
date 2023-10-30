@@ -14,7 +14,10 @@ type Props = {
   currentRangeIndex: number;
 };
 
-export default function TotalValueLineChart(props: Props) {
+export default function TotalValuationLineChart({
+  data,
+  currentRangeIndex,
+}: Props) {
   const seriesRef = useRef<ISeriesApi<"Area">>(null);
   const chartRef = useRef<any>(null);
 
@@ -22,61 +25,24 @@ export default function TotalValueLineChart(props: Props) {
     if (chartRef.current) {
       chartRef.current.timeScale().fitContent();
     }
-  }, [props.currentRangeIndex]);
-
-  const barSpacings = [6, 7, 9, 16, 33, 62];
-  // TODO: 숫자들은 상수로 빼기 ex) "1DSpace", "1WSpace", "1MSpace", or "1D", "1W", "1M"
-
-  const options = {
-    width: 500,
-    height: 300,
-
-    layout: {
-      textColor: "black",
-      backgroundColor: "#000000",
-    },
-    rightPriceScale: {
-      scaleMargins: {
-        top: 0.3,
-        bottom: 0.25,
-      },
-    },
-    crosshair: {
-      vertLine: {
-        width: 1 as LineWidth,
-        color: "black",
-        style: 3,
-      },
-      horzLine: {
-        visible: true,
-        labelVisible: true,
-      },
-    },
-    grid: {
-      vertLines: {
-        color: "transparent",
-      },
-      horzLines: {
-        color: "transparent",
-      },
-    },
-    timeScale: {
-      barSpacing: barSpacings[props.currentRangeIndex],
-    },
-  };
+  }, [currentRangeIndex]);
 
   return (
-    <StyledTotalValueLineChart>
+    <StyledTotalValuationLineChart>
       <h1 style={{ fontSize: "20px", fontWeight: "bold" }}>
         총 자산 현황 추이
       </h1>
       <div style={{ position: "relative" }}>
-        <Chart {...options} ref={chartRef}>
+        <Chart
+          {...options}
+          timeScale={{ barSpacing: barSpacings[currentRangeIndex] }}
+          ref={chartRef}>
           <AreaSeries
-            data={props.data}
-            topColor="#2962FF"
-            bottomColor="rgba(41, 98, 255, 0.28)"
-            lineColor="#2962FF"
+            data={data}
+            topColor="#2175ec"
+            // bottomColor="rgba(41, 98, 255, 0.28)"
+            bottomColor="#8fcbff"
+            lineColor="#2175ec"
             lineWidth={2}
             crosshairMarkerVisible={true}
             crosshairMarkerRadius={4}
@@ -84,11 +50,11 @@ export default function TotalValueLineChart(props: Props) {
           />
         </Chart>
       </div>
-    </StyledTotalValueLineChart>
+    </StyledTotalValuationLineChart>
   );
 }
 
-const StyledTotalValueLineChart = styled.div`
+const StyledTotalValuationLineChart = styled.div`
   width: 688px;
   height: 384px;
   background-color: #ffffff;
@@ -99,3 +65,44 @@ const StyledTotalValueLineChart = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+const barSpacings = [6, 7, 9, 16, 33, 62];
+// TODO: 숫자들은 상수로 빼기 ex) "1DSpace", "1WSpace", "1MSpace", or "1D", "1W", "1M"
+
+const options = {
+  width: 500,
+  height: 300,
+
+  layout: {
+    textColor: "black",
+    backgroundColor: "#000000",
+  },
+  rightPriceScale: {
+    scaleMargins: {
+      top: 0.3,
+      bottom: 0.25,
+    },
+  },
+  crosshair: {
+    vertLine: {
+      width: 1 as LineWidth,
+      color: "black",
+      style: 3,
+    },
+    horzLine: {
+      visible: true,
+      labelVisible: true,
+    },
+  },
+  grid: {
+    vertLines: {
+      color: "transparent",
+    },
+    horzLines: {
+      color: "transparent",
+    },
+  },
+  // timeScale: {
+  //   barSpacing: barSpacings[currentRangeIndex],
+  // },
+};

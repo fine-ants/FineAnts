@@ -8,18 +8,15 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { formatDate } from "@utils/date";
-import { useState } from "react";
+import PortfolioHoldingLotRow from "./PortfolioHoldingLotRow";
 
 type Props = {
   purchaseHistory: PurchaseHistoryField[];
 };
 
 export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
-  const [isEditing, setIsEditing] = useState(false);
-
-  const onEditLotsButtonClick = () => {
-    setIsEditing(true);
+  const onAddPurchaseClick = () => {
+    // TODO: Open modal
   };
 
   return (
@@ -28,30 +25,22 @@ export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
         <TableHead>
           <TableRow>
             <TableCell>매입 날짜</TableCell>
-            <TableCell>매입가</TableCell>
+            <TableCell align="right">매입가</TableCell>
             <TableCell align="right">매입 개수</TableCell>
             <TableCell align="right">메모</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
-          {purchaseHistory.map(
-            ({ id, purchaseDate, numShares, purchasePricePerShare, memo }) => (
-              <TableRow key={id}>
-                <TableCell component="th" scope="row">
-                  {formatDate(purchaseDate)}
-                </TableCell>
-                <TableCell>{purchasePricePerShare}</TableCell>
-                <TableCell align="right">{numShares}</TableCell>
-                <TableCell align="right">{memo}</TableCell>
-              </TableRow>
-            )
-          )}
+          {purchaseHistory.map((lot) => (
+            <PortfolioHoldingLotRow key={lot.id} {...lot} />
+          ))}
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell align="right" colSpan={4}>
-              <Button variant="text" onClick={onEditLotsButtonClick}>
-                수정
+            <TableCell align="right" colSpan={5} sx={{ border: "none" }}>
+              <Button variant="text" onClick={onAddPurchaseClick}>
+                매입 이력 추가
               </Button>
             </TableCell>
           </TableRow>

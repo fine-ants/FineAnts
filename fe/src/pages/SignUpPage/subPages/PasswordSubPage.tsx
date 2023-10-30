@@ -1,5 +1,5 @@
 import useText from "@hooks/useText";
-import { validatePassword } from "@utils/textValidators";
+import { validatePassword } from "@utils/authInputValidators";
 import SubPage from "./SubPage";
 
 type Props = {

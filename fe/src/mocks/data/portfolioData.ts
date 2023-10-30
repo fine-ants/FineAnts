@@ -1,14 +1,48 @@
-import { HTTPSTATUS } from "@api/types";
-
 export const successfulPortfolioData = {
-  code: HTTPSTATUS.success,
+  code: 200,
   status: "OK",
-  message: "카테고리 목록 조회를 성공하였습니다",
-  data: [
-    { name: "내꿈은워렌버핏", value: 2500000, fill: "#0088FE" },
-    { name: "단타왕", value: 3235500, fill: "#00C49F" },
-    { name: "물린게아니고장기투자", value: 1573500, fill: "#FFBB28" },
-  ],
+  message: "포트폴리오 목록 조회가 완료되었습니다",
+  data: {
+    portfolios: [
+      {
+        id: 3,
+        securitiesFirm: "토스",
+        name: "엘리엇파동12345ABC",
+        budget: 1000000,
+        totalGain: 100000,
+        totalGainRate: 10,
+        dailyGain: 100000,
+        dailyGainRate: 10,
+        expectedMmonthlyDividend: 20000,
+        numShares: 9,
+      },
+      {
+        id: 2,
+        name: "롱숏롱숏",
+        budget: 1000000,
+        totalGain: 100000,
+        totalGainRate: 10,
+        dailyGain: 100000,
+        dailyGainRate: 10,
+        expectedMmonthlyDividend: 20000,
+        numShares: 3,
+      },
+      {
+        id: 1,
+        securitiesFirm: "토스",
+        name: "물린게 아니라 장기투자",
+        budget: 1000000,
+        totalGain: 100000,
+        totalGainRate: 10,
+        dailyGain: 100000,
+        dailyGainRate: 10,
+        expectedMmonthlyDividend: 20000,
+        numShares: 12,
+      },
+    ],
+    hasNext: false,
+    nextCursor: null,
+  },
 };
 
 export const successfulPortfolioDetailsData = {
