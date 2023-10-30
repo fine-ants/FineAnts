@@ -1,4 +1,6 @@
 import { PortfolioDetails } from "@api/portfolio";
+import usePortfolioAddMutation from "@api/portfolio/queries/usePortfolioAddMutation";
+import usePortfolioEditMutation from "@api/portfolio/queries/usePortfolioEditMutation";
 import BaseModal from "@components/BaseModal";
 import useText from "@hooks/useText";
 import {
@@ -9,7 +11,8 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 type Props = {
@@ -23,6 +26,20 @@ export default function PortfolioModal({
   onClose,
   portfolioDetails,
 }: Props) {
+  const { id } = useParams();
+
+  const {
+    mutate: editMutate,
+    isError: editIsError,
+    isSuccess: editIsSuccess,
+  } = usePortfolioEditMutation(Number(id));
+
+  const {
+    mutate: addMutate,
+    isError: addIsError,
+    isSuccess: addIsSuccess,
+  } = usePortfolioAddMutation();
+
   const [securitiesFirm, setSecuritiesFirm] = useState(
     portfolioDetails ? portfolioDetails.securitiesFirm : "fineAnts"
   );
@@ -52,6 +69,35 @@ export default function PortfolioModal({
   const isEditMode = !!portfolioDetails;
   const isBudgetEmpty = budget === "0" || budget === "";
 
+  useEffect(() => {
+    if (isBudgetEmpty) {
+      onTargetGainChange("");
+      onTargetReturnRateChange("");
+      onMaximumLossChange("");
+      onMaximumLossRateChange("");
+    } else {
+      onTargetGainHandler(targetGain);
+      onMaximumLossHandler(maximumLoss);
+    }
+  }, [budget]);
+
+  useEffect(() => {
+    if (editIsSuccess) {
+      onClose();
+    }
+
+    if (editIsError) {
+    }
+  }, [editIsSuccess, editIsError]);
+
+  useEffect(() => {
+    if (addIsSuccess) {
+    }
+
+    if (addIsError) {
+    }
+  }, [addIsSuccess, addIsError]);
+
   const withNumberOnly =
     (handler: (value: string) => void) => (value: string) => {
       if (!isNaN(Number(value)) || value === "") {
@@ -69,20 +115,8 @@ export default function PortfolioModal({
     return Math.floor(value) === value ? value.toString() : value.toFixed(2);
   };
 
-  const onBudgetInputChange = withNumberOnly((newVal: string) => {
-    const isNewEmpty = newVal === "0" || newVal === "";
-
-    onBudgetChange(newVal);
-
-    if (isNewEmpty) {
-      onTargetGainChange("");
-      onTargetReturnRateChange("");
-      onMaximumLossChange("");
-      onMaximumLossRateChange("");
-    } else {
-      onTargetGainHandler(targetGain);
-      onMaximumLossHandler(maximumLoss);
-    }
+  const onBudgetInputChange = withNumberOnly((value: string) => {
+    onBudgetChange(value);
   });
 
   const onTargetGainHandler = withNumberOnly((value: string) => {
@@ -118,11 +152,23 @@ export default function PortfolioModal({
     setSecuritiesFirm(event.target.value);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    const body = {
+      name: name,
+      securitiesFirm: securitiesFirm,
+      budget: Number(budget),
+      targetGain: Number(targetGain),
+      maximumLoss: Number(maximumLoss),
+    };
+
     if (isEditMode) {
       // TODO : 포트폴리오 수정
+
+      editMutate({ portfolioId: Number(id), body: body });
     } else {
       // TODO : 포트폴리오 추가
+
+      addMutate(body);
     }
   };
 
