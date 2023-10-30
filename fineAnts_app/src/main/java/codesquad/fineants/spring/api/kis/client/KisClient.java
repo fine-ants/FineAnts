@@ -13,7 +13,6 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import codesquad.fineants.spring.api.errors.exception.KisException;
-import codesquad.fineants.spring.api.kis.manager.AccessTokenManager;
 import codesquad.fineants.spring.api.kis.properties.OauthKisProperties;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -31,13 +30,10 @@ public class KisClient {
 	private final String appkey;
 	private final String secretkey;
 
-	private final AccessTokenManager accessTokenManager;
-
 	public KisClient(OauthKisProperties properties) {
 		this.webClient = WebClient.builder().baseUrl(baseUrl);
 		this.appkey = properties.getAppkey();
 		this.secretkey = properties.getSecretkey();
-		this.accessTokenManager = new AccessTokenManager(accessToken());
 	}
 
 	public String approval() {
@@ -90,10 +86,8 @@ public class KisClient {
 		);
 	}
 
-	public Map<String, Object> readRealTimeCurrentPrice(String tickerSymbol, Map<String, Object> accessTokenMap) {
+	public Map<String, Object> readRealTimeCurrentPrice(String tickerSymbol, String authorization) {
 		MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
-		String authorization = String.format("%s %s", accessTokenMap.get("token_type"),
-			accessTokenMap.get("access_token"));
 		headerMap.add("authorization", authorization);
 		headerMap.add("appkey", appkey);
 		headerMap.add("appsecret", secretkey);

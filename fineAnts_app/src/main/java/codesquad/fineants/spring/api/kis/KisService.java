@@ -7,13 +7,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import codesquad.fineants.spring.api.kis.client.KisClient;
+import codesquad.fineants.spring.api.kis.manager.KisAccessTokenManager;
 import codesquad.fineants.spring.api.kis.response.CurrentPriceResponse;
 import codesquad.fineants.spring.api.portfolio_stock.PortfolioStockService;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioHoldingsResponse;
@@ -34,29 +33,12 @@ public class KisService {
 	private final KisClientScheduler scheduler;
 	private final SimpMessagingTemplate messagingTemplate;
 	private final PortfolioStockService portfolioStockService;
-	private Map<String, Object> accessTokenMap;
-
-	@PostConstruct
-	private void init() {
-		this.accessTokenMap = accessTokenMap();
-	}
-
-	public Map<String, Object> accessTokenMap() {
-		final Map<String, Object> accessTokenMap = redisService.getAccessTokenMap();
-		if (accessTokenMap != null) {
-			log.info("accessTokenMap : {}", accessTokenMap);
-			return accessTokenMap;
-		}
-		final Map<String, Object> newAccessTokenMap = kisClient.accessToken();
-		redisService.setAccessTokenMap(newAccessTokenMap);
-		log.info("newAccessTokenMap : {}", newAccessTokenMap);
-		return newAccessTokenMap;
-	}
-
+	private final KisAccessTokenManager manager;
+	
 	// 제약조건 : kis 서버에 1초당 최대 5건, TR간격 0.1초 이하면 안됨
 	public CurrentPriceResponse readRealTimeCurrentPrice(String tickerSymbol) {
 		Map<String, String> output = (Map<String, String>)kisClient.readRealTimeCurrentPrice(tickerSymbol,
-			accessTokenMap).get("output");
+			manager.createAuthorization()).get("output");
 		long currentPrice = Long.parseLong(output.get("stck_prpr"));
 		log.info("tickerSymbol={}, currentPrice={}, time={}", tickerSymbol, currentPrice, LocalDateTime.now());
 		return new CurrentPriceResponse(tickerSymbol, currentPrice);
