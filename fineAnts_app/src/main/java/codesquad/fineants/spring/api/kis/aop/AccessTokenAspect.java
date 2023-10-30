@@ -29,8 +29,9 @@ public class AccessTokenAspect {
 	public void readRealTimeCurrentPricePointcut(String tickerSymbol) {
 	}
 
-	@Before("readRealTimeCurrentPricePointcut(tickerSymbol)")
+	@Before(value = "readRealTimeCurrentPricePointcut(tickerSymbol)", argNames = "tickerSymbol")
 	public void checkAccessTokenExpiration(String tickerSymbol) {
+		log.info("checkAccessTokenExpiration call");
 		if (manager.isAccessTokenExpired(LocalDateTime.now())) {
 			final Optional<Map<String, Object>> optionalMap = redisService.getAccessTokenMap();
 			optionalMap.ifPresentOrElse(accessTokenMap -> {
