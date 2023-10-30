@@ -9,7 +9,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 type Props = {
@@ -52,8 +52,12 @@ export default function PortfolioModal({
   const isEditMode = !!portfolioDetails;
   const isBudgetEmpty = budget === "0" || budget === "";
 
-  useEffect(() => {
-    if (isBudgetEmpty) {
+  const onBudgetInputChange = (newVal: string) => {
+    onBudgetChange(newVal);
+
+    const isNewEmpty = newVal === "0" || newVal === "";
+
+    if (isNewEmpty) {
       onTargetGainChange("");
       onTargetReturnRateChange("");
       onMaximumLossChange("");
@@ -62,7 +66,7 @@ export default function PortfolioModal({
       onTargetGainHandler(targetGain);
       onMaximumLossHandler(maximumLoss);
     }
-  }, [budget]);
+  };
 
   const onTargetGainHandler = (value: string) => {
     const valueNumber = Number(value);
@@ -156,7 +160,7 @@ export default function PortfolioModal({
             <StyledInput
               placeholder="예산을 입력해 주세요"
               value={budget}
-              onChange={(e) => onBudgetChange(e.target.value.trim())}
+              onChange={(e) => onBudgetInputChange(e.target.value.trim())}
             />
             <span>KRW</span>
           </Row>
