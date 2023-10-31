@@ -36,7 +36,7 @@ export default function DividendBarChart() {
             activeBar={true}
             barSize={32}
             label={<CustomBarLabel />}
-            shape={(props) => <RoundedBar {...props} radius={8} />}>
+            shape={<RoundedBar radius={8} />}>
             {data.map((data, index) => (
               <Cell
                 cursor="pointer"

@@ -1,11 +1,11 @@
-import TVTickerTapeWidget from "../TradingViewWidgets/TVTickerTape";
-import { NavBar } from "../NavBar";
-import styled from "styled-components";
-import SearchBar from "../SearchBar";
-import UserControls from "../common/UserControls";
-import Routes from "router/Routes";
-import Dropdown from "./Dropdown";
 import { useNavigate } from "react-router-dom";
+import Routes from "router/Routes";
+import styled from "styled-components";
+import { NavBar } from "../NavBar";
+import SearchBar from "../SearchBar";
+import TVTickerTapeWidget from "../TradingViewWidgets/TVTickerTape";
+import UserControls from "../common/UserControls";
+import Dropdown from "./Dropdown";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ export default function Header() {
         <HeaderTop>
           <HeaderLeft>
             <StyledBrandIdentity onClick={() => navigate("/dashboard")}>
-              FineAnts
+              FINEANTS
             </StyledBrandIdentity>
             <NavBar style={navBarStyles}>
               <Dropdown>
@@ -86,16 +86,17 @@ export default function Header() {
 }
 
 const StyledHeader = styled.header`
-  z-index: 1;
+  z-index: 10;
+  background-color: #ffffff;
 `;
 
 const HeaderTop = styled.header`
   height: 80px;
   display: flex;
-  gap: 48px;
+  gap: 44px;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 80px;
+  padding: 0 150px;
 `;
 
 const HeaderLeft = styled.div`
@@ -106,20 +107,21 @@ const HeaderLeft = styled.div`
 
 const HeaderRight = styled.div`
   display: flex;
-  gap: 48px;
+  width: 520px;
+  gap: 16px;
   align-items: center;
   margin-left: auto;
 `;
 
 const StyledBrandIdentity = styled.div`
-  font-size: 40px;
+  font-size: 28px;
   font-weight: bold;
 `;
 
 const navBarStyles = {
   backgroundColor: "#ffffff",
   display: "flex",
-  gap: "16px",
+  gap: "58px",
   alignItems: "center",
 };
 

@@ -33,6 +33,7 @@ export default function useText(options?: Props) {
 
   useEffect(() => {
     onChange(initialValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

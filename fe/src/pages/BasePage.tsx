@@ -15,4 +15,5 @@ const StyledBasePage = styled.div`
   min-height: inherit;
   display: flex;
   flex-direction: column;
+  background-color: #f6f6f6;
 `;
