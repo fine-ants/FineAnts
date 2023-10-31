@@ -18,6 +18,7 @@ import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.oauth.support.AuthPrincipalMember;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
+import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
 import codesquad.fineants.spring.api.portfolio.response.PortfoliosResponse;
 import codesquad.fineants.spring.api.response.ApiResponse;
 import codesquad.fineants.spring.api.success.code.PortfolioSuccessCode;
@@ -34,11 +35,11 @@ public class PortFolioRestController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public ApiResponse<Void> addPortfolio(@Valid @RequestBody PortfolioCreateRequest request,
+	public ApiResponse<PortFolioCreateResponse> addPortfolio(@Valid @RequestBody PortfolioCreateRequest request,
 		@AuthPrincipalMember AuthMember authMember) {
 		log.info("포트폴리오 추가 요청, request={}", request);
-		portFolioService.addPortFolio(request, authMember);
-		return ApiResponse.success(PortfolioSuccessCode.CREATED_ADD_PORTFOLIO);
+		PortFolioCreateResponse response = portFolioService.addPortFolio(request, authMember);
+		return ApiResponse.success(PortfolioSuccessCode.CREATED_ADD_PORTFOLIO, response);
 	}
 
 	@PutMapping("/{portfolioId}")
