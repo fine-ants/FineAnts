@@ -6,7 +6,7 @@ type Props = {
   purchaseDate: string;
   purchasePricePerShare: number;
   numShares: number;
-  memo: string;
+  memo: string | null;
 };
 
 export default function PortfolioHoldingLotRow({

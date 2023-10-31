@@ -66,7 +66,7 @@ export type PurchaseHistoryField = {
   purchaseDate: string;
   numShares: number;
   purchasePricePerShare: number;
-  memo: string;
+  memo: string | null;
 };
 
 type PortfolioReqBody = {
@@ -91,7 +91,10 @@ export const getPortfolioDetails = async (portfolioId: number) => {
 };
 
 export const postPortfolio = async (body: PortfolioReqBody) => {
-  const res = await fetcher.post<Response<Portfolio>>(`/api/portfolios`, body);
+  const res = await fetcher.post<Response<{ portfolioId: number }>>(
+    `/portfolios`,
+    body
+  );
   return res.data;
 };
 

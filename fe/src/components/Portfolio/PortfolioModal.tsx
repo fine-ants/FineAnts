@@ -87,15 +87,19 @@ export default function PortfolioModal({
     }
 
     if (editIsError) {
+      // TODO toast
     }
   }, [editIsSuccess, editIsError]);
 
   useEffect(() => {
     if (addIsSuccess) {
+      onClose();
     }
 
     if (addIsError) {
+      // TODO toast
     }
+    return onClose;
   }, [addIsSuccess, addIsError]);
 
   const withNumberOnly =
