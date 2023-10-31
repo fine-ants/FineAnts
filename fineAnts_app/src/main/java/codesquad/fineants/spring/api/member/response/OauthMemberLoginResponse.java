@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class OauthMemberLoginResponse {
 
 	private Jwt jwt;
-	private OauthMemberResponse member;
+	private OauthMemberResponse user;
 
 	public static OauthMemberLoginResponse of(Jwt jwt, Member member) {
 		OauthMemberResponse user = OauthMemberResponse.from(member);
@@ -20,6 +20,6 @@ public class OauthMemberLoginResponse {
 
 	@Override
 	public String toString() {
-		return String.format("%s, %s(member=%s)", "소셜 로그인 응답", this.getClass().getSimpleName(), member);
+		return String.format("%s, %s(member=%s)", "소셜 로그인 응답", this.getClass().getSimpleName(), user);
 	}
 }
