@@ -93,7 +93,11 @@ export default function PortfolioHoldingRow({
           style={{ padding: "0 0 0 68.5px", border: "none" }}
           colSpan={9}>
           <Collapse in={isOpen} timeout="auto" unmountOnExit>
-            <PortfolioHoldingLots purchaseHistory={purchaseHistory} />
+            <PortfolioHoldingLots
+              portfolioId={portfolioId}
+              portfolioHoldingId={portfolioHoldingId}
+              purchaseHistory={purchaseHistory}
+            />
           </Collapse>
         </TableCell>
       </HoldingLotRow>
