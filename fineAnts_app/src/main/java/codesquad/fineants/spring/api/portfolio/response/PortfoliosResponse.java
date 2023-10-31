@@ -17,32 +17,37 @@ public class PortfoliosResponse {
 	private final Long nextCursor;
 
 	public static PortfoliosResponse of(ScrollPaginationCollection<Portfolio> portfoliosScroll,
-		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap) {
+		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap, Map<String, Long> currentPriceMap) {
 		if (portfoliosScroll.isLastScroll()) {
-			return PortfoliosResponse.newLastScroll(portfoliosScroll.getCurrentScrollItems(), portfolioGainHistoryMap);
+			return PortfoliosResponse.newLastScroll(portfoliosScroll.getCurrentScrollItems(), portfolioGainHistoryMap,
+				currentPriceMap);
 		}
 		return newScrollHasNext(portfoliosScroll.getCurrentScrollItems(), portfolioGainHistoryMap,
-			portfoliosScroll.getNextCursor().getId());
+			portfoliosScroll.getNextCursor().getId(), currentPriceMap);
 	}
 
 	private static PortfoliosResponse newLastScroll(List<Portfolio> portfolios,
-		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap) {
-		return newScrollHasNext(portfolios, portfolioGainHistoryMap, null);
+		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap, Map<String, Long> currentPriceMap) {
+		return newScrollHasNext(portfolios, portfolioGainHistoryMap, null, currentPriceMap);
 	}
 
 	private static PortfoliosResponse newScrollHasNext(List<Portfolio> portfolios,
 		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap,
-		Long nextCursor) {
+		Long nextCursor, Map<String, Long> currentPriceMap) {
 		if (nextCursor != null) {
-			return new PortfoliosResponse(getContents(portfolios, portfolioGainHistoryMap), true, nextCursor);
+			return new PortfoliosResponse(getContents(portfolios, portfolioGainHistoryMap, currentPriceMap), true,
+				nextCursor);
 		}
-		return new PortfoliosResponse(getContents(portfolios, portfolioGainHistoryMap), false, null);
+		return new PortfoliosResponse(getContents(portfolios, portfolioGainHistoryMap, currentPriceMap), false, null);
 	}
 
 	private static List<PortFolioItem> getContents(List<Portfolio> portfolios,
-		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap) {
+		Map<Portfolio, PortfolioGainHistory> portfolioGainHistoryMap, Map<String, Long> currentPriceMap) {
 		return portfolios.stream()
-			.map(portfolio -> PortFolioItem.of(portfolio, portfolioGainHistoryMap.get(portfolio)))
+			.map(portfolio -> {
+				portfolio.changeCurrentPriceFromHoldings(currentPriceMap);
+				return PortFolioItem.of(portfolio, portfolioGainHistoryMap.get(portfolio));
+			})
 			.collect(Collectors.toList());
 	}
 }

@@ -1,11 +1,15 @@
 package codesquad.fineants.spring.api.kis;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,8 +30,9 @@ public class KisService {
 
 	private static final String SUBSCRIBE_CURRENT_PRICE = "/sub/currentPrice/";
 	private static final String SUBSCRIBE_PORTFOLIO_HOLDING_FORMAT = "/sub/portfolio/%d/currentPrice/%s";
-	private static final Map<String, Long> currentPriceMap = new ConcurrentHashMap<>();
+	public static final Map<String, Long> currentPriceMap = new ConcurrentHashMap<>();
 	private static final Set<PortfolioSubscription> portfolioSubscriptions = new HashSet<>();
+	private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
 	private final KisClient kisClient;
 	private final KisRedisService redisService;
 	private final KisClientScheduler scheduler;
@@ -93,5 +98,23 @@ public class KisService {
 	private boolean checkCurrentPriceMap(List<String> tickerSymbols) {
 		return tickerSymbols.stream()
 			.noneMatch(tickerSymbol -> currentPriceMap.getOrDefault(tickerSymbol, 0L) == 0L);
+	}
+
+	public Map<String, Long> refreshCurrentPriceMap(List<String> tickerSymbols) {
+		for (String tickerSymbol : tickerSymbols) {
+			if (!redisService.hasCurrentPrice(tickerSymbol)) {
+				executorService.schedule(createCurrentPriceRequest(tickerSymbol), 200L, TimeUnit.MILLISECONDS);
+			}
+		}
+		executorService.shutdown();
+		try {
+			if (executorService.awaitTermination(5L, TimeUnit.SECONDS)) {
+				executorService.shutdownNow();
+			}
+		} catch (InterruptedException e) {
+			executorService.shutdownNow();
+		}
+
+		return new HashMap<>(currentPriceMap);
 	}
 }
