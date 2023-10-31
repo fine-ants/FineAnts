@@ -81,7 +81,7 @@ const dropdownToggleStyle = {
   fontSize: "16px",
   fontWeight: "bold",
   cursor: "pointer",
-  position: "relative" as "relative",
+  position: "relative" as const,
 };
 
 const dropdownMenuStyle = {
@@ -91,13 +91,15 @@ const dropdownMenuStyle = {
   borderRadius: "8px",
   padding: "10px",
   display: "flex",
-  flexDirection: "column" as "column",
+  flexDirection: "column" as const,
   gap: "8px",
   width: "200px",
 };
 
 const dropdownItemStyle = {
   width: "inherit",
+  fontSize: "20px",
+  fontWeight: "semibold",
   height: " 30px",
   display: "flex",
   alignItems: "center",

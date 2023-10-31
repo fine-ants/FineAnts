@@ -2,12 +2,13 @@ import usePortfolioDetailsQuery from "@api/portfolio/queries/usePortfolioDetails
 import plusIcon from "@assets/icons/plus.svg";
 import DividendBarChart from "@components/Portfolio/DividendBarChart";
 import HoldingsPieChart from "@components/Portfolio/HoldingsPieChart";
+import PortfolioHoldingAddModal from "@components/Portfolio/PortfolioHoldingAddModal";
 import PortfolioHoldingsTable from "@components/Portfolio/PortfolioHoldings/PortfolioHoldingsTable";
 import PortfolioOverview from "@components/Portfolio/PortfolioOverview";
 import SectorBar from "@components/Portfolio/SectorBar";
-import Footer from "@components/common/Footer";
 import Header from "@components/common/Header";
 import { Box, Button, Typography } from "@mui/material";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import BasePage from "./BasePage";
@@ -18,8 +19,10 @@ export default function PortfolioPage() {
   const { data: portfolio, isLoading: isPortfolioDetailsLoading } =
     usePortfolioDetailsQuery(Number(id));
 
+  const [isAddHoldingModalOpen, setIsAddHoldingModalOpen] = useState(false);
+
   const onAddHoldingButtonClick = () => {
-    // TODO: Open search modal
+    setIsAddHoldingModalOpen(true);
   };
 
   // TODO: Handle loading
@@ -36,57 +39,66 @@ export default function PortfolioPage() {
 
   return (
     <StyledPortfolioPage>
-      {/* Header */}
-      <Header />
-      <main style={{ display: "flex" }}>
-        <LeftPanel>
-          {/* Holdings Composition Chart */}
-          {/* Dividend Bar Chart */}
-          {/* Sector Spectrum Graph */}
-          <HoldingsPieChart data={portfolioHoldings} />
-          <DividendBarChart />
-          <SectorBar />
-        </LeftPanel>
+      <BasePage>
+        <Header />
+        <main style={{ display: "flex", padding: "40px 150px", gap: "32px" }}>
+          <PortfolioHoldingAddModal
+            isOpen={isAddHoldingModalOpen}
+            onClose={() => setIsAddHoldingModalOpen(false)}
+          />
+          <LeftPanel>
+            <HoldingsPieChart data={portfolioHoldings} />
+            <DividendBarChart />
+            <SectorBar />
+          </LeftPanel>
 
-        <RightPanel>
-          <PortfolioOverviewContainer>
-            <PortfolioOverview data={portfolioDetails} />
-          </PortfolioOverviewContainer>
+          <RightPanel>
+            <PortfolioOverviewContainer>
+              <PortfolioOverview data={portfolioDetails} />
+            </PortfolioOverviewContainer>
 
-          <PortfolioHoldingsContainer>
-            <header>
-              <Typography variant="h6" component="h3">
-                종목 목록
-              </Typography>
-
-              <AddHoldingButton
-                variant="outlined"
-                startIcon={<img src={plusIcon} alt="종목 추가" />}
-                onClick={onAddHoldingButtonClick}>
-                <Typography variant="button" sx={{ color: "#2C2C2E" }}>
-                  종목 추가
+            <PortfolioHoldingsContainer>
+              <header>
+                <Typography variant="h6" component="h3">
+                  종목 목록
                 </Typography>
-              </AddHoldingButton>
-            </header>
 
-            <PortfolioHoldingsTable
-              portfolioId={portfolioDetails.id}
-              data={portfolioHoldings}
-            />
-          </PortfolioHoldingsContainer>
-        </RightPanel>
-      </main>
-      <Footer />
-      {/* Footer */}
+                <AddHoldingButton
+                  variant="outlined"
+                  startIcon={<img src={plusIcon} alt="종목 추가" />}
+                  onClick={onAddHoldingButtonClick}>
+                  <Typography variant="button" sx={{ color: "#2C2C2E" }}>
+                    종목 추가
+                  </Typography>
+                </AddHoldingButton>
+              </header>
+
+              <PortfolioHoldingsTable
+                portfolioId={portfolioDetails.id}
+                data={portfolioHoldings}
+              />
+            </PortfolioHoldingsContainer>
+          </RightPanel>
+        </main>
+        {/* <Footer /> */}
+      </BasePage>
     </StyledPortfolioPage>
   );
 }
 
 const StyledPortfolioPage = styled(BasePage)``;
 
-const LeftPanel = styled.div``;
+const LeftPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
 
-const RightPanel = styled.div``;
+const RightPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
 
 const PortfolioOverviewContainer = styled.div``;
 
@@ -95,6 +107,7 @@ const PortfolioHoldingsContainer = styled(Box)`
   padding: 16px 24px 22px;
   box-shadow: 0px 0px 12px 0px #00000014;
   border-radius: 8px;
+  background-color: #ffffff;
 
   header {
     margin-bottom: 16px;

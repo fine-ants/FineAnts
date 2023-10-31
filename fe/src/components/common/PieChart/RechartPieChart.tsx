@@ -125,8 +125,8 @@ const renderActiveShape = (props: any) => {
       <Sector
         cx={cx}
         cy={cy}
-        innerRadius={innerRadius + 5}
-        outerRadius={outerRadius + 10}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius + 5}
         startAngle={startAngle}
         endAngle={endAngle}
         fill={fill}

@@ -6,6 +6,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import Footer from "../components/common/Footer";
 import Header from "../components/common/Header";
+import BasePage from "./BasePage";
 
 export default function DashboardPage() {
   const range = ["1D", "1W", "1M", "1Q", "1Y", "All"];
@@ -17,38 +18,40 @@ export default function DashboardPage() {
 
   return (
     <StyledDashboardPage>
-      <Header />
-      <Main>
-        <MainColorBackground />
-        <ValuationOverview />
-        <CurrentChartContainer>
-          <DateRangeSelector>
-            {range.map((range, index) => (
-              <TimeRangeButton
-                key={index}
-                range={range}
-                index={index}
-                onClick={switchTimeRange}
+      <BasePage>
+        <Header />
+        <Main>
+          <MainColorBackground />
+          <ValuationOverview />
+          <CurrentChartContainer>
+            <DateRangeSelector>
+              {range.map((range, index) => (
+                <TimeRangeButton
+                  key={index}
+                  range={range}
+                  index={index}
+                  onClick={switchTimeRange}
+                />
+              ))}
+            </DateRangeSelector>
+            <ChartContainer>
+              <PortfolioPieChartContainer>
+                <PortfolioPieChart
+                  width={384}
+                  height={384}
+                  legendStyle={{ bottom: "15px" }}
+                />
+              </PortfolioPieChartContainer>
+              <TotalValuationLineChart
+                key={currentRangeIndex}
+                currentRangeIndex={currentRangeIndex}
+                data={data[currentRangeIndex]}
               />
-            ))}
-          </DateRangeSelector>
-          <ChartContainer>
-            <PortfolioPieChartContainer>
-              <PortfolioPieChart
-                width={384}
-                height={384}
-                legendStyle={{ bottom: "15px" }}
-              />
-            </PortfolioPieChartContainer>
-            <TotalValuationLineChart
-              key={currentRangeIndex}
-              currentRangeIndex={currentRangeIndex}
-              data={data[currentRangeIndex]}
-            />
-          </ChartContainer>
-        </CurrentChartContainer>
-      </Main>
-      <Footer />
+            </ChartContainer>
+          </CurrentChartContainer>
+        </Main>
+        <Footer />
+      </BasePage>
     </StyledDashboardPage>
   );
 }
@@ -56,8 +59,6 @@ export default function DashboardPage() {
 const StyledDashboardPage = styled.div`
   display: flex;
   flex-direction: column;
-  width: 1440px;
-  height: 1024px;
   background-color: #ffffff;
   border: 1px solid #000000;
 `;
@@ -69,12 +70,12 @@ const Main = styled.main`
   flex-direction: column;
   align-items: center;
   position: relative;
+  padding: 0 150px;
 `;
 
 const MainColorBackground = styled.div`
   width: 1440px;
   height: 460px;
-  // background-color: #e3f2ff;
   position: absolute;
   z-index: 0;
 `;
