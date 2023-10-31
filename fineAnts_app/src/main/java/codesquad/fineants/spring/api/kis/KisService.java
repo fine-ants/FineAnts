@@ -1,11 +1,13 @@
 package codesquad.fineants.spring.api.kis;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,8 +28,9 @@ public class KisService {
 
 	private static final String SUBSCRIBE_CURRENT_PRICE = "/sub/currentPrice/";
 	private static final String SUBSCRIBE_PORTFOLIO_HOLDING_FORMAT = "/sub/portfolio/%d/currentPrice/%s";
-	private static final Map<String, Long> currentPriceMap = new ConcurrentHashMap<>();
-	private static final Set<PortfolioSubscription> portfolioSubscriptions = new HashSet<>();
+	public static final Map<String, Long> currentPriceMap = new ConcurrentHashMap<>();
+	private static final Map<String, PortfolioSubscription> portfolioSubscriptions = new ConcurrentHashMap<>();
+	private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
 	private final KisClient kisClient;
 	private final KisRedisService redisService;
 	private final KisClientScheduler scheduler;
@@ -50,9 +53,16 @@ public class KisService {
 			.forEach(tickerSymbol -> currentPriceMap.put(tickerSymbol, 0L));
 	}
 
-	public void addPortfolioSubscription(PortfolioSubscription subscription) {
-		portfolioSubscriptions.remove(subscription);
-		portfolioSubscriptions.add(subscription);
+	public void addPortfolioSubscription(String sessionId, PortfolioSubscription subscription) {
+		if (sessionId == null) {
+			return;
+		}
+		portfolioSubscriptions.put(sessionId, subscription);
+	}
+
+	public void removePortfolioSubscription(String sessionId) {
+		PortfolioSubscription delSubscription = portfolioSubscriptions.remove(sessionId);
+		log.info("포트폴리오 구독 삭제 : {}", delSubscription);
 	}
 
 	private Runnable createCurrentPriceRequest(final String tickerSymbol) {
@@ -76,7 +86,7 @@ public class KisService {
 			}
 		});
 
-		for (PortfolioSubscription subscription : portfolioSubscriptions) {
+		for (PortfolioSubscription subscription : portfolioSubscriptions.values()) {
 			if (!checkCurrentPriceMap(subscription.getTickerSymbols())) {
 				continue;
 			}
@@ -93,5 +103,23 @@ public class KisService {
 	private boolean checkCurrentPriceMap(List<String> tickerSymbols) {
 		return tickerSymbols.stream()
 			.noneMatch(tickerSymbol -> currentPriceMap.getOrDefault(tickerSymbol, 0L) == 0L);
+	}
+
+	public Map<String, Long> refreshCurrentPriceMap(List<String> tickerSymbols) {
+		tickerSymbols.parallelStream()
+			.filter(tickerSymbol -> !redisService.hasCurrentPrice(tickerSymbol))
+			.forEach(tickerSymbol -> executorService.schedule(createCurrentPriceRequest(tickerSymbol), 200L,
+				TimeUnit.MILLISECONDS));
+
+		executorService.shutdown();
+		try {
+			if (executorService.awaitTermination(5L, TimeUnit.SECONDS)) {
+				executorService.shutdownNow();
+			}
+		} catch (InterruptedException e) {
+			executorService.shutdownNow();
+		}
+
+		return new HashMap<>(currentPriceMap);
 	}
 }

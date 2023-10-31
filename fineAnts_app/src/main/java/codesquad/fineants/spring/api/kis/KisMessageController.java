@@ -3,6 +3,7 @@ package codesquad.fineants.spring.api.kis;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.fineants.spring.api.kis.request.MessageData;
@@ -25,9 +26,12 @@ public class KisMessageController {
 	@MessageMapping("/portfolio/{portfolioId}/currentPrice")
 	public void portfolioHolding(
 		@DestinationVariable Long portfolioId,
-		@Payload MessageData messageData) {
-		log.info("portfolioId : {}, messageData : {}", portfolioId, messageData);
+		@Payload MessageData messageData,
+		SimpMessageHeaderAccessor headerAccessor) {
+		log.info("portfolioId : {}, messageData : {}, sessionid : {}", portfolioId, messageData,
+			headerAccessor.getSessionId());
 		kisService.addTickerSymbols(messageData.getTickerSymbols());
-		kisService.addPortfolioSubscription(new PortfolioSubscription(portfolioId, messageData.getTickerSymbols()));
+		kisService.addPortfolioSubscription(headerAccessor.getSessionId(),
+			new PortfolioSubscription(portfolioId, messageData.getTickerSymbols()));
 	}
 }
