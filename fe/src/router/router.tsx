@@ -22,24 +22,21 @@ const router = (user: User | null) =>
   createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
-        {/* TODO : 테스트를 위해 ProtectedRoute 외부에 선언합니다. user 정보가 생기면 ProtectedRoute 내부로 옮기겠습니다. */}
-        <Route
-          path={Routes.PROFILE}
-          element={<Navigate to={`${Routes.PROFILE}/${Routes.PORTFOLIOS}`} />}
-        />
-        <Route
-          path={`${Routes.PROFILE}/:section`}
-          element={<MyProfilePage />}
-        />
-        <Route path={Routes.PORTFOLIO} element={<PortfolioPage />} />
-        <Route index path={Routes.DASHBOARD} element={<DashboardPage />} />
-        <Route path={Routes.WATCHLIST} element={<WatchlistPage />} />
-        {/* TOOD: 임시적으로 ProtectedRoute 외부에 선언 */}
+        {/* TODO: Landing Page */}
 
         <Route element={<ProtectedRoute user={user} />}>
-          {/* <Route index path={Routes.DASHBOARD} element={<DashboardPage />} /> */}
+          <Route index path={Routes.DASHBOARD} element={<DashboardPage />} />
+          <Route
+            path={Routes.PROFILE}
+            element={<Navigate to={`${Routes.PROFILE}/${Routes.PORTFOLIOS}`} />}
+          />
+          <Route path={Routes.PORTFOLIO} element={<PortfolioPage />} />
           {/* <Route path={Routes.PORTFOLIOHOLDING} element={<PortfolioHoldingPage />}/> */}
-          {/* <Route path={Routes.WATCHLIST} element={<WatchlistPage />} /> */}
+          <Route path={Routes.WATCHLIST} element={<WatchlistPage />} />
+          <Route
+            path={`${Routes.PROFILE}/:section`}
+            element={<MyProfilePage />}
+          />
         </Route>
 
         <Route

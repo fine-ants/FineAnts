@@ -1,3 +1,4 @@
+import { CLIENT_URL } from "@constants/config";
 import { Response } from "api/types";
 import { fetcher } from "../fetcher";
 
@@ -49,8 +50,8 @@ export const postOAuthSignIn = async (
   provider: OAuthProvider,
   authCode: string
 ) => {
-  const res = await fetcher.get<Response<SignInData>>(
-    `/auth/${provider}/login?code=${authCode}`
+  const res = await fetcher.post<Response<SignInData>>(
+    `/auth/${provider}/login?code=${authCode}&redirectUrl=${CLIENT_URL}/signin?provider=${provider}`
   );
   return res.data;
 };
