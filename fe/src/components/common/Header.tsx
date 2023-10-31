@@ -22,21 +22,18 @@ export default function Header() {
     {
       name: "내꿈은워렌버핏",
       onClick: () => {
-        console.log("워렌버핏으로 이동");
         navigate("/portfolio/1");
       },
     },
     {
       name: "단타왕",
       onClick: () => {
-        console.log("단타왕으로 이동");
         navigate("/portfolio/2");
       },
     },
     {
       name: "물린게아니고장기투자",
       onClick: () => {
-        console.log("장기투자로 이동");
         navigate("/portfolio/3");
       },
     },
@@ -107,7 +104,6 @@ const HeaderLeft = styled.div`
 
 const HeaderRight = styled.div`
   display: flex;
-  width: 520px;
   gap: 16px;
   align-items: center;
   margin-left: auto;

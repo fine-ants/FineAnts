@@ -1,4 +1,4 @@
-import useStockSearchQuery from "@api/stock/queries/useStockSearchQeury";
+import useStockSearchQuery from "@api/stock/queries/useStockSearchQuery";
 import { useState } from "react";
 import styled from "styled-components";
 
