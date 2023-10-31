@@ -160,6 +160,7 @@ public class PortFolioService {
 			.flatMap(Collection::stream)
 			.map(PortfolioHolding::getStock)
 			.map(Stock::getTickerSymbol)
+			.distinct()
 			.collect(Collectors.toList());
 		Map<String, Long> currentPriceMap = kisService.refreshCurrentPriceMap(tickerSymbols);
 
