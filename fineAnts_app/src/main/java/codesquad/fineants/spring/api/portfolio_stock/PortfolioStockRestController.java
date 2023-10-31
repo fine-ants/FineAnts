@@ -1,5 +1,9 @@
 package codesquad.fineants.spring.api.portfolio_stock;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -14,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.oauth.support.AuthPrincipalMember;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.domain.stock.Stock;
+import codesquad.fineants.spring.api.kis.KisService;
 import codesquad.fineants.spring.api.portfolio_stock.request.PortfolioStockCreateRequest;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioHoldingsResponse;
 import codesquad.fineants.spring.api.response.ApiResponse;
@@ -26,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class PortfolioStockRestController {
 
 	private final PortfolioStockService portfolioStockService;
+	private final KisService kisService;
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
@@ -46,7 +54,12 @@ public class PortfolioStockRestController {
 
 	@GetMapping
 	public ApiResponse<PortfolioHoldingsResponse> readMyPortfolioStocks(@PathVariable Long portfolioId) {
-		PortfolioHoldingsResponse response = portfolioStockService.readMyPortfolioStocks(portfolioId);
+		List<String> tickerSymbol = portfolioStockService.findPortfolio(portfolioId).getPortfolioHoldings().stream()
+			.map(PortfolioHolding::getStock)
+			.map(Stock::getTickerSymbol)
+			.collect(Collectors.toList());
+		Map<String, Long> currentPriceMap = kisService.refreshCurrentPriceMap(tickerSymbol);
+		PortfolioHoldingsResponse response = portfolioStockService.readMyPortfolioStocks(portfolioId, currentPriceMap);
 		return ApiResponse.success(PortfolioStockSuccessCode.OK_READ_PORTFOLIO_STOCKS, response);
 	}
 }

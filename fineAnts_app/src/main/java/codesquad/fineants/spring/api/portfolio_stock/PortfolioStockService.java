@@ -57,7 +57,7 @@ public class PortfolioStockService {
 		return PortfolioStockCreateResponse.from(portFolioHolding);
 	}
 
-	private Portfolio findPortfolio(Long portfolioId) {
+	public Portfolio findPortfolio(Long portfolioId) {
 		return portfolioRepository.findById(portfolioId)
 			.orElseThrow(() -> new NotFoundResourceException(PortfolioErrorCode.NOT_FOUND_PORTFOLIO));
 	}
@@ -87,7 +87,7 @@ public class PortfolioStockService {
 
 	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId) {
 		Portfolio portfolio = findPortfolio(portfolioId);
-		List<PortfolioHolding> portfolioHoldings = portFolioHoldingRepository.findAllByPortfolio(portfolio);
+		List<PortfolioHolding> portfolioHoldings = portfolio.getPortfolioHoldings();
 		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
 				portfolio, LocalDateTime.now())
 			.orElseGet(PortfolioGainHistory::empty);

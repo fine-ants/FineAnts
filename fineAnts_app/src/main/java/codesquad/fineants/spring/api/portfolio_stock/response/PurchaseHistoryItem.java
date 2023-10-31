@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PurchaseHistoryItem {
-	private Long id;
+	private Long purchaseHistoryId;
 	private LocalDateTime purchaseDate;
 	private Long numShares;
 	private Double purchasePricePerShare;
