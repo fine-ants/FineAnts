@@ -1,7 +1,7 @@
-import PortfolioOverview from "@components/Dashboard/PortfolioOverview";
 import PortfolioPieChart from "@components/Dashboard/PortfolioPieChart";
 import TimeRangeButton from "@components/Dashboard/TimeRangeButton";
 import TotalValuationLineChart from "@components/Dashboard/TotalValuationLineChart";
+import ValuationOverview from "@components/Dashboard/ValuationOverview";
 import { useState } from "react";
 import styled from "styled-components";
 import Footer from "../components/common/Footer";
@@ -20,7 +20,7 @@ export default function DashboardPage() {
       <Header />
       <Main>
         <MainColorBackground />
-        <PortfolioOverview />
+        <ValuationOverview />
         <CurrentChartContainer>
           <DateRangeSelector>
             {range.map((range, index) => (

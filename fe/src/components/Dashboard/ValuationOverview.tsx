@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-export default function PortfolioOverview() {
+export default function ValuationOverview() {
   return (
-    <StyledPortfolioOverview>
+    <StyledValuationOverview>
       <TotalMainContentWrapper>
         <MainText>{currentValues.total.title}</MainText>
         <MainText>₩ {currentValues.total.value}</MainText>
@@ -10,7 +10,7 @@ export default function PortfolioOverview() {
       <TotalSubContentWrapper>
         <SubText>{currentValues.investment.title}</SubText>
         <SubText>₩ {currentValues.investment.value}</SubText>
-        <SubText></SubText>
+        <SubText />
       </TotalSubContentWrapper>
       <TotalSubContentWrapper>
         <SubText>{currentValues.profit.title}</SubText>
@@ -26,11 +26,11 @@ export default function PortfolioOverview() {
           <SubText>+ {currentValues.dividends.value.percentage} %</SubText>
         </NumWrapper>
       </TotalSubContentWrapper>
-    </StyledPortfolioOverview>
+    </StyledValuationOverview>
   );
 }
 
-const StyledPortfolioOverview = styled.div`
+const StyledValuationOverview = styled.div`
   width: 1440px;
   height: 144px;
   display: flex;
