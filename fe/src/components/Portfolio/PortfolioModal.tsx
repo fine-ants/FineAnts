@@ -12,7 +12,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 type Props = {
@@ -27,6 +27,7 @@ export default function PortfolioModal({
   portfolioDetails,
 }: Props) {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const {
     mutate: editMutate,
@@ -35,6 +36,7 @@ export default function PortfolioModal({
   } = usePortfolioEditMutation(Number(id));
 
   const {
+    data: addData,
     mutate: addMutate,
     isError: addIsError,
     isSuccess: addIsSuccess,
@@ -93,7 +95,10 @@ export default function PortfolioModal({
 
   useEffect(() => {
     if (addIsSuccess) {
+      const portfolioId = addData.data.portfolioId;
+
       onClose();
+      navigate(`/portfolio/${portfolioId}`);
     }
 
     if (addIsError) {
