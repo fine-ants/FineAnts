@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 export default function SearchBar() {
   const [value, setValue] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
 
   const { data: searchResults } = useStockSearchQuery(value);
 
@@ -12,12 +11,7 @@ export default function SearchBar() {
     setValue(e.target.value);
   };
 
-  const onSearchBarFocus = () => {
-    setIsFocused(true);
-  };
-
-  console.log("밸류", value);
-  console.log(searchResults);
+  const isQuerySearched = value && searchResults;
 
   return (
     <StyledSearchBar>
@@ -25,13 +19,12 @@ export default function SearchBar() {
         <Input
           type="text"
           value={value}
-          onFocus={onSearchBarFocus}
           placeholder="종목 또는 지수 검색"
           onChange={onSearchBarChange}
         />
       </InputContainer>
 
-      {value && isFocused && searchResults && (
+      {isQuerySearched && (
         <SearchList>
           {searchResults.map((result) => (
             <SearchItem key={result.stockCode}>{result.companyName}</SearchItem>
