@@ -101,11 +101,11 @@ public class KisService {
 	}
 
 	public Map<String, Long> refreshCurrentPriceMap(List<String> tickerSymbols) {
-		for (String tickerSymbol : tickerSymbols) {
-			if (!redisService.hasCurrentPrice(tickerSymbol)) {
-				executorService.schedule(createCurrentPriceRequest(tickerSymbol), 200L, TimeUnit.MILLISECONDS);
-			}
-		}
+		tickerSymbols.parallelStream()
+			.filter(tickerSymbol -> !redisService.hasCurrentPrice(tickerSymbol))
+			.forEach(tickerSymbol -> executorService.schedule(createCurrentPriceRequest(tickerSymbol), 200L,
+				TimeUnit.MILLISECONDS));
+
 		executorService.shutdown();
 		try {
 			if (executorService.awaitTermination(5L, TimeUnit.SECONDS)) {
