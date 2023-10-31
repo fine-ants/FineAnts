@@ -7,8 +7,16 @@ export type SignInCredentials = {
 };
 
 type SignInData = {
-  accessToken: string;
-  refreshToken: string;
+  jwt: {
+    accessToken: string;
+    refreshToken: string;
+  };
+  user: {
+    id: number;
+    nickname: string;
+    email: string;
+    profileUrl: string;
+  };
 };
 
 export type SignUpData = {
@@ -37,7 +45,7 @@ export const postSignUp = async (body: SignUpData) => {
 };
 
 export const postSignIn = async (body: SignInCredentials) => {
-  const res = await fetcher.post<Response<SignInData>>("/auth", body);
+  const res = await fetcher.post<Response<SignInData>>("/auth/login", body);
   return res.data;
 };
 
@@ -52,16 +60,16 @@ export const postOAuthSignIn = async (
 };
 
 export const deleteSignOut = async () => {
-  const res = await fetcher.delete<Response<null>>("/auth");
+  const res = await fetcher.delete<Response<null>>("/auth/logout");
   return res.data;
 };
 
 export const refreshAccessToken = async () => {
-  const res = await fetcher.get<Response<AccessTokenData>>("/auth/refresh", {
-    headers: {
-      Authorization: localStorage.getItem("refreshToken"),
-    },
-  });
+  const refreshToken = localStorage.getItem("refreshToken");
+  const res = await fetcher.post<Response<AccessTokenData>>(
+    "/auth/refresh/token",
+    { refreshToken }
+  );
   return res.data;
 };
 
