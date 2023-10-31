@@ -1,12 +1,13 @@
 import { OAuthProvider, postOAuthSignIn } from "@api/auth";
+import { UserContext } from "@context/UserContext";
 import { useMutation } from "@tanstack/react-query";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Routes from "router/Routes";
-import useUserInfoQuery from "./useUserInfoQuery";
 
 export default function useOAuthSignInMutation() {
   const navigate = useNavigate();
-  const { refetch: fetchUserInfo } = useUserInfoQuery();
+  const { onSignIn } = useContext(UserContext);
 
   return useMutation({
     mutationFn: ({
@@ -17,12 +18,15 @@ export default function useOAuthSignInMutation() {
       authCode: string;
     }) => postOAuthSignIn(provider, authCode),
     onSuccess: ({ data }) => {
-      const { accessToken, refreshToken } = data;
+      const {
+        jwt: { accessToken, refreshToken },
+        user,
+      } = data;
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
-      fetchUserInfo();
+      onSignIn(user);
 
       navigate(Routes.DASHBOARD);
     },

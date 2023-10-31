@@ -1,6 +1,13 @@
 import { Response } from "api/types";
 import { fetcher } from "../fetcher";
 
+export type User = {
+  id: number;
+  nickname: string;
+  email: string;
+  profileUrl: string;
+};
+
 export type SignInCredentials = {
   email: string;
   password: string;
@@ -11,12 +18,7 @@ type SignInData = {
     accessToken: string;
     refreshToken: string;
   };
-  user: {
-    id: number;
-    nickname: string;
-    email: string;
-    profileUrl: string;
-  };
+  user: User;
 };
 
 export type SignUpData = {
@@ -25,12 +27,6 @@ export type SignUpData = {
   password: string;
   passwordConfirm: string;
   verificationCode: string;
-};
-
-export type User = {
-  userId: number;
-  nickname: string;
-  imageUrl: string;
 };
 
 export type OAuthProvider = "google" | "naver" | "kakao";
@@ -70,11 +66,6 @@ export const refreshAccessToken = async () => {
     "/auth/refresh/token",
     { refreshToken }
   );
-  return res.data;
-};
-
-export const getUserInfo = async () => {
-  const res = await fetcher.get<Response<User>>("/users/info");
   return res.data;
 };
 

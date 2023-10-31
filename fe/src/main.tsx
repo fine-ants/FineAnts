@@ -1,3 +1,4 @@
+import { UserProvider } from "@context/UserContext.tsx";
 import { StyledEngineProvider } from "@mui/styled-engine";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -19,7 +20,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <UserProvider>
+          <App />
+        </UserProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </StyledEngineProvider>

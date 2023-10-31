@@ -1,12 +1,13 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { UserContext } from "@context/UserContext";
+import { useMutation } from "@tanstack/react-query";
 import { deleteSignOut } from "api/auth";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Routes from "router/Routes";
-import { userKeys } from "./queryKeys";
 
 export default function useSignOutMutation() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const { onSignOut } = useContext(UserContext);
 
   return useMutation({
     mutationFn: deleteSignOut,
@@ -14,10 +15,7 @@ export default function useSignOutMutation() {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
 
-      queryClient.resetQueries({
-        queryKey: userKeys.info().queryKey,
-        exact: true,
-      });
+      onSignOut();
 
       navigate(Routes.SIGNIN);
     },

@@ -18,7 +18,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import PublicOnlyRoute from "./PublicOnlyRoute";
 import Routes from "./Routes";
 
-const router = (user: User | undefined) =>
+const router = (user: User | null) =>
   createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
