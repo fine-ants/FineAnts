@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import codesquad.fineants.domain.BaseEntity;
 import codesquad.fineants.domain.stock.Stock;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class StockDividend {
+public class StockDividend extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -27,7 +28,7 @@ public class StockDividend {
 	private Long dividend;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "stock_id")
+	@JoinColumn(name = "ticker_symbol", referencedColumnName = "tickerSymbol")
 	private Stock stock;
 
 	@Builder
