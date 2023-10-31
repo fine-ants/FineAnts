@@ -99,7 +99,6 @@ export default function PortfolioModal({
     if (addIsError) {
       // TODO toast
     }
-    return onClose;
   }, [addIsSuccess, addIsError]);
 
   const withNumberOnly =
