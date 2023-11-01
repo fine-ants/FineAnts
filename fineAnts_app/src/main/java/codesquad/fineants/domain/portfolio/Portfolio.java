@@ -177,11 +177,12 @@ public class Portfolio {
 
 	// 투자대비 연간 배당율 = 포트폴리오 총 연배당금 / 포트폴리오 투자금액 * 100
 	public Integer calculateAnnualInvestmentDividendYield() {
-		Long totalInvestmentAmount = calculateTotalInvestmentAmount();
+		double totalInvestmentAmount = calculateTotalInvestmentAmount();
 		if (totalInvestmentAmount == 0) {
 			return 0;
 		}
-		return (int)(calculateTotalAnnualDividend() / totalInvestmentAmount) * 100;
+		double totalAnnualDividend = calculateTotalAnnualDividend();
+		return (int)((totalAnnualDividend / totalInvestmentAmount) * 100);
 	}
 
 	public PortfolioGainHistory createPortfolioGainHistory(PortfolioGainHistory history) {

@@ -184,6 +184,18 @@ class PortfolioStockServiceTest {
 			() -> assertThat(response).extracting("portfolioHoldings")
 				.asList()
 				.hasSize(1)
+				.flatExtracting("dividends")
+				.extracting("dividendMonth", "dividendAmount")
+				.containsExactlyInAnyOrder(
+					Tuple.tuple(LocalDate.of(2023, 4, 1).atStartOfDay(), 361L),
+					Tuple.tuple(LocalDate.of(2023, 5, 1).atStartOfDay(), 361L),
+					Tuple.tuple(LocalDate.of(2023, 8, 1).atStartOfDay(), 361L),
+					Tuple.tuple(LocalDate.of(2023, 11, 1).atStartOfDay(), 361L)
+				),
+
+			() -> assertThat(response).extracting("portfolioHoldings")
+				.asList()
+				.hasSize(1)
 				.flatExtracting("purchaseHistory")
 				.extracting("purchaseDate", "numShares", "purchasePricePerShare", "memo")
 				.containsExactlyInAnyOrder(Tuple.tuple(LocalDateTime.of(2023, 11, 1, 9, 30, 0), 3L, 50000.0, "첫구매"))

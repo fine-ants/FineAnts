@@ -146,11 +146,12 @@ public class PortfolioHolding extends BaseEntity {
 
 	// 연간배당율 = (연간배당금 / 현재 가치) * 100
 	public Integer calculateAnnualDividendYield() {
-		Long currentValuation = calculateCurrentValuation();
+		double currentValuation = calculateCurrentValuation();
 		if (currentValuation == 0) {
 			return 0;
 		}
-		return (int)((double)calculateAnnualDividend() / (double)currentValuation) * 100;
+		double annualDividend = calculateAnnualDividend();
+		return (int)((annualDividend / currentValuation) * 100);
 	}
 
 	// 연간 배당금 = 종목의 배당금 합계
