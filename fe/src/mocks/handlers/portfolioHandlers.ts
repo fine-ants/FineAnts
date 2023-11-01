@@ -1,4 +1,5 @@
 import { HTTPSTATUS } from "@api/types";
+import { calculateRate } from "@utils/calculate";
 import {
   successfulPortfolioAddData,
   successfulPortfolioData,
@@ -47,7 +48,8 @@ export default [
   rest.post("/api/portfolios", async (req, res, ctx) => {
     const { name, securitiesFirm, budget, targetGain, maximumLoss } =
       req.body as EditPortfolioReq;
-    const targetReturnRate = ((targetGain - budget) / budget) * 100;
+
+    const targetReturnRate = calculateRate(targetGain, budget);
     const maximumLossRate = ((budget - maximumLoss) / budget) * 100;
 
     const data = {
@@ -93,7 +95,7 @@ export default [
     const portfolioId = Number(req.params.portfolioId);
     const { budget, targetGain, maximumLoss } = req.body as EditPortfolioReq;
 
-    const targetReturnRate = ((targetGain - budget) / budget) * 100;
+    const targetReturnRate = calculateRate(targetGain, budget);
     const maximumLossRate = ((budget - maximumLoss) / budget) * 100;
 
     portfolioDetailsData[portfolioId - 1].portfolioDetails = {
