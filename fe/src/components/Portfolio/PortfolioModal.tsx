@@ -11,6 +11,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import { calculateRate, calculateValue } from "@utils/calculate";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -31,15 +32,15 @@ export default function PortfolioModal({
 
   const {
     mutate: editMutate,
-    isError: editIsError,
-    isSuccess: editIsSuccess,
+    isError: isEditError,
+    isSuccess: isEditSuccess,
   } = usePortfolioEditMutation(Number(id));
 
   const {
     data: addData,
     mutate: addMutate,
-    isError: addIsError,
-    isSuccess: addIsSuccess,
+    isError: isAddError,
+    isSuccess: isAddSuccess,
   } = usePortfolioAddMutation();
 
   const [securitiesFirm, setSecuritiesFirm] = useState(
@@ -84,50 +85,40 @@ export default function PortfolioModal({
   }, [budget]);
 
   useEffect(() => {
-    if (editIsSuccess) {
+    if (isEditSuccess) {
       onClose();
     }
 
-    if (editIsError) {
+    if (isEditError) {
       // TODO toast
     }
-  }, [editIsSuccess, editIsError]);
+  }, [isEditSuccess, isEditError]);
 
   useEffect(() => {
-    if (addIsSuccess) {
+    if (isAddSuccess) {
       const portfolioId = addData.data.portfolioId;
 
       onClose();
       navigate(`/portfolio/${portfolioId}`);
     }
 
-    if (addIsError) {
+    if (isAddError) {
       // TODO toast
     }
-  }, [addIsSuccess, addIsError]);
+  }, [isAddSuccess, isAddError]);
 
-  const withNumberOnly =
+  const changeIfNumberOnly =
     (handler: (value: string) => void) => (value: string) => {
       if (!isNaN(Number(value)) || value === "") {
         handler(value);
       }
     };
 
-  const calculateRate = (num1: number, num2: number) => {
-    return ((num1 - num2) / num2) * 100;
-  };
-
-  const calculateValue = (rate: number, base: number) => {
-    const value = base + (rate / 100) * base;
-
-    return Math.floor(value) === value ? value.toString() : value.toFixed(2);
-  };
-
-  const onBudgetInputChange = withNumberOnly((value: string) => {
+  const onBudgetInputChange = changeIfNumberOnly((value: string) => {
     onBudgetChange(value);
   });
 
-  const onTargetGainHandler = withNumberOnly((value: string) => {
+  const onTargetGainHandler = changeIfNumberOnly((value: string) => {
     const budgetNumber = Number(budget);
 
     onTargetGainChange(value);
@@ -136,12 +127,12 @@ export default function PortfolioModal({
     );
   });
 
-  const onTargetReturnRateHandler = withNumberOnly((value: string) => {
+  const onTargetReturnRateHandler = changeIfNumberOnly((value: string) => {
     onTargetReturnRateChange(value);
     onTargetGainChange(calculateValue(Number(value), Number(budget)));
   });
 
-  const onMaximumLossHandler = withNumberOnly((value: string) => {
+  const onMaximumLossHandler = changeIfNumberOnly((value: string) => {
     const budgetNumber = Number(budget);
     const valueNumber = Number(value);
 
@@ -151,7 +142,7 @@ export default function PortfolioModal({
     );
   });
 
-  const maximumLossRateHandler = withNumberOnly((value: string) => {
+  const maximumLossRateHandler = changeIfNumberOnly((value: string) => {
     onMaximumLossRateChange(value);
     onMaximumLossChange(calculateValue(-Number(value), Number(budget)));
   });
