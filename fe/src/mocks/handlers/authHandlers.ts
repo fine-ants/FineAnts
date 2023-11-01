@@ -4,6 +4,7 @@ import {
   successfulEmailVerificationData,
   successfulNicknameDuplicationCheckData,
   successfulSignInData,
+  successfulSignOutData,
   successfulSignUpData,
   unsuccessfulEmailDuplicationCheckData,
   unsuccessfulEmailVerificationData,
@@ -32,6 +33,10 @@ export default [
   rest.post("/api/auth/:provider/login", async (_, res, ctx) => {
     // Ignore `provider` and `code` for the sake of mock.
     return res(ctx.status(HTTPSTATUS.success), ctx.json(successfulSignInData));
+  }),
+
+  rest.delete("/api/auth/logout", async (_, res, ctx) => {
+    return res(ctx.status(HTTPSTATUS.success), ctx.json(successfulSignOutData));
   }),
 
   rest.post("/api/auth/signup", async (_, res, ctx) => {

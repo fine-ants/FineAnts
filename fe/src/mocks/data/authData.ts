@@ -39,6 +39,13 @@ export const unsuccessfulSignInData = {
   data: null,
 };
 
+export const successfulSignOutData = {
+  code: HTTPSTATUS.success,
+  status: "Success",
+  message: "로그아웃이 성공했습니다",
+  data: null,
+};
+
 export const successfulNicknameDuplicationCheckData = {
   code: HTTPSTATUS.success,
   status: "Success",

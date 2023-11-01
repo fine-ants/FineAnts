@@ -1,8 +1,18 @@
+import useSignOutMutation from "@api/auth/queries/useSignOutMutation";
+import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function UserControls() {
   const navigate = useNavigate();
+
+  const { mutate: signOutMutate } = useSignOutMutation();
+
+  const onSignOut = () => {
+    // TODO: Handler error
+    signOutMutate();
+  };
+
   return (
     <StyledUserControls>
       <ControlButton>알</ControlButton>
@@ -10,6 +20,9 @@ export default function UserControls() {
       <ControlButton onClick={() => navigate("/profile/edit")}>
         프
       </ControlButton>
+      <Button variant="text" onClick={onSignOut}>
+        로그아웃
+      </Button>
     </StyledUserControls>
   );
 }
