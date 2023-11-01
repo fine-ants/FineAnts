@@ -139,7 +139,7 @@ class PortfolioNotificationServiceTest {
 		assertAll(
 			() -> assertThat(response).extracting("portfolioId", "isActive")
 				.containsExactlyInAnyOrder(portfolioId, true),
-			() -> assertThat(portfolioRepository.findById(portfolioId).orElseThrow().getIsActive()).isTrue()
+			() -> assertThat(portfolioRepository.findById(portfolioId).orElseThrow().getTargetGainIsActive()).isTrue()
 		);
 	}
 

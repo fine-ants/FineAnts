@@ -2,8 +2,12 @@ package codesquad.fineants.spring.api.portfolio_gain_history;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
@@ -12,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import codesquad.fineants.domain.member.Member;
@@ -26,6 +31,7 @@ import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
+import codesquad.fineants.spring.api.kis.KisService;
 import codesquad.fineants.spring.api.portfolio_gain_history.response.PortfolioGainHistoryCreateResponse;
 
 @ActiveProfiles("test")
@@ -52,6 +58,9 @@ class PortfolioGainHistoryServiceTest {
 
 	@Autowired
 	private PurchaseHistoryRepository purchaseHistoryRepository;
+
+	@MockBean
+	private KisService kisService;
 
 	private Member member;
 
@@ -115,6 +124,10 @@ class PortfolioGainHistoryServiceTest {
 		portfolioHolding.addPurchaseHistory(purchaseHistory);
 		portFolioHoldingRepository.save(portfolioHolding);
 		purchaseHistoryRepository.save(purchaseHistory);
+
+		Map<String, Long> currentPriceMap = new HashMap<>();
+		currentPriceMap.put("005930", 60000L);
+		given(kisService.refreshCurrentPriceMap(anyList())).willReturn(currentPriceMap);
 
 		// when
 		PortfolioGainHistoryCreateResponse response = service.addPortfolioGainHistory();

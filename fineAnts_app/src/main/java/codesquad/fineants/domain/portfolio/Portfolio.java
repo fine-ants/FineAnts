@@ -38,7 +38,7 @@ public class Portfolio {
 	private Long budget;
 	private Long targetGain;
 	private Long maximumLoss;
-	private Boolean isActive;
+	private Boolean targetGainIsActive;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -49,14 +49,14 @@ public class Portfolio {
 
 	@Builder
 	public Portfolio(Long id, String name, String securitiesFirm, Long budget, Long targetGain, Long maximumLoss,
-		Boolean isActive, Member member) {
+		Boolean targetGainIsActive, Member member) {
 		this.id = id;
 		this.name = name;
 		this.securitiesFirm = securitiesFirm;
 		this.budget = budget;
 		this.targetGain = targetGain;
 		this.maximumLoss = maximumLoss;
-		this.isActive = isActive;
+		this.targetGainIsActive = targetGainIsActive;
 		this.member = member;
 	}
 
@@ -217,6 +217,6 @@ public class Portfolio {
 	}
 
 	public void changeNotification(Boolean isActive) {
-		this.isActive = isActive;
+		this.targetGainIsActive = isActive;
 	}
 }

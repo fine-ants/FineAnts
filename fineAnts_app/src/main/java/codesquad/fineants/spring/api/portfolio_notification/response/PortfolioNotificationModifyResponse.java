@@ -14,6 +14,6 @@ public class PortfolioNotificationModifyResponse {
 	private Boolean isActive;
 
 	public static PortfolioNotificationModifyResponse from(Portfolio portfolio) {
-		return new PortfolioNotificationModifyResponse(portfolio.getId(), portfolio.getIsActive());
+		return new PortfolioNotificationModifyResponse(portfolio.getId(), portfolio.getTargetGainIsActive());
 	}
 }
