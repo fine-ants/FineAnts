@@ -87,6 +87,7 @@ class PortFolioRestControllerTest {
 	void addPortfolio() throws Exception {
 		// given
 		PortFolioCreateResponse response = PortFolioCreateResponse.from(Portfolio.builder()
+			.id(1L)
 			.name("내꿈은 워렌버핏")
 			.securitiesFirm("토스")
 			.budget(1000000L)
@@ -113,7 +114,7 @@ class PortFolioRestControllerTest {
 			.andExpect(jsonPath("code").value(equalTo(201)))
 			.andExpect(jsonPath("status").value(equalTo("Created")))
 			.andExpect(jsonPath("message").value(equalTo("포트폴리오가 추가되었습니다")))
-			.andExpect(jsonPath("data").value(equalTo(null)));
+			.andExpect(jsonPath("data.portfolioId").value(notNullValue()));
 	}
 
 	@DisplayName("사용자는 포트폴리오 추가시 유효하지 않은 입력 정보로 추가할 수 없다")

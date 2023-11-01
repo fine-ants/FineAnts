@@ -32,6 +32,7 @@ import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.spring.api.errors.handler.GlobalExceptionHandler;
+import codesquad.fineants.spring.api.kis.KisService;
 import codesquad.fineants.spring.api.portfolio_stock.request.PortfolioStockCreateRequest;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStockCreateResponse;
 import codesquad.fineants.spring.config.JpaAuditingConfiguration;
@@ -57,6 +58,9 @@ class PortfolioHoldingRestControllerTest {
 
 	@MockBean
 	private PortfolioStockService portfolioStockService;
+
+	@MockBean
+	private KisService kisService;
 
 	private Member member;
 	private Portfolio portfolio;
@@ -98,9 +102,8 @@ class PortfolioHoldingRestControllerTest {
 			.build();
 
 		stock = Stock.builder()
-			.id(1L)
-			.companyName("삼성전자보통주")
 			.tickerSymbol("005930")
+			.companyName("삼성전자보통주")
 			.companyNameEng("SamsungElectronics")
 			.stockCode("KR7005930003")
 			.market(Market.KOSPI)
@@ -108,7 +111,6 @@ class PortfolioHoldingRestControllerTest {
 
 		portfolioHolding = PortfolioHolding.builder()
 			.id(1L)
-			.annualDividend(0L)
 			.currentPrice(null)
 			.portfolio(portfolio)
 			.stock(stock)

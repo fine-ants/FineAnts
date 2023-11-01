@@ -85,15 +85,6 @@ public class PortfolioStockService {
 		return new PortfolioStockDeleteResponse(portfolioHoldingId);
 	}
 
-	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId) {
-		Portfolio portfolio = findPortfolio(portfolioId);
-		List<PortfolioHolding> portfolioHoldings = portfolio.getPortfolioHoldings();
-		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
-				portfolio, LocalDateTime.now())
-			.orElseGet(PortfolioGainHistory::empty);
-		return PortfolioHoldingsResponse.of(portfolio, latestHistory, portfolioHoldings);
-	}
-
 	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId, Map<String, Long> currentPriceMap) {
 		Portfolio portfolio = findPortfolio(portfolioId);
 		List<PortfolioHolding> portfolioHoldings = portfolio.changeCurrentPriceFromHoldings(currentPriceMap);
