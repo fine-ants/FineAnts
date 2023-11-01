@@ -12,16 +12,7 @@ export default function useSignInMutation() {
   return useMutation({
     mutationFn: postSignIn,
     onSuccess: ({ data }) => {
-      const {
-        jwt: { accessToken, refreshToken },
-        user,
-      } = data;
-
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-
-      onSignIn(user);
-
+      onSignIn(data);
       navigate(Routes.DASHBOARD);
     },
   });

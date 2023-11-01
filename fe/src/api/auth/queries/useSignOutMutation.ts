@@ -12,12 +12,8 @@ export default function useSignOutMutation() {
   return useMutation({
     mutationFn: deleteSignOut,
     onSuccess: () => {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-
       onSignOut();
-
-      navigate(Routes.SIGNIN);
+      navigate(Routes.LANDING);
     },
   });
 }

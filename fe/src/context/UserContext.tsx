@@ -1,9 +1,9 @@
-import { User } from "@api/auth";
+import { SignInData, User } from "@api/auth";
 import { ReactNode, createContext, useState } from "react";
 
 export const UserContext = createContext<{
   user: User | null;
-  onSignIn: (user: User) => void;
+  onSignIn: (signInData: SignInData) => void;
   onSignOut: () => void;
 }>({
   user: null,
@@ -14,11 +14,18 @@ export const UserContext = createContext<{
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
-  const onSignIn = (user: User) => {
+  const onSignIn = ({
+    jwt: { accessToken, refreshToken },
+    user,
+  }: SignInData) => {
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
     setUser(user);
   };
 
   const onSignOut = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     setUser(null);
   };
 

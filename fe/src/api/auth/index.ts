@@ -14,7 +14,7 @@ export type SignInCredentials = {
   password: string;
 };
 
-type SignInData = {
+export type SignInData = {
   jwt: {
     accessToken: string;
     refreshToken: string;

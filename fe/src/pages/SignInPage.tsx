@@ -27,7 +27,7 @@ export default function SignInPage() {
   } = useText({ validators: [validateEmail] });
   const { value: password, onChange: onPasswordChange } = useText();
 
-  const onSignIn = async (e: FormEvent) => {
+  const onSignInSubmit = async (e: FormEvent) => {
     e.preventDefault();
     signInMutate({ email, password });
   };
@@ -71,7 +71,7 @@ export default function SignInPage() {
     <StyledSignInPage>
       <h2>로그인</h2>
 
-      <Form onSubmit={onSignIn}>
+      <Form onSubmit={onSignInSubmit}>
         <InputControl>
           <TextInputLabel>이메일</TextInputLabel>
           <input
