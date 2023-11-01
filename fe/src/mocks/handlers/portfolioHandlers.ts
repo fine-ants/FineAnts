@@ -1,5 +1,5 @@
 import { HTTPSTATUS } from "@api/types";
-import { calculateRate } from "@utils/calculate";
+import { calculateRate } from "@utils/calculations";
 import {
   successfulPortfolioAddData,
   successfulPortfolioData,

@@ -11,7 +11,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { calculateRate, calculateValue } from "@utils/calculate";
+import { calculateRate, calculateValue } from "@utils/calculations";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
