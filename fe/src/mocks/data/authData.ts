@@ -4,18 +4,38 @@ export const successfulSignUpData = {
   code: HTTPSTATUS.created,
   status: "Created",
   message: "회원가입이 완료되었습니다",
-  data: {
-    member: {
-      nickname: "Kakamotobi",
-      email: "daeram.chung@gmail.com",
-    },
-  },
+  data: null,
 };
 
 export const unsuccessfulSignUpData = {
   code: HTTPSTATUS.badRequest,
   status: "Bad Request",
   message: "회원가입이 실패했습니다",
+  data: null,
+};
+
+export const successfulSignInData = {
+  code: HTTPSTATUS.success,
+  status: "Success",
+  message: "로그인이 성공했습니다",
+  data: {
+    jwt: {
+      accessToken: "iamaccesstoken",
+      refreshToken: "iamrefreshtoken",
+    },
+    user: {
+      id: 1,
+      nickname: "Kakamotobi",
+      email: "daeram.chung@gmail.com",
+      profileUrl: "https://avatars.githubusercontent.com/u/79886384?v=4",
+    },
+  },
+};
+
+export const unsuccessfulSignInData = {
+  code: HTTPSTATUS.badRequest,
+  status: "Bad Request",
+  message: "로그인이 실패했습니다",
   data: null,
 };
 
