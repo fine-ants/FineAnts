@@ -77,7 +77,7 @@ public class MemberServiceTest {
 		// then
 		assertAll(
 			() -> assertThat(response)
-				.extracting("member")
+				.extracting("user")
 				.extracting("email")
 				.isEqualTo("kim1234@gmail.com")
 		);
