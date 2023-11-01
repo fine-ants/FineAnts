@@ -1,8 +1,11 @@
 import { PurchaseHistoryField } from "@api/portfolio";
 import usePortfolioHoldingPurchaseDeleteMutation from "@api/portfolio/queries/usePortfolioHoldingPurchaseDeleteMutation";
+import usePortfolioHoldingPurchaseEditMutation from "@api/portfolio/queries/usePortfolioHoldingPurchaseEditMutation";
 import ConfirmAlert from "@components/ConfirmAlert";
 import { Button, Input, TableCell, TableRow } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
 import { formatDate } from "@utils/date";
+import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
 
 type Props = {
@@ -22,6 +25,13 @@ export default function PortfolioHoldingLotRow({
     memo,
   },
 }: Props) {
+  const { mutate: portfolioHoldingPurchaseEditMutate } =
+    usePortfolioHoldingPurchaseEditMutation({
+      portfolioId,
+      portfolioHoldingId,
+      purchaseHistoryId,
+    });
+
   const { mutate: portfolioHoldingPurchaseDeleteMutate } =
     usePortfolioHoldingPurchaseDeleteMutation({
       portfolioId,
@@ -33,8 +43,8 @@ export default function PortfolioHoldingLotRow({
   const [isDeleteConfirmAlertOpen, setIsDeleteConfirmAlertOpen] =
     useState(false);
 
-  const [newPurchaseDate, setNewPurchaseDate] = useState(
-    formatDate(purchaseDate)
+  const [newPurchaseDate, setNewPurchaseDate] = useState<Dayjs | null>(
+    dayjs(new Date())
   );
   const [newPurchasePricePerShare, setNewPurchasePricePerShare] = useState(
     purchasePricePerShare.toString()
@@ -47,7 +57,19 @@ export default function PortfolioHoldingLotRow({
   };
 
   const onSaveClick = () => {
-    // TODO: Send request to save changes
+    // TODO: Handle error
+    portfolioHoldingPurchaseEditMutate({
+      portfolioId,
+      portfolioHoldingId,
+      purchaseHistoryId,
+      body: {
+        purchaseDate: newPurchaseDate?.toISOString() ?? "",
+        purchasePricePerShare: Number(newPurchasePricePerShare),
+        numShares: Number(newNumShares),
+        memo: newMemo,
+      },
+    });
+
     setIsEditing(false);
   };
 
@@ -73,10 +95,10 @@ export default function PortfolioHoldingLotRow({
       {isEditing ? (
         <>
           <TableCell component="th" scope="row">
-            <Input
-              type="date"
+            <DatePicker
+              label="Purchase Date"
               value={newPurchaseDate}
-              onChange={(e) => setNewPurchaseDate(e.target.value)}
+              onChange={(newVal) => setNewPurchaseDate(newVal)}
             />
           </TableCell>
           <TableCell align="right">

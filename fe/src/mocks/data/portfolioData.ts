@@ -140,21 +140,21 @@ export const successfulGetPortfolioDetailsResponse = {
 
 //TODO: api portfolios로 가져오는 데이터의 값이랑 다른 상태라 상의후에 통일해야함 포스트맨 api에는 value와 fill이 없음
 
-export const successfulPortfolioAddData = {
+export const successfulPortfolioAddResponse = {
   code: 200,
   status: "OK",
   message: "포트폴리오가 추가되었습니다",
   data: null,
 };
 
-export const successfulPortfolioEditData = {
+export const successfulPortfolioEditResponse = {
   code: 200,
   status: "OK",
   message: "포트폴리오가 수정되었습니다",
   data: null,
 };
 
-export const successfulPortfolioDeleteData = {
+export const successfulPortfolioDeleteResponse = {
   code: 200,
   status: "OK",
   message: "포트폴리오 삭제가 완료되었습니다",
@@ -165,6 +165,13 @@ export const successfulPortfolioHoldingPurchaseAddResponse = {
   code: 200,
   status: "OK",
   message: "매입 이력이 추가되었습니다",
+  data: null,
+};
+
+export const successfulPortfolioHoldingPurchaseEditResponse = {
+  code: 200,
+  status: "OK",
+  message: "매입 이력이 수정되었습니다",
   data: null,
 };
 

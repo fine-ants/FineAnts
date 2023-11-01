@@ -182,6 +182,7 @@ export const putPortfolioHoldingPurchase = async ({
     purchaseDate: string;
     numShares: number;
     purchasePricePerShare: number;
+    memo: string;
   };
 }) => {
   const res = await fetcher.put<Response<null>>(
