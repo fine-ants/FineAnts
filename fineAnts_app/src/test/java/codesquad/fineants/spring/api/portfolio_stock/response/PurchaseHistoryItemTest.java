@@ -29,7 +29,7 @@ class PurchaseHistoryItemTest {
 		PurchaseHistoryItem historyItem = PurchaseHistoryItem.from(history);
 		// then
 		assertThat(historyItem)
-			.extracting("id", "purchaseDate", "numShares", "purchasePricePerShare", "memo")
+			.extracting("purchaseHistoryId", "purchaseDate", "numShares", "purchasePricePerShare", "memo")
 			.containsExactlyInAnyOrder(1L, now, 3L, 30000.0, "첫구매");
 	}
 }

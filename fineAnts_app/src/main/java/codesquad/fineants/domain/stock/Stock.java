@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -19,28 +17,28 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString(exclude = "stockDividends")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Stock extends BaseEntity {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private String tickerSymbol;
 	private String companyName;
 	private String companyNameEng;
 	private String stockCode;
-	private String tickerSymbol;
 	@Enumerated(value = EnumType.STRING)
 	private Market market;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "stock", fetch = FetchType.LAZY)
 	private final List<StockDividend> stockDividends = new ArrayList<>();
 
 	@Builder
-	public Stock(Long id, String companyName, String companyNameEng, String stockCode, String tickerSymbol,
+	public Stock(String companyName, String companyNameEng, String stockCode, String tickerSymbol,
 		Market market) {
-		this.id = id;
 		this.companyName = companyName;
 		this.companyNameEng = companyNameEng;
 		this.stockCode = stockCode;

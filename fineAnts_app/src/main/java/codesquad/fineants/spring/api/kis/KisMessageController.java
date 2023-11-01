@@ -17,12 +17,6 @@ public class KisMessageController {
 
 	private final KisService kisService;
 
-	@MessageMapping("/currentPrice")
-	public void currentPrice(@Payload MessageData messageData) {
-		log.info("tickerSymbols : {}", messageData.getTickerSymbols());
-		kisService.addTickerSymbols(messageData.getTickerSymbols());
-	}
-
 	@MessageMapping("/portfolio/{portfolioId}/currentPrice")
 	public void portfolioHolding(
 		@DestinationVariable Long portfolioId,

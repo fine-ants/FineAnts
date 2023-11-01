@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import codesquad.fineants.spring.api.kis.client.KisClient;
+import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import codesquad.fineants.spring.api.kis.manager.KisAccessTokenManager;
 import codesquad.fineants.spring.api.kis.response.CurrentPriceResponse;
 import codesquad.fineants.spring.api.portfolio_stock.PortfolioStockService;
@@ -37,12 +38,14 @@ public class KisService {
 	private final SimpMessagingTemplate messagingTemplate;
 	private final PortfolioStockService portfolioStockService;
 	private final KisAccessTokenManager manager;
+	private final CurrentPriceManager currentPriceManager;
 
 	// 제약조건 : kis 서버에 1초당 최대 5건, TR간격 0.1초 이하면 안됨
 	public CurrentPriceResponse readRealTimeCurrentPrice(String tickerSymbol) {
 		Map<String, String> output = (Map<String, String>)kisClient.readRealTimeCurrentPrice(tickerSymbol,
 			manager.createAuthorization()).get("output");
 		long currentPrice = Long.parseLong(output.get("stck_prpr"));
+
 		log.info("tickerSymbol={}, currentPrice={}, time={}", tickerSymbol, currentPrice, LocalDateTime.now());
 		return new CurrentPriceResponse(tickerSymbol, currentPrice);
 	}
