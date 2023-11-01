@@ -38,6 +38,7 @@ public class Portfolio {
 	private Long budget;
 	private Long targetGain;
 	private Long maximumLoss;
+	private Boolean isActive;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -48,13 +49,14 @@ public class Portfolio {
 
 	@Builder
 	public Portfolio(Long id, String name, String securitiesFirm, Long budget, Long targetGain, Long maximumLoss,
-		Member member) {
+		Boolean isActive, Member member) {
 		this.id = id;
 		this.name = name;
 		this.securitiesFirm = securitiesFirm;
 		this.budget = budget;
 		this.targetGain = targetGain;
 		this.maximumLoss = maximumLoss;
+		this.isActive = isActive;
 		this.member = member;
 	}
 
@@ -212,5 +214,9 @@ public class Portfolio {
 	// 목표 수익률 = ((목표 수익 금액 - 예산) / 예산) * 100
 	public Integer calculateTargetReturnRate() {
 		return (int)(((double)(targetGain - budget) / (double)budget) * 100);
+	}
+
+	public void changeNotification(Boolean isActive) {
+		this.isActive = isActive;
 	}
 }
