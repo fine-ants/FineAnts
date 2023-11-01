@@ -12,7 +12,12 @@ export const UserContext = createContext<{
 });
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const getUser = () => {
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
+  };
+
+  const [user, setUser] = useState<User | null>(getUser());
 
   const onSignIn = ({
     jwt: { accessToken, refreshToken },
@@ -20,12 +25,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }: SignInData) => {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("user", JSON.stringify(user));
     setUser(user);
   };
 
   const onSignOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
     setUser(null);
   };
 
