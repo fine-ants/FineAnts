@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -20,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.client.OauthClient;
 import codesquad.fineants.domain.oauth.repository.OauthClientRepository;
 import codesquad.fineants.spring.api.member.response.OauthAccessTokenResponse;
@@ -41,6 +43,14 @@ public class MemberServiceTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	private MemberRepository memberRepository;
+
+	@BeforeEach
+	void tearDown() {
+		memberRepository.deleteAllInBatch();
+	}
 
 	@DisplayName("사용자가 카카오 로그인합니다.")
 	@Test

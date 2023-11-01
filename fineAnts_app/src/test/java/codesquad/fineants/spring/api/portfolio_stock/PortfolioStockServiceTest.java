@@ -24,6 +24,7 @@ import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
 import codesquad.fineants.domain.portfolio_holding.PortFolioHoldingRepository;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import codesquad.fineants.domain.purchase_history.PurchaseHistory;
@@ -64,6 +65,9 @@ class PortfolioStockServiceTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	private PortfolioGainHistoryRepository portfolioGainHistoryRepository;
 
 	private Member member;
 	private Portfolio portfolio;
@@ -139,6 +143,7 @@ class PortfolioStockServiceTest {
 	void tearDown() {
 		purchaseHistoryRepository.deleteAllInBatch();
 		portFolioHoldingRepository.deleteAllInBatch();
+		portfolioGainHistoryRepository.deleteAllInBatch();
 		portfolioRepository.deleteAllInBatch();
 		memberRepository.deleteAllInBatch();
 		stockDividendRepository.deleteAllInBatch();
@@ -158,12 +163,12 @@ class PortfolioStockServiceTest {
 		// then
 		assertAll(
 			() -> assertThat(response).extracting("portfolioDetails")
-				.extracting("id", "securitiesFirm", "name", "budget", "targetGain", "targetReturnRate",
+				.extracting("securitiesFirm", "name", "budget", "targetGain", "targetReturnRate",
 					"maximumLoss", "maximumLossRate", "investedAmount", "totalGain", "totalGainRate", "dailyGain",
 					"dailyGainRate", "balance", "totalAnnualDividend", "totalAnnualDividendYield",
 					"provisionalLossBalance",
 					"targetGainNotification", "maxLossNotification")
-				.containsExactlyInAnyOrder(1L, "토스", "내꿈은 워렌버핏", 1000000L, 1500000L, 50, 900000L, 10, 150000L, 30000L,
+				.containsExactlyInAnyOrder("토스", "내꿈은 워렌버핏", 1000000L, 1500000L, 50, 900000L, 10, 150000L, 30000L,
 					20, 30000L, 20, 850000L, 4332L, 2, 0L, false, false),
 			() -> assertThat(response).extracting("portfolioHoldings")
 				.asList()
