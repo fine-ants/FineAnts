@@ -123,7 +123,7 @@ class PortfolioNotificationRestControllerTest {
 			.build();
 	}
 
-	@DisplayName("사용자는 포트폴리오의 알람을 활성화합니다.")
+	@DisplayName("사용자는 포트폴리오의 목표수익금액 알람을 활성화합니다.")
 	@Test
 	void modifyNotificationTargetGain() throws Exception {
 		// given
@@ -137,7 +137,7 @@ class PortfolioNotificationRestControllerTest {
 
 		PortfolioNotificationModifyResponse response = objectMapper.readValue(
 			objectMapper.writeValueAsString(responseBodyMap), PortfolioNotificationModifyResponse.class);
-		given(service.modifyPortfolioNotification(
+		given(service.modifyPortfolioTargetGainNotification(
 			any(PortfolioNotificationModifyRequest.class),
 			anyLong()
 		)).willReturn(response);
@@ -154,7 +154,7 @@ class PortfolioNotificationRestControllerTest {
 			.andExpect(jsonPath("data").value(equalTo(null)));
 	}
 
-	@DisplayName("사용자는 포트폴리오의 알람을 비활성화합니다.")
+	@DisplayName("사용자는 포트폴리오의 목표수익금액 알람을 비활성화합니다.")
 	@Test
 	void modifyNotificationTargetGainWithInActive() throws Exception {
 		// given
@@ -168,7 +168,7 @@ class PortfolioNotificationRestControllerTest {
 
 		PortfolioNotificationModifyResponse response = objectMapper.readValue(
 			objectMapper.writeValueAsString(responseBodyMap), PortfolioNotificationModifyResponse.class);
-		given(service.modifyPortfolioNotification(
+		given(service.modifyPortfolioTargetGainNotification(
 			any(PortfolioNotificationModifyRequest.class),
 			anyLong()
 		)).willReturn(response);
@@ -182,6 +182,68 @@ class PortfolioNotificationRestControllerTest {
 			.andExpect(jsonPath("code").value(equalTo(200)))
 			.andExpect(jsonPath("status").value(equalTo("OK")))
 			.andExpect(jsonPath("message").value(equalTo("목표수익금액의 알림이 비활성화되었습니다")))
+			.andExpect(jsonPath("data").value(equalTo(null)));
+	}
+
+	@DisplayName("사용자는 포트폴리오의 최대손실금액 알람을 활성화합니다.")
+	@Test
+	void modifyNotificationMaximumLoss() throws Exception {
+		// given
+		long portfolioId = portfolio.getId();
+		Map<String, String> requestBodyMap = new HashMap<>();
+		requestBodyMap.put("isActive", "true");
+
+		Map<String, Object> responseBodyMap = new HashMap<>();
+		responseBodyMap.put("portfolioId", portfolioId);
+		responseBodyMap.put("isActive", true);
+
+		PortfolioNotificationModifyResponse response = objectMapper.readValue(
+			objectMapper.writeValueAsString(responseBodyMap), PortfolioNotificationModifyResponse.class);
+		given(service.modifyPortfolioMaximumLossNotification(
+			any(PortfolioNotificationModifyRequest.class),
+			anyLong()
+		)).willReturn(response);
+
+		// when & then
+		mockMvc.perform(put(String.format("/api/portfolio/%d/notification/maxLoss", portfolioId))
+				.contentType(MediaType.APPLICATION_JSON)
+				.characterEncoding(StandardCharsets.UTF_8)
+				.content(objectMapper.writeValueAsString(requestBodyMap)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("code").value(equalTo(200)))
+			.andExpect(jsonPath("status").value(equalTo("OK")))
+			.andExpect(jsonPath("message").value(equalTo("최대손실금액의 알림이 활성화되었습니다")))
+			.andExpect(jsonPath("data").value(equalTo(null)));
+	}
+
+	@DisplayName("사용자는 포트폴리오의 최대손실금액 알람을 비활성화합니다.")
+	@Test
+	void modifyNotificationMaximumLossWithInActive() throws Exception {
+		// given
+		long portfolioId = portfolio.getId();
+		Map<String, String> requestBodyMap = new HashMap<>();
+		requestBodyMap.put("isActive", "false");
+
+		Map<String, Object> responseBodyMap = new HashMap<>();
+		responseBodyMap.put("portfolioId", portfolioId);
+		responseBodyMap.put("isActive", false);
+
+		PortfolioNotificationModifyResponse response = objectMapper.readValue(
+			objectMapper.writeValueAsString(responseBodyMap), PortfolioNotificationModifyResponse.class);
+		given(service.modifyPortfolioMaximumLossNotification(
+			any(PortfolioNotificationModifyRequest.class),
+			anyLong()
+		)).willReturn(response);
+
+		// when & then
+		mockMvc.perform(put(String.format("/api/portfolio/%d/notification/maxLoss", portfolioId))
+				.contentType(MediaType.APPLICATION_JSON)
+				.characterEncoding(StandardCharsets.UTF_8)
+				.content(objectMapper.writeValueAsString(requestBodyMap)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("code").value(equalTo(200)))
+			.andExpect(jsonPath("status").value(equalTo("OK")))
+			.andExpect(jsonPath("message").value(equalTo("최대손실금액의 알림이 비활성화되었습니다")))
 			.andExpect(jsonPath("data").value(equalTo(null)));
 	}
 }

@@ -121,9 +121,9 @@ class PortfolioNotificationServiceTest {
 		stockRepository.deleteAllInBatch();
 	}
 
-	@DisplayName("사용자는 포트폴리오 알림을 활성화한다")
+	@DisplayName("사용자는 포트폴리오 목표수익금액 알림을 활성화한다")
 	@Test
-	void modifyPortfolioNotification() throws JsonProcessingException {
+	void modifyPortfolioTargetGainNotification() throws JsonProcessingException {
 		// given
 		long portfolioId = portfolio.getId();
 		Map<String, Boolean> requestBodyMap = new HashMap<>();
@@ -132,7 +132,7 @@ class PortfolioNotificationServiceTest {
 			objectMapper.writeValueAsString(requestBodyMap), PortfolioNotificationModifyRequest.class);
 
 		// when
-		PortfolioNotificationModifyResponse response = service.modifyPortfolioNotification(
+		PortfolioNotificationModifyResponse response = service.modifyPortfolioTargetGainNotification(
 			request, portfolioId);
 
 		// then
@@ -140,6 +140,28 @@ class PortfolioNotificationServiceTest {
 			() -> assertThat(response).extracting("portfolioId", "isActive")
 				.containsExactlyInAnyOrder(portfolioId, true),
 			() -> assertThat(portfolioRepository.findById(portfolioId).orElseThrow().getTargetGainIsActive()).isTrue()
+		);
+	}
+
+	@DisplayName("사용자는 포트폴리오 최대손실금액 알림을 활성화한다")
+	@Test
+	void modifyPortfolioMaximumLossNotification() throws JsonProcessingException {
+		// given
+		long portfolioId = portfolio.getId();
+		Map<String, Boolean> requestBodyMap = new HashMap<>();
+		requestBodyMap.put("isActive", true);
+		PortfolioNotificationModifyRequest request = objectMapper.readValue(
+			objectMapper.writeValueAsString(requestBodyMap), PortfolioNotificationModifyRequest.class);
+
+		// when
+		PortfolioNotificationModifyResponse response = service.modifyPortfolioMaximumLossNotification(
+			request, portfolioId);
+
+		// then
+		assertAll(
+			() -> assertThat(response).extracting("portfolioId", "isActive")
+				.containsExactlyInAnyOrder(portfolioId, true),
+			() -> assertThat(portfolioRepository.findById(portfolioId).orElseThrow().getMaximumIsActive()).isTrue()
 		);
 	}
 

@@ -28,10 +28,24 @@ public class PortfolioNotificationRestController {
 		@Valid @RequestBody PortfolioNotificationModifyRequest request,
 		@PathVariable Long portfolioId) {
 		log.info("포트폴리오 알림 설정 : request={}, portfolioId={}", request, portfolioId);
-		PortfolioNotificationModifyResponse response = service.modifyPortfolioNotification(request, portfolioId);
+		PortfolioNotificationModifyResponse response = service.modifyPortfolioTargetGainNotification(request,
+			portfolioId);
 		if (response.getIsActive()) {
-			return ApiResponse.success(PortfolioSuccessCode.OK_MODIFY_PORTFOLIO_ACTIVE_NOTIFICATION);
+			return ApiResponse.success(PortfolioSuccessCode.OK_MODIFY_PORTFOLIO_TARGET_GAIN_ACTIVE_NOTIFICATION);
 		}
-		return ApiResponse.success(PortfolioSuccessCode.OK_MODIFY_PORTFOLIO_INACTIVE_NOTIFICATION);
+		return ApiResponse.success(PortfolioSuccessCode.OK_MODIFY_PORTFOLIO_TARGET_GAIN_INACTIVE_NOTIFICATION);
+	}
+
+	@PutMapping("/maxLoss")
+	public ApiResponse<Void> modifyNotificationMaximumLoss(
+		@Valid @RequestBody PortfolioNotificationModifyRequest request,
+		@PathVariable Long portfolioId) {
+		log.info("포트폴리오 알림 설정 : request={}, portfolioId={}", request, portfolioId);
+		PortfolioNotificationModifyResponse response = service.modifyPortfolioMaximumLossNotification(request,
+			portfolioId);
+		if (response.getIsActive()) {
+			return ApiResponse.success(PortfolioSuccessCode.OK_MODIFY_PORTFOLIO_MAXIMUM_LOSS_ACTIVE_NOTIFICATION);
+		}
+		return ApiResponse.success(PortfolioSuccessCode.OK_MODIFY_PORTFOLIO_MAXIMUM_LOSS_INACTIVE_NOTIFICATION);
 	}
 }
