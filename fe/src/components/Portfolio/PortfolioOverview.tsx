@@ -1,10 +1,11 @@
 import { PortfolioDetails } from "@api/portfolio";
+import usePortfolioDeleteMutation from "@api/portfolio/queries/usePortfolioDeleteMutation";
 import ConfirmAlert from "@components/ConfirmAlert";
 import PortfolioModal from "@components/Portfolio/PortfolioModal";
 import ToggleSwitch from "@components/ToggleSwitch";
 import { Button } from "@mui/material";
 import { useState } from "react";
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 type Props = {
@@ -12,7 +13,10 @@ type Props = {
 };
 
 export default function PortfolioOverview({ data }: Props) {
-  // const { id } = useParams();)
+  const { id } = useParams();
+  const { mutate: portfolioDeleteMutate } = usePortfolioDeleteMutation(
+    Number(id)
+  );
 
   const [isTargetSwitchChecked, setIsTargetSwitchChecked] = useState(true);
   const [isLossSwitchChecked, setIsLossSwitchChecked] = useState(false);
@@ -20,13 +24,23 @@ export default function PortfolioOverview({ data }: Props) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const onPortfolioEdit = () => {
-    // TODO : 수정 api 추가
     setIsModalOPen(true);
   };
 
   const onPortfolioRemove = () => {
-    // TODO : 삭제 api 추가
     setIsConfirmOpen(true);
+  };
+
+  const onModalClose = () => {
+    setIsModalOPen(false);
+  };
+
+  const onConfirmAlertClose = () => {
+    setIsConfirmOpen(false);
+  };
+
+  const onConfirmAction = () => {
+    portfolioDeleteMutate(Number(id));
   };
 
   const onTargetSwitchToggle = () => {
@@ -42,9 +56,7 @@ export default function PortfolioOverview({ data }: Props) {
       {isModalOpen && (
         <PortfolioModal
           isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOPen(false);
-          }}
+          onClose={onModalClose}
           portfolioDetails={data}
         />
       )}
@@ -53,8 +65,8 @@ export default function PortfolioOverview({ data }: Props) {
           isOpen={isConfirmOpen}
           title="포트폴리오 삭제"
           content="포트폴리오를 삭제 하시겠습니까?"
-          onClose={() => setIsConfirmOpen(false)}
-          onConfirm={() => console.log("삭제")}
+          onClose={onConfirmAlertClose}
+          onConfirm={onConfirmAction}
         />
       )}
       <Header>
@@ -71,15 +83,15 @@ export default function PortfolioOverview({ data }: Props) {
       </Header>
       <Body>
         <LeftPanel>
-          <div>예산 : {data.budget} KRW</div>
-          <div>투자 금액 : {data.investedAmount} KRW</div>
-          <div>잔고 : {data.balance} KRW</div>
-          <div>잠정 손실잔고 : {data.provisionalLossBalance} KRW</div>
+          <div>예산 {data.budget} KRW</div>
+          <div>투자 금액 {data.investedAmount} KRW</div>
+          <div>잔고 {data.balance} KRW</div>
+          <div>잠정 손실잔고 {data.provisionalLossBalance} KRW</div>
         </LeftPanel>
         <RightPanel>
           <OverviewWrapper>
             <div>
-              <span>목표 수익률 :</span>
+              <span>목표 수익률</span>
               <span>{data.targetGain} KRW</span>
               <span>{data.targetReturnRate}%</span>
               <ToggleSwitch
@@ -88,7 +100,7 @@ export default function PortfolioOverview({ data }: Props) {
               />
             </div>
             <div>
-              <span>최대 손실율 : </span>
+              <span>최대 손실율 </span>
               <span>{data.maximumLoss} KRW</span>
               <span>{data.maximumLossRate} %</span>
               <ToggleSwitch
@@ -99,24 +111,24 @@ export default function PortfolioOverview({ data }: Props) {
           </OverviewWrapper>
           <OverviewWrapper>
             <div>
-              <span>총 손익 :</span>
+              <span>총 손익</span>
               <span>{data.totalGain} KRW</span>
               <span> {data.totalGainRate} %</span>
             </div>
             <div>
-              <span>당일 손익 : </span>
+              <span>당일 손익 </span>
               <span>{data.dailyGain} KRW</span>
               <span>{data.dailyGainRate} %</span>
             </div>
           </OverviewWrapper>
           <OverviewWrapper>
             <div>
-              <span>총 연배당금 :</span>
+              <span>총 연배당금</span>
               <span>{data.totalAnnualDividend} KRW</span>
               <span>{data.totalAnnualDividendYield} %</span>
             </div>
             <div>
-              <span>투자 연배당률 :</span>
+              <span>투자 연배당률</span>
               <span>{data.annualInvestmentDividendYield} %</span>
             </div>
           </OverviewWrapper>

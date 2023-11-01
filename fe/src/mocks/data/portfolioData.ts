@@ -36,28 +36,6 @@ const portfolios = [
   },
 ];
 
-const portfolioDetails = {
-  id: 3,
-  securitiesFirm: "toss",
-  name: "내꿈은 워렌버핏",
-  budget: 1000000,
-  targetGain: 1500000,
-  targetReturnRate: 50,
-  maximumLoss: 900000,
-  maximumLossRate: 10,
-  currentValuation: 600000,
-  investedAmount: 500000,
-  totalGain: 100000,
-  totalGainRate: 10,
-  dailyGain: 100000,
-  dailyGainRate: 10,
-  balance: 500000,
-  totalAnnualDividend: 15000,
-  totalAnnualDividendYield: 3,
-  annualInvestmentDividendYield: 3,
-  provisionalLossBalance: 0,
-};
-
 export const portfolioHoldings = [
   {
     companyName: "삼성전자보통주",
@@ -155,7 +133,7 @@ export const successfulGetPortfolioDetailsResponse = {
   status: "OK",
   message: "포트폴리오 상세 정보 및 포트폴리오 종목 목록 조회가 완료되었습니다",
   data: {
-    portfolioDetails,
+    portfolioDetails: {},
     portfolioHoldings,
   },
 };
@@ -168,3 +146,24 @@ export const successfulPortfolioHoldingPurchaseDeleteResponse = {
 };
 
 //TODO: api portfolios로 가져오는 데이터의 값이랑 다른 상태라 상의후에 통일해야함 포스트맨 api에는 value와 fill이 없음
+
+export const successfulPortfolioAddData = {
+  code: 200,
+  status: "OK",
+  message: "포트폴리오가 추가되었습니다",
+  data: null,
+};
+
+export const successfulPortfolioEditData = {
+  code: 200,
+  status: "OK",
+  message: "포트폴리오가 수정되었습니다",
+  data: null,
+};
+
+export const successfulPortfolioDeleteData = {
+  code: 200,
+  status: "OK",
+  message: "포트폴리오 삭제가 완료되었습니다",
+  data: null,
+};

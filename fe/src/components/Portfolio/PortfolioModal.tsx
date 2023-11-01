@@ -1,4 +1,6 @@
 import { PortfolioDetails } from "@api/portfolio";
+import usePortfolioAddMutation from "@api/portfolio/queries/usePortfolioAddMutation";
+import usePortfolioEditMutation from "@api/portfolio/queries/usePortfolioEditMutation";
 import BaseModal from "@components/BaseModal";
 import useText from "@hooks/useText";
 import {
@@ -9,7 +11,9 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { calculateRate, calculateValue } from "@utils/calculations";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 type Props = {
@@ -23,6 +27,22 @@ export default function PortfolioModal({
   onClose,
   portfolioDetails,
 }: Props) {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const {
+    mutate: editMutate,
+    isError: isEditError,
+    isSuccess: isEditSuccess,
+  } = usePortfolioEditMutation(Number(id));
+
+  const {
+    data: addData,
+    mutate: addMutate,
+    isError: isAddError,
+    isSuccess: isAddSuccess,
+  } = usePortfolioAddMutation();
+
   const [securitiesFirm, setSecuritiesFirm] = useState(
     portfolioDetails ? portfolioDetails.securitiesFirm : "fineAnts"
   );
@@ -52,12 +72,8 @@ export default function PortfolioModal({
   const isEditMode = !!portfolioDetails;
   const isBudgetEmpty = budget === "0" || budget === "";
 
-  const onBudgetInputChange = (newVal: string) => {
-    onBudgetChange(newVal);
-
-    const isNewEmpty = newVal === "0" || newVal === "";
-
-    if (isNewEmpty) {
+  useEffect(() => {
+    if (isBudgetEmpty) {
       onTargetGainChange("");
       onTargetReturnRateChange("");
       onMaximumLossChange("");
@@ -66,64 +82,92 @@ export default function PortfolioModal({
       onTargetGainHandler(targetGain);
       onMaximumLossHandler(maximumLoss);
     }
-  };
+  }, [budget]);
 
-  const onTargetGainHandler = (value: string) => {
-    const valueNumber = Number(value);
+  useEffect(() => {
+    if (isEditSuccess) {
+      onClose();
+    }
+
+    if (isEditError) {
+      // TODO toast
+    }
+  }, [isEditSuccess, isEditError]);
+
+  useEffect(() => {
+    if (isAddSuccess) {
+      const portfolioId = addData.data.portfolioId;
+
+      onClose();
+      navigate(`/portfolio/${portfolioId}`);
+    }
+
+    if (isAddError) {
+      // TODO toast
+    }
+  }, [isAddSuccess, isAddError]);
+
+  const changeIfNumberOnly =
+    (handler: (value: string) => void) => (value: string) => {
+      if (!isNaN(Number(value)) || value === "") {
+        handler(value);
+      }
+    };
+
+  const onBudgetInputChange = changeIfNumberOnly((value: string) => {
+    onBudgetChange(value);
+  });
+
+  const onTargetGainHandler = changeIfNumberOnly((value: string) => {
     const budgetNumber = Number(budget);
 
     onTargetGainChange(value);
     onTargetReturnRateChange(
-      (((valueNumber - budgetNumber) / budgetNumber) * 100).toString()
+      calculateRate(Number(value), budgetNumber).toString()
     );
-  };
+  });
 
-  const onTargetReturnRateHandler = (value: string) => {
-    const valueNumber = Number(value);
-    const budgetNumber = Number(budget);
-
-    const calculatedGain = (valueNumber / 100) * budgetNumber;
-    const gainDisplay =
-      Math.floor(calculatedGain) === calculatedGain
-        ? calculatedGain.toString()
-        : calculatedGain.toFixed(2);
-
+  const onTargetReturnRateHandler = changeIfNumberOnly((value: string) => {
     onTargetReturnRateChange(value);
-    onTargetGainChange(gainDisplay);
-  };
+    onTargetGainChange(calculateValue(Number(value), Number(budget)));
+  });
 
-  const onMaximumLossHandler = (value: string) => {
-    const valueNumber = Number(value);
+  const onMaximumLossHandler = changeIfNumberOnly((value: string) => {
     const budgetNumber = Number(budget);
+    const valueNumber = Number(value);
 
     onMaximumLossChange(value);
     onMaximumLossRateChange(
       (((budgetNumber - valueNumber) / budgetNumber) * 100).toString()
     );
-  };
-  const maximumLossRateHandler = (value: string) => {
-    const valueNumber = Number(value);
-    const budgetNumber = Number(budget);
+  });
 
-    const calculatedLoss = budgetNumber - (valueNumber / 100) * budgetNumber;
-    const lossDisplay =
-      Math.floor(calculatedLoss) === calculatedLoss
-        ? calculatedLoss.toString()
-        : calculatedLoss.toFixed(2);
-
+  const maximumLossRateHandler = changeIfNumberOnly((value: string) => {
     onMaximumLossRateChange(value);
-    onMaximumLossChange(lossDisplay);
-  };
+    onMaximumLossChange(calculateValue(-Number(value), Number(budget)));
+  });
 
   const handleChange = (event: SelectChangeEvent) => {
     setSecuritiesFirm(event.target.value);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    const body = {
+      name: name,
+      securitiesFirm: securitiesFirm,
+      budget: Number(budget),
+      targetGain: Number(targetGain),
+      maximumLoss: Number(maximumLoss),
+    };
+
     if (isEditMode) {
       // TODO : 포트폴리오 수정
+
+      editMutate({ portfolioId: Number(id), body: body });
     } else {
       // TODO : 포트폴리오 추가
+
+      addMutate(body);
     }
   };
 
@@ -152,7 +196,7 @@ export default function PortfolioModal({
             <StyledInput
               placeholder="포트폴리오 제목을 입력해 주세요"
               value={name}
-              onChange={(e) => onNameChange(e.target.value.trim())}
+              onChange={(e) => onNameChange(e.target.value)}
             />
           </Row>
           <Row>
