@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
@@ -22,7 +24,6 @@ import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
-import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
 import codesquad.fineants.domain.portfolio_holding.PortFolioHoldingRepository;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import codesquad.fineants.domain.purchase_history.PurchaseHistory;
@@ -32,7 +33,6 @@ import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
 import codesquad.fineants.domain.stock_dividend.StockDividend;
 import codesquad.fineants.domain.stock_dividend.StockDividendRepository;
-import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioHoldingsResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -64,12 +64,6 @@ class PortfolioStockServiceTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-
-	@Autowired
-	private PortfolioGainHistoryRepository portfolioGainHistoryRepository;
-
-	@Autowired
-	private CurrentPriceManager currentPriceManager;
 
 	private Member member;
 	private Portfolio portfolio;
@@ -145,7 +139,6 @@ class PortfolioStockServiceTest {
 	void tearDown() {
 		purchaseHistoryRepository.deleteAllInBatch();
 		portFolioHoldingRepository.deleteAllInBatch();
-		portfolioGainHistoryRepository.deleteAllInBatch();
 		portfolioRepository.deleteAllInBatch();
 		memberRepository.deleteAllInBatch();
 		stockDividendRepository.deleteAllInBatch();
@@ -157,20 +150,20 @@ class PortfolioStockServiceTest {
 	void readMyPortfolioStocks() {
 		// given
 		Long portfolioId = portfolio.getId();
-		currentPriceManager.addCurrentPrice("005930", 60000L);
+		Map<String, Long> currentPriceMap = new HashMap<>(Map.of("005930", 60000L));
 
 		// when
-		PortfolioHoldingsResponse response = service.readMyPortfolioStocks(portfolioId);
+		PortfolioHoldingsResponse response = service.readMyPortfolioStocks(portfolioId, currentPriceMap);
 
 		// then
 		assertAll(
 			() -> assertThat(response).extracting("portfolioDetails")
-				.extracting("securitiesFirm", "name", "budget", "targetGain", "targetReturnRate",
+				.extracting("id", "securitiesFirm", "name", "budget", "targetGain", "targetReturnRate",
 					"maximumLoss", "maximumLossRate", "investedAmount", "totalGain", "totalGainRate", "dailyGain",
 					"dailyGainRate", "balance", "totalAnnualDividend", "totalAnnualDividendYield",
 					"provisionalLossBalance",
 					"targetGainNotification", "maxLossNotification")
-				.containsExactlyInAnyOrder("토스", "내꿈은 워렌버핏", 1000000L, 1500000L, 50, 900000L, 10, 150000L, 30000L,
+				.containsExactlyInAnyOrder(1L, "토스", "내꿈은 워렌버핏", 1000000L, 1500000L, 50, 900000L, 10, 150000L, 30000L,
 					20, 30000L, 20, 850000L, 4332L, 2, 0L, false, false),
 			() -> assertThat(response).extracting("portfolioHoldings")
 				.asList()

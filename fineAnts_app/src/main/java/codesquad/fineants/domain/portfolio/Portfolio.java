@@ -3,6 +3,7 @@ package codesquad.fineants.domain.portfolio;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +17,6 @@ import javax.persistence.OneToMany;
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
-import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,8 +38,6 @@ public class Portfolio {
 	private Long budget;
 	private Long targetGain;
 	private Long maximumLoss;
-	private Boolean targetGainIsActive;
-	private Boolean maximumIsActive;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -50,15 +48,13 @@ public class Portfolio {
 
 	@Builder
 	public Portfolio(Long id, String name, String securitiesFirm, Long budget, Long targetGain, Long maximumLoss,
-		Boolean targetGainIsActive, Boolean maximumIsActive, Member member) {
+		Member member) {
 		this.id = id;
 		this.name = name;
 		this.securitiesFirm = securitiesFirm;
 		this.budget = budget;
 		this.targetGain = targetGain;
 		this.maximumLoss = maximumLoss;
-		this.targetGainIsActive = targetGainIsActive;
-		this.maximumIsActive = maximumIsActive;
 		this.member = member;
 	}
 
@@ -201,12 +197,12 @@ public class Portfolio {
 			.build();
 	}
 
-	public List<PortfolioHolding> changeCurrentPriceFromHoldings(CurrentPriceManager manager) {
+	public List<PortfolioHolding> changeCurrentPriceFromHoldings(Map<String, Long> currentPriceMap) {
 		List<PortfolioHolding> result = new ArrayList<>();
 		for (PortfolioHolding portfolioHolding : portfolioHoldings) {
 			String tickerSymbol = portfolioHolding.getStock().getTickerSymbol();
-			if (manager.hasCurrentPrice(tickerSymbol)) {
-				portfolioHolding.changeCurrentPrice(manager.getCurrentPrice(tickerSymbol));
+			if (currentPriceMap.containsKey(tickerSymbol)) {
+				portfolioHolding.changeCurrentPrice(currentPriceMap.get(tickerSymbol));
 				result.add(portfolioHolding);
 			}
 		}
@@ -216,21 +212,5 @@ public class Portfolio {
 	// 목표 수익률 = ((목표 수익 금액 - 예산) / 예산) * 100
 	public Integer calculateTargetReturnRate() {
 		return (int)(((double)(targetGain - budget) / (double)budget) * 100);
-	}
-
-	public void changeTargetGainNotification(Boolean isActive) {
-		this.targetGainIsActive = isActive;
-	}
-
-	public void changeMaximumLossNotification(Boolean isActive) {
-		this.maximumIsActive = isActive;
-	}
-
-	public boolean reachedTargetGain() {
-		return budget + calculateTotalGain() >= targetGain;
-	}
-
-	public boolean reachedMaximumLoss() {
-		return budget + calculateTotalGain() <= maximumLoss;
 	}
 }

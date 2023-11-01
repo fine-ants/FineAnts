@@ -2,6 +2,7 @@ package codesquad.fineants.spring.api.portfolio_stock;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ import codesquad.fineants.spring.api.errors.errorcode.PortfolioHoldingErrorCode;
 import codesquad.fineants.spring.api.errors.errorcode.StockErrorCode;
 import codesquad.fineants.spring.api.errors.exception.ForBiddenException;
 import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
-import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import codesquad.fineants.spring.api.portfolio_stock.request.PortfolioStockCreateRequest;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioHoldingsResponse;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioStockCreateResponse;
@@ -40,7 +40,6 @@ public class PortfolioStockService {
 	private final PortFolioHoldingRepository portFolioHoldingRepository;
 	private final PurchaseHistoryRepository purchaseHistoryRepository;
 	private final PortfolioGainHistoryRepository portfolioGainHistoryRepository;
-	private final CurrentPriceManager currentPriceManager;
 
 	@Transactional
 	public PortfolioStockCreateResponse addPortfolioStock(Long portfolioId, PortfolioStockCreateRequest request,
@@ -86,10 +85,10 @@ public class PortfolioStockService {
 		return new PortfolioStockDeleteResponse(portfolioHoldingId);
 	}
 
-	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId) {
+	public PortfolioHoldingsResponse readMyPortfolioStocks(Long portfolioId, Map<String, Long> currentPriceMap) {
 		Portfolio portfolio = findPortfolio(portfolioId);
-
-		List<PortfolioHolding> portfolioHoldings = portfolio.changeCurrentPriceFromHoldings(currentPriceManager);
+		List<PortfolioHolding> portfolioHoldings = portfolio.changeCurrentPriceFromHoldings(currentPriceMap);
+		log.info("currentPriceMap : {}", currentPriceMap);
 		log.info("portfolioHoldings : {}", portfolioHoldings);
 
 		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
