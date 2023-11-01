@@ -156,22 +156,23 @@ public class Portfolio {
 	// 총 연간 배당금 = 각 종목들의 연배당금의 합계
 	public Long calculateTotalAnnualDividend() {
 		return portfolioHoldings.stream()
-			.mapToLong(PortfolioHolding::getAnnualDividend)
+			.mapToLong(PortfolioHolding::calculateAnnualDividend)
 			.sum();
 	}
 
 	// 총 연간배당율 = 모든 종목들의 연 배당금 합계 / 모든 종목들의 총 가치의 합계) * 100
 	public Integer calculateTotalAnnualDividendYield() {
-		Long currentValuation = calculateTotalCurrentValuation();
+		double currentValuation = calculateTotalCurrentValuation();
 		if (currentValuation == 0) {
 			return 0;
 		}
-		return (int)(calculateTotalAnnualDividend() / calculateTotalCurrentValuation()) * 100;
+		double totalAnnualDividend = calculateTotalAnnualDividend();
+		return (int)((totalAnnualDividend / currentValuation) * 100);
 	}
 
 	// 최대손실율 = ((예산 - 최대손실금액) / 예산) * 100
 	public Integer calculateMaximumLossRate() {
-		return (int)((budget - maximumLoss) / budget) * 100;
+		return (int)(((double)(budget - maximumLoss) / (double)budget) * 100);
 	}
 
 	// 투자대비 연간 배당율 = 포트폴리오 총 연배당금 / 포트폴리오 투자금액 * 100
@@ -205,5 +206,10 @@ public class Portfolio {
 			}
 		}
 		return result;
+	}
+
+	// 목표 수익률 = ((목표 수익 금액 - 예산) / 예산) * 100
+	public Integer calculateTargetReturnRate() {
+		return (int)(((double)(targetGain - budget) / (double)budget) * 100);
 	}
 }

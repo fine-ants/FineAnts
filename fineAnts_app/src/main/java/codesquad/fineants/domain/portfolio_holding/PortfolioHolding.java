@@ -18,6 +18,7 @@ import codesquad.fineants.domain.BaseEntity;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.purchase_history.PurchaseHistory;
 import codesquad.fineants.domain.stock.Stock;
+import codesquad.fineants.domain.stock_dividend.StockDividend;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,14 +35,13 @@ public class PortfolioHolding extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long annualDividend;    // 연간배당금
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "portfolio_id")
 	private Portfolio portfolio;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "stock_id")
+	@JoinColumn(name = "ticker_symbol")
 	private Stock stock;
 
 	@OneToMany(mappedBy = "portFolioHolding")
@@ -51,9 +51,8 @@ public class PortfolioHolding extends BaseEntity {
 	private Long currentPrice;    // 현재가
 
 	@Builder
-	private PortfolioHolding(Long id, Long annualDividend, Long currentPrice, Portfolio portfolio, Stock stock) {
+	private PortfolioHolding(Long id, Long currentPrice, Portfolio portfolio, Stock stock) {
 		this.id = id;
-		this.annualDividend = annualDividend;
 		this.currentPrice = currentPrice;
 		this.portfolio = portfolio;
 		this.stock = stock;
@@ -65,7 +64,6 @@ public class PortfolioHolding extends BaseEntity {
 
 	public static PortfolioHolding of(Portfolio portfolio, Stock stock, Long currentPrice) {
 		return PortfolioHolding.builder()
-			.annualDividend(0L)
 			.currentPrice(currentPrice)
 			.portfolio(portfolio)
 			.stock(stock)
@@ -152,7 +150,15 @@ public class PortfolioHolding extends BaseEntity {
 		if (currentValuation == 0) {
 			return 0;
 		}
-		return (int)(annualDividend / currentValuation) * 100;
+		return (int)((double)calculateAnnualDividend() / (double)currentValuation) * 100;
+	}
+
+	// 연간 배당금 = 종목의 배당금 합계
+	public long calculateAnnualDividend() {
+		long annualDividend = stock.getStockDividends().stream()
+			.mapToLong(StockDividend::getDividend)
+			.sum();
+		return annualDividend * calculateNumShares();
 	}
 
 	public void changeCurrentPrice(long currentPrice) {

@@ -16,7 +16,7 @@ LOAD DATA LOCAL INFILE 'src/main/resources/dividends.tsv'
     IGNORE 1 ROWS
     (@allocation_base_date, @cash_dividend_payment_date, @ticker_symbol, @dividend_per_share)
     set stock_dividend.dividend = @dividend_per_share,
-        stock_dividend.dividend_months =
+        stock_dividend.dividend_month =
                 IF(@cash_dividend_payment_date = '', @allocation_base_date, @cash_dividend_payment_date),
         stock_dividend.ticker_symbol = @ticker_symbol,
         stock_dividend.create_at = now();
@@ -28,9 +28,9 @@ VALUES (now(), 'qkdlfjtm119@naver.com', '일개미2aa1c3d7',
 INSERT INTO fineAnts.portfolio (id, budget, maximum_loss, name, securities_firm, target_gain, member_id)
 VALUES (1, 1000000, 900000, '내꿈은 워렌버핏', '토스', 1500000, 1);
 
-INSERT INTO fineAnts.portfolio_holding (id, create_at, modified_at, annual_dividend,
-                                        portfolio_id, stock_id)
-VALUES (1, '2023-10-26 15:25:39.409612', '2023-10-26 15:25:39.409612', 0, 1, 890);
+INSERT INTO fineAnts.portfolio_holding (id, create_at, modified_at,
+                                        portfolio_id, ticker_symbol)
+VALUES (1, '2023-10-26 15:25:39.409612', '2023-10-26 15:25:39.409612', 1, '005930');
 
 INSERT INTO fineAnts.purchase_history (id, create_at, modified_at, memo, num_shares, purchase_date,
                                        purchase_price_per_share, portfolio_holding_id)
