@@ -14,7 +14,9 @@ type Props = {
 
 export default function PortfolioOverview({ data }: Props) {
   const { id } = useParams();
-  const { mutate } = usePortfolioDeleteMutation(Number(id));
+  const { mutate: portfolioDeleteMutate } = usePortfolioDeleteMutation(
+    Number(id)
+  );
 
   const [isTargetSwitchChecked, setIsTargetSwitchChecked] = useState(true);
   const [isLossSwitchChecked, setIsLossSwitchChecked] = useState(false);
@@ -38,7 +40,7 @@ export default function PortfolioOverview({ data }: Props) {
   };
 
   const onConfirmAction = () => {
-    mutate(Number(id));
+    portfolioDeleteMutate(Number(id));
   };
 
   const onTargetSwitchToggle = () => {
