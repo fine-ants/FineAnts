@@ -1,14 +1,25 @@
+import { CLIENT_URL } from "@constants/config";
 import { Response } from "api/types";
 import { fetcher } from "../fetcher";
+
+export type User = {
+  id: number;
+  nickname: string;
+  email: string;
+  profileUrl: string;
+};
 
 export type SignInCredentials = {
   email: string;
   password: string;
 };
 
-type SignInData = {
-  accessToken: string;
-  refreshToken: string;
+export type SignInData = {
+  jwt: {
+    accessToken: string;
+    refreshToken: string;
+  };
+  user: User;
 };
 
 export type SignUpData = {
@@ -17,12 +28,6 @@ export type SignUpData = {
   password: string;
   passwordConfirm: string;
   verificationCode: string;
-};
-
-export type User = {
-  userId: number;
-  nickname: string;
-  imageUrl: string;
 };
 
 export type OAuthProvider = "google" | "naver" | "kakao";
@@ -37,7 +42,7 @@ export const postSignUp = async (body: SignUpData) => {
 };
 
 export const postSignIn = async (body: SignInCredentials) => {
-  const res = await fetcher.post<Response<SignInData>>("/auth", body);
+  const res = await fetcher.post<Response<SignInData>>("/auth/login", body);
   return res.data;
 };
 
@@ -45,28 +50,23 @@ export const postOAuthSignIn = async (
   provider: OAuthProvider,
   authCode: string
 ) => {
-  const res = await fetcher.get<Response<SignInData>>(
-    `/auth/${provider}/login?code=${authCode}`
+  const res = await fetcher.post<Response<SignInData>>(
+    `/auth/${provider}/login?code=${authCode}&redirectUrl=${CLIENT_URL}/signin?provider=${provider}`
   );
   return res.data;
 };
 
 export const deleteSignOut = async () => {
-  const res = await fetcher.delete<Response<null>>("/auth");
+  const res = await fetcher.delete<Response<null>>("/auth/logout");
   return res.data;
 };
 
 export const refreshAccessToken = async () => {
-  const res = await fetcher.get<Response<AccessTokenData>>("/auth/refresh", {
-    headers: {
-      Authorization: localStorage.getItem("refreshToken"),
-    },
-  });
-  return res.data;
-};
-
-export const getUserInfo = async () => {
-  const res = await fetcher.get<Response<User>>("/users/info");
+  const refreshToken = localStorage.getItem("refreshToken");
+  const res = await fetcher.post<Response<AccessTokenData>>(
+    "/auth/refresh/token",
+    { refreshToken }
+  );
   return res.data;
 };
 
