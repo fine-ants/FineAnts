@@ -13,7 +13,7 @@ export default function ProfileEditPage() {
 
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [imgFile, setImgFile] = useState<File>();
-  const [profileImg, setProfileImg] = useState<String | undefined>(SAMPLE_IMG);
+  const [profileImg, setProfileImg] = useState<string | undefined>(SAMPLE_IMG);
 
   const nickname = useText({
     validators: [validateNickname],
@@ -164,7 +164,7 @@ const ProfileWrapper = styled.div`
   }
 `;
 
-const ProfileImg = styled.label<{ $profileImgUrl: String | undefined }>`
+const ProfileImg = styled.label<{ $profileImgUrl: string | undefined }>`
   width: 96px;
   height: 96px;
   border-radius: 50%;

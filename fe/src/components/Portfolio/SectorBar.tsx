@@ -22,7 +22,8 @@ export default function SectorBar() {
               width: (d.value / totalValuation) * sectorBarWidth,
               height: "100%",
               backgroundColor: chartColorPalette[index],
-            }}></div>
+            }}
+          />
         ))}
       </Bar>
       <Legend style={legendStyle} pieData={coloredData} />

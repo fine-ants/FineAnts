@@ -1,10 +1,12 @@
 import { User } from "@api/auth";
 import { GOOGLE_CLIENT_ID } from "@constants/config";
 import { WindowProvider } from "@context/WindowContext";
+import DashboardPage from "@pages/DashboardPage";
 import PortfolioPage from "@pages/PortfolioPage";
 import MyProfilePage from "@pages/ProfilePage/MyProfilePage";
 import SignInPage from "@pages/SignInPage";
 import SignUpPage from "@pages/SignUpPage/SignUpPage";
+import WatchlistPage from "@pages/WatchlistPage";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import {
   Navigate,
@@ -15,10 +17,8 @@ import {
 import ProtectedRoute from "./ProtectedRoute";
 import PublicOnlyRoute from "./PublicOnlyRoute";
 import Routes from "./Routes";
-import DashboardPage from "@pages/DashboardPage";
-import WatchlistPage from "@pages/WatchlistPage";
 
-export default (user: User | undefined) =>
+const router = (user: User | undefined) =>
   createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
@@ -60,3 +60,5 @@ export default (user: User | undefined) =>
       </Route>
     )
   );
+
+export default router;

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import styled from "styled-components";
 
 export default function NaverSignInButton() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const naverLogin = new (window as any).naver.LoginWithNaverId({
     clientId: NAVER_CLIENT_ID,
     callbackUrl: `${CLIENT_URL}/signin?provider=naver`,
@@ -16,6 +17,7 @@ export default function NaverSignInButton() {
 
   useEffect(() => {
     naverLogin.init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <StyledNaverSignInButton id="naverIdLogin" />;

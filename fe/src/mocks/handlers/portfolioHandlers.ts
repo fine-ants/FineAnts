@@ -1,11 +1,13 @@
 import { HTTPSTATUS } from "@api/types";
 import { calculateRate } from "@utils/calculations";
 import {
+  portfolioHoldings,
+  successfulGetPortfolioDetailsResponse,
+  successfulGetPortfolioResponse,
   successfulPortfolioAddData,
-  successfulPortfolioData,
   successfulPortfolioDeleteData,
-  successfulPortfolioDetailsData,
   successfulPortfolioEditData,
+  successfulPortfolioHoldingPurchaseDeleteResponse,
 } from "mocks/data/portfolioData";
 import { portfolioDetails } from "mocks/data/portfolioDetailsData";
 import { rest } from "msw";
@@ -25,7 +27,7 @@ export default [
   rest.get("/api/portfolios", async (_, res, ctx) => {
     return res(
       ctx.status(HTTPSTATUS.success),
-      ctx.json(successfulPortfolioData)
+      ctx.json(successfulGetPortfolioResponse)
     );
   }),
 
@@ -34,16 +36,16 @@ export default [
     const portfolioId = req.params.portfolioId;
 
     const resPortfolioDetailsData = {
-      ...successfulPortfolioDetailsData,
-      data: portfolioDetailsData[Number(portfolioId) - 1],
+      ...successfulGetPortfolioDetailsResponse,
     };
+    resPortfolioDetailsData.data.portfolioDetails =
+      portfolioDetailsData[Number(portfolioId) - 1];
 
     return res(
       ctx.status(HTTPSTATUS.success),
       ctx.json(resPortfolioDetailsData)
     );
   }),
-
   // Add Portfolio
   rest.post("/api/portfolios", async (req, res, ctx) => {
     const { name, securitiesFirm, budget, targetGain, maximumLoss } =
@@ -53,28 +55,25 @@ export default [
     const maximumLossRate = ((budget - maximumLoss) / budget) * 100;
 
     const data = {
-      portfolioDetails: {
-        id: portfolioDetails.length + 1,
-        securitiesFirm: securitiesFirm,
-        name: name,
-        budget: budget,
-        targetGain: targetGain,
-        targetReturnRate: targetReturnRate,
-        maximumLoss: maximumLoss,
-        maximumLossRate: maximumLossRate,
-        currentValuation: 0,
-        investedAmount: 0,
-        totalGain: 0,
-        totalGainRate: 0,
-        dailyGain: 0,
-        dailyGainRate: 0,
-        balance: 0,
-        totalAnnualDividend: 0,
-        totalAnnualDividendYield: 0,
-        annualInvestmentDividendYield: 0,
-        provisionalLossBalance: 0,
-      },
-      portfolioHoldings: [],
+      id: portfolioDetails.length + 1,
+      securitiesFirm: securitiesFirm,
+      name: name,
+      budget: budget,
+      targetGain: targetGain,
+      targetReturnRate: targetReturnRate,
+      maximumLoss: maximumLoss,
+      maximumLossRate: maximumLossRate,
+      currentValuation: 0,
+      investedAmount: 0,
+      totalGain: 0,
+      totalGainRate: 0,
+      dailyGain: 0,
+      dailyGainRate: 0,
+      balance: 0,
+      totalAnnualDividend: 0,
+      totalAnnualDividendYield: 0,
+      annualInvestmentDividendYield: 0,
+      provisionalLossBalance: 0,
     };
 
     portfolioDetailsData.push(data);
@@ -98,8 +97,8 @@ export default [
     const targetReturnRate = calculateRate(targetGain, budget);
     const maximumLossRate = ((budget - maximumLoss) / budget) * 100;
 
-    portfolioDetailsData[portfolioId - 1].portfolioDetails = {
-      ...portfolioDetailsData[portfolioId - 1].portfolioDetails,
+    portfolioDetailsData[portfolioId - 1] = {
+      ...portfolioDetailsData[portfolioId - 1],
       ...{
         ...(req.body as EditPortfolioReq),
         targetReturnRate: targetReturnRate,
@@ -123,4 +122,30 @@ export default [
       ctx.json(successfulPortfolioDeleteData)
     );
   }),
+
+  // Delete portfolio holding purchase history
+  rest.delete(
+    "/api/portfolio/:portfolioId/holdings/:portfolioHoldingId/purchaseHistory/:purchaseHistoryId",
+    async (req, res, ctx) => {
+      const { portfolioHoldingId, purchaseHistoryId } = req.params;
+
+      // Mutate portfolio holding purchase history data
+      const targetPortfolioHolding = portfolioHoldings.find(
+        (holding) => holding.portfolioHoldingId === Number(portfolioHoldingId)
+      );
+      const targetPurchaseHistoryIndex =
+        targetPortfolioHolding?.purchaseHistory.findIndex(
+          (purchase) => purchase.purchaseHistoryId === Number(purchaseHistoryId)
+        );
+      targetPortfolioHolding?.purchaseHistory.splice(
+        targetPurchaseHistoryIndex!,
+        1
+      );
+
+      return res(
+        ctx.status(HTTPSTATUS.success),
+        ctx.json(successfulPortfolioHoldingPurchaseDeleteResponse)
+      );
+    }
+  ),
 ];

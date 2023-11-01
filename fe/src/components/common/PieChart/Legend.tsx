@@ -9,6 +9,7 @@ type Props = {
   style?: CSSProperties;
 };
 export default function Legend({ pieData, style }: Props) {
+  const valueSum = pieData.reduce((acc, cur) => acc + cur.value, 0);
   return (
     <StyledLegend style={style}>
       {pieData ? (
@@ -17,6 +18,7 @@ export default function Legend({ pieData, style }: Props) {
             key={item.name}
             color={chartColorPalette[index]}
             title={item.name}
+            percent={Math.floor((item.value / valueSum) * 100)}
           />
         ))
       ) : (

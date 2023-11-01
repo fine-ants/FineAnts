@@ -1,12 +1,13 @@
-import { useCallback, useState } from "react";
-import styled from "styled-components";
-import { PieChart, Pie, Sector } from "recharts";
 import { thousandsDelimiter } from "@utils/thousandsDelimiter";
+import { useCallback, useState } from "react";
+import { Pie, PieChart, Sector } from "recharts";
+import styled from "styled-components";
 
 type PieEntry = {
   percent: number;
   cornerRadius?: number;
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tooltipPayload: any[];
   midAngle: number;
   cx: number;
@@ -77,6 +78,7 @@ export default function RechartPieChart({ width, height, pieData }: Props) {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const renderActiveShape = (props: any) => {
   // const RADIAN = Math.PI / 180;
   const {
@@ -123,8 +125,8 @@ const renderActiveShape = (props: any) => {
       <Sector
         cx={cx}
         cy={cy}
-        innerRadius={innerRadius + 5}
-        outerRadius={outerRadius + 10}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius + 5}
         startAngle={startAngle}
         endAngle={endAngle}
         fill={fill}

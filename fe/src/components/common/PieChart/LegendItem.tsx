@@ -3,13 +3,14 @@ import styled from "styled-components";
 type Props = {
   color: string;
   title: string;
+  percent: number;
 };
 
-export default function LegendItem({ color, title }: Props) {
+export default function LegendItem({ color, title, percent }: Props) {
   return (
     <StyledLegendItem>
       <LegendItemColor $color={color} />
-      {title}
+      {title} {percent}%
     </StyledLegendItem>
   );
 }

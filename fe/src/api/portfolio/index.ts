@@ -62,7 +62,7 @@ export type PortfolioHolding = {
 };
 
 export type PurchaseHistoryField = {
-  id: number;
+  purchaseHistoryId: number;
   purchaseDate: string;
   numShares: number;
   purchasePricePerShare: number;

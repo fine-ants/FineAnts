@@ -1,4 +1,4 @@
-import { ISeriesApi, LineWidth } from "lightweight-charts";
+import { IChartApi, ISeriesApi, LineWidth } from "lightweight-charts";
 import { AreaSeries, Chart } from "lightweight-charts-react-wrapper";
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
@@ -19,7 +19,7 @@ export default function TotalValuationLineChart({
   currentRangeIndex,
 }: Props) {
   const seriesRef = useRef<ISeriesApi<"Area">>(null);
-  const chartRef = useRef<any>(null);
+  const chartRef = useRef<IChartApi>(null);
 
   useEffect(() => {
     if (chartRef.current) {
@@ -34,13 +34,16 @@ export default function TotalValuationLineChart({
       </h1>
       <div style={{ position: "relative" }}>
         <Chart
-          {...options}
-          timeScale={{ barSpacing: barSpacings[currentRangeIndex] }}
+          {...{
+            ...options,
+            timeScale: {
+              barSpacing: barSpacings[currentRangeIndex],
+            },
+          }}
           ref={chartRef}>
           <AreaSeries
             data={data}
             topColor="#2175ec"
-            // bottomColor="rgba(41, 98, 255, 0.28)"
             bottomColor="#8fcbff"
             lineColor="#2175ec"
             lineWidth={2}

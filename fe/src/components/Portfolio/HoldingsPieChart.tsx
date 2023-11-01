@@ -1,15 +1,16 @@
 import { PortfolioHolding } from "@api/portfolio";
-import { useCallback, useState } from "react";
-import styled from "styled-components";
-import { PieChart, Pie, Sector } from "recharts";
-import { thousandsDelimiter } from "@utils/thousandsDelimiter";
 import Legend from "@components/common/PieChart/Legend";
+import { thousandsDelimiter } from "@utils/thousandsDelimiter";
+import { useCallback, useState } from "react";
+import { Pie, PieChart, Sector } from "recharts";
+import styled from "styled-components";
 import { chartColorPalette } from "styles/chartColorPalette";
 
 type PieEntry = {
   percent: number;
   cornerRadius?: number;
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tooltipPayload: any[];
   midAngle: number;
   cx: number;
@@ -90,6 +91,7 @@ export default function HoldingsPieChart({ data }: Props) {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const renderActiveShape = (props: any) => {
   const {
     cx,
@@ -123,8 +125,8 @@ const renderActiveShape = (props: any) => {
       <Sector
         cx={cx}
         cy={cy}
-        innerRadius={innerRadius + 5}
-        outerRadius={outerRadius + 10}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius + 2}
         startAngle={startAngle}
         endAngle={endAngle}
         fill={fill}
@@ -142,6 +144,7 @@ const StyledHoldingsPieChart = styled.div`
   position: relative;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
+  background-color: #ffffff;
 `;
 const TotalValue = styled.div`
   display: flex;
