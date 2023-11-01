@@ -7,12 +7,13 @@ import {
   successfulPortfolioAddData,
   successfulPortfolioDeleteData,
   successfulPortfolioEditData,
+  successfulPortfolioHoldingPurchaseAddResponse,
   successfulPortfolioHoldingPurchaseDeleteResponse,
 } from "mocks/data/portfolioData";
 import { portfolioDetails } from "mocks/data/portfolioDetailsData";
 import { rest } from "msw";
 
-let portfolioDetailsData = portfolioDetails;
+const portfolioDetailsData = portfolioDetails;
 
 type EditPortfolioReq = {
   name: string;
@@ -46,6 +47,7 @@ export default [
       ctx.json(resPortfolioDetailsData)
     );
   }),
+
   // Add Portfolio
   rest.post("/api/portfolios", async (req, res, ctx) => {
     const { name, securitiesFirm, budget, targetGain, maximumLoss } =
@@ -122,6 +124,28 @@ export default [
       ctx.json(successfulPortfolioDeleteData)
     );
   }),
+
+  // Add portfolio holding purchase history
+  rest.post(
+    "/api/portfolio/:portfolioId/holdings/:portfolioHoldingId/purchaseHistory",
+    async (req, res, ctx) => {
+      const { portfolioHoldingId } = req.params;
+      const body = await req.json();
+
+      const targetPortfolioHolding = portfolioHoldings.find(
+        (holding) => holding.portfolioHoldingId === Number(portfolioHoldingId)
+      );
+      targetPortfolioHolding?.purchaseHistory.push({
+        purchaseHistoryId: Math.random(),
+        ...body,
+      });
+
+      return res(
+        ctx.status(HTTPSTATUS.success),
+        ctx.json(successfulPortfolioHoldingPurchaseAddResponse)
+      );
+    }
+  ),
 
   // Delete portfolio holding purchase history
   rest.delete(

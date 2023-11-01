@@ -159,6 +159,7 @@ export const postPortfolioHoldingPurchase = async ({
     purchaseDate: string;
     numShares: number;
     purchasePricePerShare: number;
+    memo: string;
   };
 }) => {
   const res = await fetcher.post<Response<null>>(
