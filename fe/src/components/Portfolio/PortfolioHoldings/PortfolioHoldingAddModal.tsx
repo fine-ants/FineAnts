@@ -17,20 +17,12 @@ export default function PortfolioHoldingAddModal({
     usePortfolioHoldingAddMutation(portfolioId);
 
   const addStockToPortfolio = (tickerSymbol: string) => {
-    portfolioHoldingAddMutate(
-      {
-        portfolioId,
-        body: {
-          tickerSymbol,
-        },
+    portfolioHoldingAddMutate({
+      portfolioId,
+      body: {
+        tickerSymbol,
       },
-      {
-        onSuccess: () => {
-          onClose(); // 모달을 닫음
-        },
-        // onError: (error) => {error;},
-      }
-    );
+    });
   };
 
   return (
