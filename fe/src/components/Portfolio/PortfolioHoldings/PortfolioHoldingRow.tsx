@@ -38,13 +38,13 @@ export default function PortfolioHoldingRow({
     purchaseHistory,
   } = row;
 
-  const { mutate: portfolioHoldingDelete } =
+  const { mutate: portfolioHoldingDeleteMutate } =
     usePortfolioHoldingDeleteMutation(portfolioId);
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const deleteHoldingToPortfolio = () => {
-    portfolioHoldingDelete({ portfolioId, portfolioHoldingId });
+  const onDeleteClick = () => {
+    portfolioHoldingDeleteMutate({ portfolioId, portfolioHoldingId });
   };
 
   return (
@@ -96,7 +96,7 @@ export default function PortfolioHoldingRow({
         </HoldingTableCell>
         {/* TODO: 종목 삭제 버튼 */}
         <div
-          onClick={deleteHoldingToPortfolio}
+          onClick={onDeleteClick}
           style={{ border: "1px solid black", cursor: "pointer" }}>
           삭제
         </div>
