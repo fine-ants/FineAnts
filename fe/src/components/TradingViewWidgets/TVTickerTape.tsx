@@ -50,7 +50,7 @@ export default function TVTickerTapeWidget() {
 
   return (
     <div className="tradingview-widget-container">
-      <div className="tradingview-widget-container__widget"></div>
+      <div className="tradingview-widget-container__widget" />
     </div>
   );
 }

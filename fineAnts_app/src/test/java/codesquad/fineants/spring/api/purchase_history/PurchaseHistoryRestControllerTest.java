@@ -100,9 +100,8 @@ class PurchaseHistoryRestControllerTest {
 			.build();
 
 		stock = Stock.builder()
-			.id(1L)
-			.companyName("삼성전자보통주")
 			.tickerSymbol("005930")
+			.companyName("삼성전자보통주")
 			.companyNameEng("SamsungElectronics")
 			.stockCode("KR7005930003")
 			.market(Market.KOSPI)
@@ -110,7 +109,6 @@ class PurchaseHistoryRestControllerTest {
 
 		portfolioHolding = PortfolioHolding.builder()
 			.id(1L)
-			.annualDividend(0L)
 			.currentPrice(null)
 			.portfolio(portfolio)
 			.stock(stock)

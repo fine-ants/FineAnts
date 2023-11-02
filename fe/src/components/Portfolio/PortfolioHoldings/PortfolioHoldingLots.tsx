@@ -8,15 +8,26 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { useState } from "react";
 import PortfolioHoldingLotRow from "./PortfolioHoldingLotRow";
+import PortfolioHoldingPurchaseAddModal from "./PortfolioHoldingPurchaseAddModal";
 
 type Props = {
+  portfolioId: number;
+  portfolioHoldingId: number;
   purchaseHistory: PurchaseHistoryField[];
 };
 
-export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
+export default function PortfolioHoldingLots({
+  portfolioId,
+  portfolioHoldingId,
+  purchaseHistory,
+}: Props) {
+  const [isAddHoldingPurchaseModalOpen, setIsAddHoldingPurchaseModalOpen] =
+    useState(false);
+
   const onAddPurchaseClick = () => {
-    // TODO: Open modal
+    setIsAddHoldingPurchaseModalOpen(true);
   };
 
   return (
@@ -33,7 +44,12 @@ export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
         </TableHead>
         <TableBody>
           {purchaseHistory.map((lot) => (
-            <PortfolioHoldingLotRow key={lot.id} {...lot} />
+            <PortfolioHoldingLotRow
+              key={lot.purchaseHistoryId}
+              portfolioId={portfolioId}
+              portfolioHoldingId={portfolioHoldingId}
+              lot={lot}
+            />
           ))}
         </TableBody>
         <TableFooter>
@@ -46,6 +62,13 @@ export default function PortfolioHoldingLots({ purchaseHistory }: Props) {
           </TableRow>
         </TableFooter>
       </Table>
+
+      <PortfolioHoldingPurchaseAddModal
+        isOpen={isAddHoldingPurchaseModalOpen}
+        onClose={() => setIsAddHoldingPurchaseModalOpen(false)}
+        portfolioId={portfolioId}
+        portfolioHoldingId={portfolioHoldingId}
+      />
     </>
   );
 }

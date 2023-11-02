@@ -18,7 +18,6 @@ const Switch = styled(BaseSwitch)`
   height: 20px;
   background: #b3c3d3;
   border-radius: 10px;
-  margin: 10px;
   cursor: pointer;
 
   & .${switchClasses.thumb} {

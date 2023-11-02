@@ -23,6 +23,7 @@ import codesquad.fineants.domain.member.MemberRepository;
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio.PortfolioRepository;
+import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistoryRepository;
 import codesquad.fineants.domain.portfolio_holding.PortFolioHoldingRepository;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import codesquad.fineants.domain.purchase_history.PurchaseHistory;
@@ -58,6 +59,9 @@ class PortfolioHoldingServiceTest {
 
 	@Autowired
 	private PurchaseHistoryRepository purchaseHistoryRepository;
+
+	@Autowired
+	private PortfolioGainHistoryRepository portfolioGainHistoryRepository;
 
 	private Member member;
 
@@ -99,6 +103,7 @@ class PortfolioHoldingServiceTest {
 	void tearDown() {
 		purchaseHistoryRepository.deleteAllInBatch();
 		portFolioHoldingRepository.deleteAllInBatch();
+		portfolioGainHistoryRepository.deleteAllInBatch();
 		portfolioRepository.deleteAllInBatch();
 		memberRepository.deleteAllInBatch();
 		stockRepository.deleteAllInBatch();

@@ -1,6 +1,6 @@
 import { postNicknameDuplicateCheck } from "@api/auth";
 import { HTTPSTATUS } from "@api/types";
-import useText from "@hooks/useText";
+import useText from "@components/hooks/useText";
 import { validateNickname } from "@utils/authInputValidators";
 import axios from "axios";
 import { ChangeEvent, useState } from "react";

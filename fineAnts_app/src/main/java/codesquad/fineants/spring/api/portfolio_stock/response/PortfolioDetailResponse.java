@@ -4,7 +4,9 @@ import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class PortfolioDetailResponse {
 	private Long id;
 	private String securitiesFirm;
@@ -62,12 +64,12 @@ public class PortfolioDetailResponse {
 			.name(portfolio.getName())
 			.budget(portfolio.getBudget())
 			.targetGain(portfolio.getTargetGain())
-			.targetReturnRate(portfolio.calculateTotalGainRate())
+			.targetReturnRate(portfolio.calculateTargetReturnRate())
 			.maximumLoss(portfolio.getMaximumLoss())
 			.maximumLossRate(portfolio.calculateMaximumLossRate())
 			.investedAmount(portfolio.calculateTotalInvestmentAmount())
 			.totalGain(portfolio.calculateTotalGain())
-			.totalGainRate(portfolio.calculateDailyGainRate(history))
+			.totalGainRate(portfolio.calculateTotalGainRate())
 			.dailyGain(portfolio.calculateDailyGain(history))
 			.dailyGainRate(portfolio.calculateDailyGainRate(history))
 			.balance(portfolio.calculateBalance())

@@ -36,7 +36,7 @@ export default function DividendBarChart() {
             activeBar={true}
             barSize={32}
             label={<CustomBarLabel />}
-            shape={(props) => <RoundedBar {...props} radius={8} />}>
+            shape={<RoundedBar radius={8} />}>
             {data.map((data, index) => (
               <Cell
                 cursor="pointer"
@@ -106,6 +106,7 @@ const StyledDividendBarChart = styled.div`
   background-color: white;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
+  box-shadow: 0px 0px 12px 0px #00000014;
 `;
 
 // ?: API를 따로 만들건지 포트폴리오 종목 조회에서 아래에 필요한 값들을 추가할것인지

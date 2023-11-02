@@ -15,6 +15,7 @@ export default function useSignUpMutation() {
     },
     onError: (error) => {
       // TODO: Handle error
+      // eslint-disable-next-line no-console
       console.error(error);
     },
   });

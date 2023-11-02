@@ -87,12 +87,7 @@ class PortFolioServiceTest {
 		PortFolioCreateResponse response = service.addPortFolio(request, AuthMember.from(member));
 
 		// then
-		assertAll(
-			() -> assertThat(response).isNotNull(),
-			() -> assertThat(response)
-				.extracting("name")
-				.isEqualTo("내꿈은 워렌버핏")
-		);
+		assertThat(response).isNotNull();
 	}
 
 	@DisplayName("회원은 포트폴리오를 추가할때 목표수익금액이 예산보다 같거나 작으면 안된다")

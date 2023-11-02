@@ -1,4 +1,5 @@
 import { PortfolioHolding } from "@api/portfolio";
+import usePortfolioHoldingDeleteMutation from "@api/portfolio/queries/usePortfolioHoldingDeleteMutation";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
@@ -37,7 +38,14 @@ export default function PortfolioHoldingRow({
     purchaseHistory,
   } = row;
 
+  const { mutate: portfolioHoldingDeleteMutate } =
+    usePortfolioHoldingDeleteMutation(portfolioId);
+
   const [isOpen, setIsOpen] = useState(false);
+
+  const onDeleteClick = () => {
+    portfolioHoldingDeleteMutate({ portfolioId, portfolioHoldingId });
+  };
 
   return (
     <>
@@ -87,13 +95,22 @@ export default function PortfolioHoldingRow({
           <Typography>{annualDividend}</Typography>
         </HoldingTableCell>
         {/* TODO: 종목 삭제 버튼 */}
+        <div
+          onClick={onDeleteClick}
+          style={{ border: "1px solid black", cursor: "pointer" }}>
+          삭제
+        </div>
       </HoldingTableRow>
       <HoldingLotRow>
         <TableCell
           style={{ padding: "0 0 0 68.5px", border: "none" }}
           colSpan={9}>
           <Collapse in={isOpen} timeout="auto" unmountOnExit>
-            <PortfolioHoldingLots purchaseHistory={purchaseHistory} />
+            <PortfolioHoldingLots
+              portfolioId={portfolioId}
+              portfolioHoldingId={portfolioHoldingId}
+              purchaseHistory={purchaseHistory}
+            />
           </Collapse>
         </TableCell>
       </HoldingLotRow>

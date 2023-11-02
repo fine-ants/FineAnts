@@ -1,24 +1,50 @@
+import { PurchaseHistoryField } from "@api/portfolio";
+import usePortfolioHoldingPurchaseDeleteMutation from "@api/portfolio/queries/usePortfolioHoldingPurchaseDeleteMutation";
+import usePortfolioHoldingPurchaseEditMutation from "@api/portfolio/queries/usePortfolioHoldingPurchaseEditMutation";
+import ConfirmAlert from "@components/ConfirmAlert";
 import { Button, Input, TableCell, TableRow } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
 import { formatDate } from "@utils/date";
+import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
 
 type Props = {
-  purchaseDate: string;
-  purchasePricePerShare: number;
-  numShares: number;
-  memo: string;
+  portfolioId: number;
+  portfolioHoldingId: number;
+  lot: PurchaseHistoryField;
 };
 
 export default function PortfolioHoldingLotRow({
-  purchaseDate,
-  purchasePricePerShare,
-  numShares,
-  memo,
+  portfolioId,
+  portfolioHoldingId,
+  lot: {
+    purchaseHistoryId,
+    purchaseDate,
+    purchasePricePerShare,
+    numShares,
+    memo,
+  },
 }: Props) {
-  const [isEditing, setIsEditing] = useState(false);
+  const { mutate: portfolioHoldingPurchaseEditMutate } =
+    usePortfolioHoldingPurchaseEditMutation({
+      portfolioId,
+      portfolioHoldingId,
+      purchaseHistoryId,
+    });
 
-  const [newPurchaseDate, setNewPurchaseDate] = useState(
-    formatDate(purchaseDate)
+  const { mutate: portfolioHoldingPurchaseDeleteMutate } =
+    usePortfolioHoldingPurchaseDeleteMutation({
+      portfolioId,
+      portfolioHoldingId,
+      purchaseHistoryId,
+    });
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [isDeleteConfirmAlertOpen, setIsDeleteConfirmAlertOpen] =
+    useState(false);
+
+  const [newPurchaseDate, setNewPurchaseDate] = useState<Dayjs | null>(
+    dayjs(new Date())
   );
   const [newPurchasePricePerShare, setNewPurchasePricePerShare] = useState(
     purchasePricePerShare.toString()
@@ -31,12 +57,37 @@ export default function PortfolioHoldingLotRow({
   };
 
   const onSaveClick = () => {
-    // TODO: Send request to save changes
+    // TODO: Handle error
+    portfolioHoldingPurchaseEditMutate({
+      portfolioId,
+      portfolioHoldingId,
+      purchaseHistoryId,
+      body: {
+        purchaseDate: newPurchaseDate?.toISOString() ?? "",
+        purchasePricePerShare: Number(newPurchasePricePerShare),
+        numShares: Number(newNumShares),
+        memo: newMemo,
+      },
+    });
+
     setIsEditing(false);
   };
 
-  const onDeleteClick = () => {
-    // TODO: open confirmation dialog
+  const onOpenDeleteConfirmAlert = () => {
+    setIsDeleteConfirmAlertOpen(true);
+  };
+
+  const onCloseDeleteConfirmAlert = () => {
+    setIsDeleteConfirmAlertOpen(false);
+  };
+
+  const onDeleteConfirm = () => {
+    // TODO: Handle error
+    portfolioHoldingPurchaseDeleteMutate({
+      portfolioId,
+      portfolioHoldingId,
+      purchaseHistoryId,
+    });
   };
 
   return (
@@ -44,10 +95,10 @@ export default function PortfolioHoldingLotRow({
       {isEditing ? (
         <>
           <TableCell component="th" scope="row">
-            <Input
-              type="date"
+            <DatePicker
+              label="Purchase Date"
               value={newPurchaseDate}
-              onChange={(e) => setNewPurchaseDate(e.target.value)}
+              onChange={(newVal) => setNewPurchaseDate(newVal)}
             />
           </TableCell>
           <TableCell align="right">
@@ -96,8 +147,15 @@ export default function PortfolioHoldingLotRow({
           <TableCell align="right">{memo}</TableCell>
           <TableCell align="right" sx={{ width: "160px" }}>
             <Button onClick={onEditClick}>수정</Button>
-            <Button onClick={onDeleteClick}>삭제</Button>
+            <Button onClick={onOpenDeleteConfirmAlert}>삭제</Button>
           </TableCell>
+          <ConfirmAlert
+            isOpen={isDeleteConfirmAlertOpen}
+            title="매입 이력 삭제"
+            content="매입 이력을 정말 삭제하시겠습니까?"
+            onClose={onCloseDeleteConfirmAlert}
+            onConfirm={onDeleteConfirm}
+          />
         </>
       )}
     </TableRow>

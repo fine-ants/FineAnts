@@ -1,5 +1,5 @@
-import update from "immutability-helper";
 import { StockItem } from "@pages/WatchlistPage";
+import update from "immutability-helper";
 import { memo, useCallback, useState } from "react";
 import styled from "styled-components";
 import { WatchlistItem } from "./WatchlistItem";
@@ -33,6 +33,8 @@ export const Watchlist = memo(function Watchlist({
         moveStock={moveStock}
       />
     );
+    // TODO: 라이브러리 변경해야함
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <StyledWatchlist>

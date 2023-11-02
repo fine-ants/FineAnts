@@ -12,8 +12,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import codesquad.fineants.spring.api.kis.client.KisClient;
+import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
+import codesquad.fineants.spring.api.kis.manager.KisAccessTokenManager;
 import codesquad.fineants.spring.api.kis.response.CurrentPriceResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +28,16 @@ class KisServiceTest {
 
 	@Autowired
 	private KisService kisService;
+
+	@MockBean
+	private CurrentPriceManager currentPriceManager;
+
+	@Autowired
+	private KisAccessTokenManager manager;
+	@Autowired
+	private KisClient client;
+	@Autowired
+	private KisRedisService redisService;
 
 	@DisplayName("주식 현재가 시세를 가져온다")
 	@Test
@@ -75,4 +89,5 @@ class KisServiceTest {
 		assertThat(response).extracting("tickerSymbol").isEqualTo(tickerSymbol);
 		assertThat(response).extracting("currentPrice").isNotNull();
 	}
+
 }

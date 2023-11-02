@@ -3,7 +3,6 @@ package codesquad.fineants.domain.portfolio;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +16,7 @@ import javax.persistence.OneToMany;
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +38,8 @@ public class Portfolio {
 	private Long budget;
 	private Long targetGain;
 	private Long maximumLoss;
+	private Boolean targetGainIsActive;
+	private Boolean maximumIsActive;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -48,13 +50,15 @@ public class Portfolio {
 
 	@Builder
 	public Portfolio(Long id, String name, String securitiesFirm, Long budget, Long targetGain, Long maximumLoss,
-		Member member) {
+		Boolean targetGainIsActive, Boolean maximumIsActive, Member member) {
 		this.id = id;
 		this.name = name;
 		this.securitiesFirm = securitiesFirm;
 		this.budget = budget;
 		this.targetGain = targetGain;
 		this.maximumLoss = maximumLoss;
+		this.targetGainIsActive = targetGainIsActive;
+		this.maximumIsActive = maximumIsActive;
 		this.member = member;
 	}
 
@@ -156,31 +160,33 @@ public class Portfolio {
 	// 총 연간 배당금 = 각 종목들의 연배당금의 합계
 	public Long calculateTotalAnnualDividend() {
 		return portfolioHoldings.stream()
-			.mapToLong(PortfolioHolding::getAnnualDividend)
+			.mapToLong(PortfolioHolding::calculateAnnualDividend)
 			.sum();
 	}
 
 	// 총 연간배당율 = 모든 종목들의 연 배당금 합계 / 모든 종목들의 총 가치의 합계) * 100
 	public Integer calculateTotalAnnualDividendYield() {
-		Long currentValuation = calculateTotalCurrentValuation();
+		double currentValuation = calculateTotalCurrentValuation();
 		if (currentValuation == 0) {
 			return 0;
 		}
-		return (int)(calculateTotalAnnualDividend() / calculateTotalCurrentValuation()) * 100;
+		double totalAnnualDividend = calculateTotalAnnualDividend();
+		return (int)((totalAnnualDividend / currentValuation) * 100);
 	}
 
 	// 최대손실율 = ((예산 - 최대손실금액) / 예산) * 100
 	public Integer calculateMaximumLossRate() {
-		return (int)((budget - maximumLoss) / budget) * 100;
+		return (int)(((double)(budget - maximumLoss) / (double)budget) * 100);
 	}
 
 	// 투자대비 연간 배당율 = 포트폴리오 총 연배당금 / 포트폴리오 투자금액 * 100
 	public Integer calculateAnnualInvestmentDividendYield() {
-		Long totalInvestmentAmount = calculateTotalInvestmentAmount();
+		double totalInvestmentAmount = calculateTotalInvestmentAmount();
 		if (totalInvestmentAmount == 0) {
 			return 0;
 		}
-		return (int)(calculateTotalAnnualDividend() / totalInvestmentAmount) * 100;
+		double totalAnnualDividend = calculateTotalAnnualDividend();
+		return (int)((totalAnnualDividend / totalInvestmentAmount) * 100);
 	}
 
 	public PortfolioGainHistory createPortfolioGainHistory(PortfolioGainHistory history) {
@@ -195,15 +201,36 @@ public class Portfolio {
 			.build();
 	}
 
-	public List<PortfolioHolding> changeCurrentPriceFromHoldings(Map<String, Long> currentPriceMap) {
+	public List<PortfolioHolding> changeCurrentPriceFromHoldings(CurrentPriceManager manager) {
 		List<PortfolioHolding> result = new ArrayList<>();
 		for (PortfolioHolding portfolioHolding : portfolioHoldings) {
 			String tickerSymbol = portfolioHolding.getStock().getTickerSymbol();
-			if (currentPriceMap.containsKey(tickerSymbol)) {
-				portfolioHolding.changeCurrentPrice(currentPriceMap.get(tickerSymbol));
+			if (manager.hasCurrentPrice(tickerSymbol)) {
+				portfolioHolding.changeCurrentPrice(manager.getCurrentPrice(tickerSymbol));
 				result.add(portfolioHolding);
 			}
 		}
 		return result;
+	}
+
+	// 목표 수익률 = ((목표 수익 금액 - 예산) / 예산) * 100
+	public Integer calculateTargetReturnRate() {
+		return (int)(((double)(targetGain - budget) / (double)budget) * 100);
+	}
+
+	public void changeTargetGainNotification(Boolean isActive) {
+		this.targetGainIsActive = isActive;
+	}
+
+	public void changeMaximumLossNotification(Boolean isActive) {
+		this.maximumIsActive = isActive;
+	}
+
+	public boolean reachedTargetGain() {
+		return budget + calculateTotalGain() >= targetGain;
+	}
+
+	public boolean reachedMaximumLoss() {
+		return budget + calculateTotalGain() <= maximumLoss;
 	}
 }

@@ -109,25 +109,25 @@ class PortfolioTest {
 		StockDividend stockDividend1 = StockDividend.builder()
 			.id(1L)
 			.dividend(1000L)
-			.dividendMonths(LocalDate.of(2023, 3, 1).atStartOfDay())
+			.dividendMonth(LocalDate.of(2023, 3, 1).atStartOfDay())
 			.build();
 
 		StockDividend stockDividend2 = StockDividend.builder()
 			.id(1L)
 			.dividend(1000L)
-			.dividendMonths(LocalDate.of(2023, 6, 1).atStartOfDay())
+			.dividendMonth(LocalDate.of(2023, 6, 1).atStartOfDay())
 			.build();
 
 		StockDividend stockDividend3 = StockDividend.builder()
 			.id(1L)
 			.dividend(1000L)
-			.dividendMonths(LocalDate.of(2023, 10, 1).atStartOfDay())
+			.dividendMonth(LocalDate.of(2023, 10, 1).atStartOfDay())
 			.build();
 
 		StockDividend stockDividend4 = StockDividend.builder()
 			.id(1L)
 			.dividend(1000L)
-			.dividendMonths(LocalDate.of(2023, 12, 1).atStartOfDay())
+			.dividendMonth(LocalDate.of(2023, 12, 1).atStartOfDay())
 			.build();
 
 		stock.addStockDividend(stockDividend1);
