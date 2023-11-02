@@ -77,7 +77,7 @@ type PortfolioReqBody = {
   maximumLoss: number;
 };
 
-export const getPortfolioChart = async () => {
+export const getPortfolios = async () => {
   const res =
     await fetcher.get<Response<PortfolioPieChartDataItem>>("/portfolios");
   return res.data;
