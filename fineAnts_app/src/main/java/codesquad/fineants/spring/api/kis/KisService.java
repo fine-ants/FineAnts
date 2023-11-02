@@ -35,8 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class KisService {
-	private static final String SUBSCRIBE_PORTFOLIO_HOLDING_FORMAT = "/sub/portfolio/%d/currentPrice/%s";
-	public static final Map<String, Long> currentPriceMap = new ConcurrentHashMap<>();
+	private static final String SUBSCRIBE_PORTFOLIO_HOLDING_FORMAT = "/sub/portfolio/%d";
 	private static final Map<String, PortfolioSubscription> portfolioSubscriptions = new ConcurrentHashMap<>();
 	private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
 	private final KisClient kisClient;
@@ -83,7 +82,7 @@ public class KisService {
 					subscription.getPortfolioId());
 				subscription.getTickerSymbols().stream()
 					.map(tickerSymbol -> String.format(SUBSCRIBE_PORTFOLIO_HOLDING_FORMAT,
-						subscription.getPortfolioId(), tickerSymbol))
+						subscription.getPortfolioId()))
 					.forEach(destination -> messagingTemplate.convertAndSend(destination, response));
 			});
 	}

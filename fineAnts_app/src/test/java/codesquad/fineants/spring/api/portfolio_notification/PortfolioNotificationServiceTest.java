@@ -88,6 +88,8 @@ class PortfolioNotificationServiceTest {
 			.targetGain(1500000L)
 			.maximumLoss(900000L)
 			.member(this.member)
+			.targetGainIsActive(true)
+			.maximumIsActive(true)
 			.build();
 		this.portfolio = portfolioRepository.save(portfolio);
 

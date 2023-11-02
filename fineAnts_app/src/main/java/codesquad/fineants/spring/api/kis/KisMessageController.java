@@ -17,7 +17,7 @@ public class KisMessageController {
 
 	private final KisService kisService;
 
-	@MessageMapping("/portfolio/{portfolioId}/currentPrice")
+	@MessageMapping("/portfolio/{portfolioId}")
 	public void portfolioHolding(
 		@DestinationVariable Long portfolioId,
 		@Payload MessageData messageData,
