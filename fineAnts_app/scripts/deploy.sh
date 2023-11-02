@@ -25,5 +25,6 @@ echo ">>> deploy DEPLOY_JAR"    >> /home/ec2-user/action/deploy.log
 sudo chmod 666 /var/run/docker.sock
 sudo chmod +x /usr/local/bin/docker-compose
 docker-compose -f /home/ec2-user/action/docker-compose-dev.yml down -v
+docker-compose -f /home/ec2-user/action/docker-compose-dev.yml build
 docker-compose -f /home/ec2-user/action/docker-compose-dev.yml pull
 docker-compose -f /home/ec2-user/action/docker-compose-dev.yml up -d

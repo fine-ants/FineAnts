@@ -1,5 +1,8 @@
 package codesquad.fineants.spring.api.portfolio_stock;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -14,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.fineants.domain.oauth.support.AuthMember;
 import codesquad.fineants.domain.oauth.support.AuthPrincipalMember;
+import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.domain.stock.Stock;
+import codesquad.fineants.spring.api.kis.KisService;
+import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
+import codesquad.fineants.spring.api.portfolio.PortFolioService;
 import codesquad.fineants.spring.api.portfolio_stock.request.PortfolioStockCreateRequest;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioHoldingsResponse;
 import codesquad.fineants.spring.api.response.ApiResponse;
@@ -26,6 +34,9 @@ import lombok.RequiredArgsConstructor;
 public class PortfolioStockRestController {
 
 	private final PortfolioStockService portfolioStockService;
+	private final KisService kisService;
+	private final PortFolioService portFolioService;
+	private final CurrentPriceManager currentPriceManager;
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
@@ -46,6 +57,13 @@ public class PortfolioStockRestController {
 
 	@GetMapping
 	public ApiResponse<PortfolioHoldingsResponse> readMyPortfolioStocks(@PathVariable Long portfolioId) {
+		List<String> tickerSymbols = portFolioService.findPortfolio(portfolioId).getPortfolioHoldings().stream()
+			.map(PortfolioHolding::getStock)
+			.map(Stock::getTickerSymbol)
+			.filter(tickerSymbol -> !currentPriceManager.hasCurrentPrice(tickerSymbol))
+			.collect(Collectors.toList());
+		kisService.refreshCurrentPrice(tickerSymbols);
+
 		PortfolioHoldingsResponse response = portfolioStockService.readMyPortfolioStocks(portfolioId);
 		return ApiResponse.success(PortfolioStockSuccessCode.OK_READ_PORTFOLIO_STOCKS, response);
 	}

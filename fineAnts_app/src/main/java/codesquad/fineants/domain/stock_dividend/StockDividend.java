@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import codesquad.fineants.domain.BaseEntity;
 import codesquad.fineants.domain.stock.Stock;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,27 +20,27 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class StockDividend {
+public class StockDividend extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private LocalDateTime dividendMonths;
+	private LocalDateTime dividendMonth;
 	private Long dividend;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "stock_id")
+	@JoinColumn(name = "ticker_symbol", referencedColumnName = "tickerSymbol")
 	private Stock stock;
 
 	@Builder
-	public StockDividend(Long id, LocalDateTime dividendMonths, Long dividend, Stock stock) {
+	public StockDividend(Long id, LocalDateTime dividendMonth, Long dividend, Stock stock) {
 		this.id = id;
-		this.dividendMonths = dividendMonths;
+		this.dividendMonth = dividendMonth;
 		this.dividend = dividend;
 		this.stock = stock;
 	}
 
 	public boolean isMonthlyDividend(LocalDateTime monthDateTime) {
-		return dividendMonths.getYear() == monthDateTime.getYear()
-			&& dividendMonths.getMonthValue() == monthDateTime.getMonthValue();
+		return dividendMonth.getYear() == monthDateTime.getYear()
+			&& dividendMonth.getMonthValue() == monthDateTime.getMonthValue();
 	}
 }
