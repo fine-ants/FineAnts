@@ -21,11 +21,11 @@ export default function PortfolioOverview({ data }: Props) {
 
   const [isTargetSwitchChecked, setIsTargetSwitchChecked] = useState(true);
   const [isLossSwitchChecked, setIsLossSwitchChecked] = useState(false);
-  const [isModalOpen, setIsModalOPen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const onPortfolioEdit = () => {
-    setIsModalOPen(true);
+    setIsModalOpen(true);
   };
 
   const onPortfolioRemove = () => {
@@ -33,7 +33,7 @@ export default function PortfolioOverview({ data }: Props) {
   };
 
   const onModalClose = () => {
-    setIsModalOPen(false);
+    setIsModalOpen(false);
   };
 
   const onConfirmAlertClose = () => {

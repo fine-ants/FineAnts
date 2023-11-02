@@ -1,4 +1,4 @@
-import useText from "@hooks/useText";
+import useText from "@components/hooks/useText";
 import { validatePassword } from "@utils/authInputValidators";
 import SubPage from "./SubPage";
 
