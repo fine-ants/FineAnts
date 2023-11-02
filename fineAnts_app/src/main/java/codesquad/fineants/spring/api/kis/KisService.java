@@ -25,6 +25,7 @@ import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.spring.api.kis.client.KisClient;
 import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import codesquad.fineants.spring.api.kis.manager.KisAccessTokenManager;
+import codesquad.fineants.spring.api.kis.manager.PortfolioSubscriptionManager;
 import codesquad.fineants.spring.api.kis.response.CurrentPriceResponse;
 import codesquad.fineants.spring.api.portfolio_stock.PortfolioStockService;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioHoldingsResponse;
@@ -44,15 +45,18 @@ public class KisService {
 	private final PortfolioStockService portfolioStockService;
 	private final KisAccessTokenManager manager;
 	private final CurrentPriceManager currentPriceManager;
+	private final PortfolioSubscriptionManager portfolioSubscriptionManager;
 
 	// 제약조건 : kis 서버에 1초당 최대 5건, TR간격 0.1초 이하면 안됨
 	public CurrentPriceResponse readRealTimeCurrentPrice(String tickerSymbol) {
-		Map<String, String> output = (Map<String, String>)kisClient.readRealTimeCurrentPrice(tickerSymbol,
-			manager.createAuthorization()).get("output");
-		long currentPrice = Long.parseLong(output.get("stck_prpr"));
-
+		long currentPrice = kisClient.readRealTimeCurrentPrice(tickerSymbol, manager.createAuthorization());
 		log.info("tickerSymbol={}, currentPrice={}, time={}", tickerSymbol, currentPrice, LocalDateTime.now());
 		return new CurrentPriceResponse(tickerSymbol, currentPrice);
+	}
+
+	public void addPortfolioSubscription(String sessionId, PortfolioSubscription subscription) {
+		addTickerSymbols(subscription.getTickerSymbols());
+		portfolioSubscriptionManager.addPortfolioSubscription(sessionId, subscription);
 	}
 
 	public void addTickerSymbols(List<String> tickerSymbols) {
@@ -61,16 +65,8 @@ public class KisService {
 			.forEach(currentPriceManager::addKey);
 	}
 
-	public void addPortfolioSubscription(String sessionId, PortfolioSubscription subscription) {
-		if (sessionId == null) {
-			return;
-		}
-		portfolioSubscriptions.put(sessionId, subscription);
-	}
-
 	public void removePortfolioSubscription(String sessionId) {
-		PortfolioSubscription delSubscription = portfolioSubscriptions.remove(sessionId);
-		log.info("포트폴리오 구독 삭제 : {}", delSubscription);
+		portfolioSubscriptionManager.removePortfolioSubscription(sessionId);
 	}
 
 	@Scheduled(fixedRate = 5, timeUnit = TimeUnit.SECONDS)
