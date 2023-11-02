@@ -87,7 +87,7 @@ class PortfolioNotificationServiceTest {
 			.budget(1000000L)
 			.targetGain(1500000L)
 			.maximumLoss(900000L)
-			.member(member)
+			.member(this.member)
 			.build();
 		this.portfolio = portfolioRepository.save(portfolio);
 
@@ -108,6 +108,7 @@ class PortfolioNotificationServiceTest {
 			.numShares(3L)
 			.purchasePricePerShare(50000.0)
 			.memo("첫구매")
+			.portFolioHolding(this.portfolioHolding)
 			.build());
 	}
 
@@ -163,6 +164,22 @@ class PortfolioNotificationServiceTest {
 				.containsExactlyInAnyOrder(portfolioId, true),
 			() -> assertThat(portfolioRepository.findById(portfolioId).orElseThrow().getMaximumIsActive()).isTrue()
 		);
+	}
+
+	@DisplayName("사용자에게 최대손익금액 도달 안내 메일을 전송합니다.")
+	@Test
+	void notifyTargetGain() {
+		// given
+		purchaseHistoryRepository.save(PurchaseHistory.builder()
+			.purchaseDate(LocalDateTime.now())
+			.numShares(100L)
+			.purchasePricePerShare(10000.0)
+			.memo("추가구매")
+			.portFolioHolding(portfolioHolding)
+			.build());
+		// when
+		service.notifyTargetGain();
+		// then
 	}
 
 }

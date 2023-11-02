@@ -1,7 +1,6 @@
 package codesquad.fineants.spring.api.portfolio_stock;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -21,6 +20,8 @@ import codesquad.fineants.domain.oauth.support.AuthPrincipalMember;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.spring.api.kis.KisService;
+import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
+import codesquad.fineants.spring.api.portfolio.PortFolioService;
 import codesquad.fineants.spring.api.portfolio_stock.request.PortfolioStockCreateRequest;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioHoldingsResponse;
 import codesquad.fineants.spring.api.response.ApiResponse;
@@ -34,6 +35,8 @@ public class PortfolioStockRestController {
 
 	private final PortfolioStockService portfolioStockService;
 	private final KisService kisService;
+	private final PortFolioService portFolioService;
+	private final CurrentPriceManager currentPriceManager;
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
@@ -54,12 +57,14 @@ public class PortfolioStockRestController {
 
 	@GetMapping
 	public ApiResponse<PortfolioHoldingsResponse> readMyPortfolioStocks(@PathVariable Long portfolioId) {
-		List<String> tickerSymbol = portfolioStockService.findPortfolio(portfolioId).getPortfolioHoldings().stream()
+		List<String> tickerSymbols = portFolioService.findPortfolio(portfolioId).getPortfolioHoldings().stream()
 			.map(PortfolioHolding::getStock)
 			.map(Stock::getTickerSymbol)
+			.filter(tickerSymbol -> !currentPriceManager.hasCurrentPrice(tickerSymbol))
 			.collect(Collectors.toList());
-		Map<String, Long> currentPriceMap = kisService.refreshCurrentPriceMap(tickerSymbol);
-		PortfolioHoldingsResponse response = portfolioStockService.readMyPortfolioStocks(portfolioId, currentPriceMap);
+		kisService.refreshCurrentPrice(tickerSymbols);
+
+		PortfolioHoldingsResponse response = portfolioStockService.readMyPortfolioStocks(portfolioId);
 		return ApiResponse.success(PortfolioStockSuccessCode.OK_READ_PORTFOLIO_STOCKS, response);
 	}
 }

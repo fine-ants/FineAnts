@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
@@ -34,6 +32,7 @@ import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
 import codesquad.fineants.domain.stock_dividend.StockDividend;
 import codesquad.fineants.domain.stock_dividend.StockDividendRepository;
+import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioHoldingsResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,6 +67,9 @@ class PortfolioStockServiceTest {
 
 	@Autowired
 	private PortfolioGainHistoryRepository portfolioGainHistoryRepository;
+
+	@Autowired
+	private CurrentPriceManager currentPriceManager;
 
 	private Member member;
 	private Portfolio portfolio;
@@ -155,10 +157,10 @@ class PortfolioStockServiceTest {
 	void readMyPortfolioStocks() {
 		// given
 		Long portfolioId = portfolio.getId();
-		Map<String, Long> currentPriceMap = new HashMap<>(Map.of("005930", 60000L));
+		currentPriceManager.addCurrentPrice("005930", 60000L);
 
 		// when
-		PortfolioHoldingsResponse response = service.readMyPortfolioStocks(portfolioId, currentPriceMap);
+		PortfolioHoldingsResponse response = service.readMyPortfolioStocks(portfolioId);
 
 		// then
 		assertAll(

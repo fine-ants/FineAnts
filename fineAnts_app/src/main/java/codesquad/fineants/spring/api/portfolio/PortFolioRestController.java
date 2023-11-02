@@ -64,6 +64,7 @@ public class PortFolioRestController {
 	public ApiResponse<PortfoliosResponse> readMyAllPortfolio(@AuthPrincipalMember AuthMember authMember,
 		@RequestParam(required = false, defaultValue = "10") int size,
 		@RequestParam(required = false, defaultValue = Long.MAX_VALUE + "") long nextCursor) {
+
 		return ApiResponse.success(PortfolioSuccessCode.OK_SEARCH_PORTFOLIOS,
 			portFolioService.readMyAllPortfolio(authMember, size, nextCursor));
 	}

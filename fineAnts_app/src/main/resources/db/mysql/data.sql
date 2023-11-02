@@ -22,8 +22,8 @@ LOAD DATA LOCAL INFILE 'src/main/resources/dividends.tsv'
         stock_dividend.create_at = now();
 
 INSERT INTO member(create_at, email, nickname, profile_url, provider)
-VALUES (now(), 'qkdlfjtm119@naver.com', '일개미2aa1c3d7',
-        'http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg', 'kakao');
+VALUES (now(), 'dragonbead95@naver.com', '일개미2aa1c3d7',
+        'http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg', 'naver');
 
 INSERT INTO fineAnts.portfolio (id, budget, maximum_loss, name, securities_firm, target_gain, member_id)
 VALUES (1, 1000000, 900000, '내꿈은 워렌버핏', '토스', 1500000, 1);

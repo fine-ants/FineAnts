@@ -3,7 +3,6 @@ package codesquad.fineants.domain.portfolio;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +16,7 @@ import javax.persistence.OneToMany;
 import codesquad.fineants.domain.member.Member;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import codesquad.fineants.domain.portfolio_holding.PortfolioHolding;
+import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -201,12 +201,12 @@ public class Portfolio {
 			.build();
 	}
 
-	public List<PortfolioHolding> changeCurrentPriceFromHoldings(Map<String, Long> currentPriceMap) {
+	public List<PortfolioHolding> changeCurrentPriceFromHoldings(CurrentPriceManager manager) {
 		List<PortfolioHolding> result = new ArrayList<>();
 		for (PortfolioHolding portfolioHolding : portfolioHoldings) {
 			String tickerSymbol = portfolioHolding.getStock().getTickerSymbol();
-			if (currentPriceMap.containsKey(tickerSymbol)) {
-				portfolioHolding.changeCurrentPrice(currentPriceMap.get(tickerSymbol));
+			if (manager.hasCurrentPrice(tickerSymbol)) {
+				portfolioHolding.changeCurrentPrice(manager.getCurrentPrice(tickerSymbol));
 				result.add(portfolioHolding);
 			}
 		}
@@ -224,5 +224,9 @@ public class Portfolio {
 
 	public void changeMaximumLossNotification(Boolean isActive) {
 		this.maximumIsActive = isActive;
+	}
+
+	public boolean reachedTargetGain() {
+		return calculateTotalGain() >= targetGain;
 	}
 }
