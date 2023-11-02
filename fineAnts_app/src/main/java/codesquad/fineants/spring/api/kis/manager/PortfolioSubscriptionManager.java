@@ -38,4 +38,8 @@ public class PortfolioSubscriptionManager {
 	public List<PortfolioSubscription> values() {
 		return new ArrayList<>(portfolioSubscriptions.values());
 	}
+
+	public int size() {
+		return portfolioSubscriptions.size();
+	}
 }
