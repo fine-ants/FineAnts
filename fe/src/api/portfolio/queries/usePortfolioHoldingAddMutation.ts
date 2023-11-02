@@ -2,7 +2,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postPortfolioHolding } from "..";
 import { portfolioKeys } from "./queryKeys";
 
-export default function usePortfolioHoldingAddMutation(portfolioId: number) {
+type Props = {
+  portfolioId: number;
+  onClose: () => void;
+};
+
+export default function usePortfolioHoldingAddMutation({
+  portfolioId,
+  onClose,
+}: Props) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -13,6 +21,7 @@ export default function usePortfolioHoldingAddMutation(portfolioId: number) {
       queryClient.invalidateQueries({
         queryKey: portfolioKeys.details(portfolioId).queryKey,
       });
+      onClose();
     },
     onError: (error) => {
       // eslint-disable-next-line no-console

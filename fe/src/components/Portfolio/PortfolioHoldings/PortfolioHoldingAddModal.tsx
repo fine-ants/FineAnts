@@ -13,8 +13,10 @@ export default function PortfolioHoldingAddModal({
   isOpen,
   onClose,
 }: Props) {
-  const { mutate: portfolioHoldingAddMutate } =
-    usePortfolioHoldingAddMutation(portfolioId);
+  const { mutate: portfolioHoldingAddMutate } = usePortfolioHoldingAddMutation({
+    portfolioId,
+    onClose,
+  });
 
   const addStockToPortfolio = (tickerSymbol: string) => {
     portfolioHoldingAddMutate({
