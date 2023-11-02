@@ -1,3 +1,5 @@
+import useStompSubscription from "@api/hooks/useStompSubWithRQ";
+import { Portfolio } from "@api/portfolio";
 import usePortfolioDetailsQuery from "@api/portfolio/queries/usePortfolioDetailsQuery";
 import plusIcon from "@assets/icons/plus.svg";
 import DividendBarChart from "@components/Portfolio/DividendBarChart";
@@ -7,8 +9,9 @@ import PortfolioHoldingsTable from "@components/Portfolio/PortfolioHoldings/Port
 import PortfolioOverview from "@components/Portfolio/PortfolioOverview";
 import SectorBar from "@components/Portfolio/SectorBar";
 import Header from "@components/common/Header";
+import { BASE_API_URL_WS } from "@constants/config";
 import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import BasePage from "./BasePage";
@@ -20,6 +23,27 @@ export default function PortfolioPage() {
     usePortfolioDetailsQuery(Number(id));
 
   const [isAddHoldingModalOpen, setIsAddHoldingModalOpen] = useState(false);
+
+  const { onConnect } = useStompSubscription<Portfolio>({
+    brokerURL: `${BASE_API_URL_WS}/portfolio`,
+    subscribeURL: `portfolio/${id}`,
+    queryKey: useMemo(() => ["portfolio", Number(id)], [id]),
+    updaterFn: useCallback((_, newData) => newData, []),
+    initialMsg: useMemo(
+      () => ({
+        tickerSymbols: portfolio?.portfolioHoldings.map(
+          (holding) => holding.tickerSymbol
+        ),
+      }),
+      [portfolio]
+    ),
+  });
+
+  useEffect(() => {
+    if (portfolio) {
+      onConnect();
+    }
+  }, [portfolio, onConnect]);
 
   const onAddHoldingButtonClick = () => {
     setIsAddHoldingModalOpen(true);
@@ -41,6 +65,7 @@ export default function PortfolioPage() {
     <StyledPortfolioPage>
       <BasePage>
         <Header />
+
         <main style={{ display: "flex", padding: "40px 150px", gap: "32px" }}>
           <PortfolioHoldingAddModal
             isOpen={isAddHoldingModalOpen}
@@ -80,6 +105,7 @@ export default function PortfolioPage() {
             </PortfolioHoldingsContainer>
           </RightPanel>
         </main>
+
         {/* <Footer /> */}
       </BasePage>
     </StyledPortfolioPage>
