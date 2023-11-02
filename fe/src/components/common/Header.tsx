@@ -61,8 +61,8 @@ export default function Header() {
   //   },
   // ];
 
-  const moveToStockDetail = (ticker: string) => {
-    navigate(`/stock/${ticker}`);
+  const moveToStockPage = (tickerSymbol: string) => {
+    navigate(`/stock/${tickerSymbol}`);
   };
 
   return (
@@ -112,7 +112,7 @@ export default function Header() {
           <HeaderRight>
             <SearchBar>
               <SearchBar.Input />
-              <SearchBar.SearchList onItemClick={moveToStockDetail} />
+              <SearchBar.SearchList onItemClick={moveToStockPage} />
             </SearchBar>
             <UserControls />
           </HeaderRight>
