@@ -47,6 +47,7 @@ public class PortfolioGainHistoryService {
 			portfolio.changeCurrentPriceFromHoldings(currentPriceManager);
 			PortfolioGainHistory latestHistory = repository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
 				portfolio, LocalDateTime.now()).orElseGet(PortfolioGainHistory::empty);
+			// TODO: 실시간 주식 시세 문제 해결
 			PortfolioGainHistory history = portfolio.createPortfolioGainHistory(latestHistory);
 			portfolioGainHistories.add(repository.save(history));
 		}
