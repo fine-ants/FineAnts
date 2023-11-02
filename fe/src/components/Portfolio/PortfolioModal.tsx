@@ -2,7 +2,7 @@ import { PortfolioDetails } from "@api/portfolio";
 import usePortfolioAddMutation from "@api/portfolio/queries/usePortfolioAddMutation";
 import usePortfolioEditMutation from "@api/portfolio/queries/usePortfolioEditMutation";
 import BaseModal from "@components/BaseModal";
-import useText from "@hooks/useText";
+import useText from "@components/hooks/useText";
 import {
   Button,
   FormControl,
@@ -12,8 +12,8 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { calculateRate, calculateValue } from "@utils/calculations";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 type Props = {
@@ -22,13 +22,13 @@ type Props = {
   portfolioDetails?: PortfolioDetails;
 };
 
+// TODO: Refactoring 시급!
 export default function PortfolioModal({
   isOpen,
   onClose,
   portfolioDetails,
 }: Props) {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const {
     mutate: editMutate,
@@ -36,12 +36,9 @@ export default function PortfolioModal({
     isSuccess: isEditSuccess,
   } = usePortfolioEditMutation(Number(id));
 
-  const {
-    data: addData,
-    mutate: addMutate,
-    isError: isAddError,
-    isSuccess: isAddSuccess,
-  } = usePortfolioAddMutation();
+  const { mutate: addMutate } = usePortfolioAddMutation({
+    onSuccessCb: onClose,
+  });
 
   const [securitiesFirm, setSecuritiesFirm] = useState(
     portfolioDetails ? portfolioDetails.securitiesFirm : "fineAnts"
@@ -69,43 +66,20 @@ export default function PortfolioModal({
     }
   );
 
+  const clearInputs = useCallback(() => {
+    onTargetGainChange("");
+    onTargetReturnRateChange("");
+    onMaximumLossChange("");
+    onMaximumLossRateChange("");
+  }, [
+    onMaximumLossChange,
+    onMaximumLossRateChange,
+    onTargetGainChange,
+    onTargetReturnRateChange,
+  ]);
+
   const isEditMode = !!portfolioDetails;
   const isBudgetEmpty = budget === "0" || budget === "";
-
-  useEffect(() => {
-    if (isBudgetEmpty) {
-      onTargetGainChange("");
-      onTargetReturnRateChange("");
-      onMaximumLossChange("");
-      onMaximumLossRateChange("");
-    } else {
-      onTargetGainHandler(targetGain);
-      onMaximumLossHandler(maximumLoss);
-    }
-  }, [budget]);
-
-  useEffect(() => {
-    if (isEditSuccess) {
-      onClose();
-    }
-
-    if (isEditError) {
-      // TODO toast
-    }
-  }, [isEditSuccess, isEditError]);
-
-  useEffect(() => {
-    if (isAddSuccess) {
-      const portfolioId = addData.data.portfolioId;
-
-      onClose();
-      navigate(`/portfolio/${portfolioId}`);
-    }
-
-    if (isAddError) {
-      // TODO toast
-    }
-  }, [isAddSuccess, isAddError]);
 
   const changeIfNumberOnly =
     (handler: (value: string) => void) => (value: string) => {
@@ -170,6 +144,34 @@ export default function PortfolioModal({
       addMutate(body);
     }
   };
+
+  // 예산이 변경되었을 때
+  useEffect(() => {
+    if (isBudgetEmpty) {
+      clearInputs();
+    } else {
+      onTargetGainHandler(targetGain);
+      onMaximumLossHandler(maximumLoss);
+    }
+  }, [
+    budget,
+    clearInputs,
+    isBudgetEmpty,
+    maximumLoss,
+    onMaximumLossHandler,
+    onTargetGainHandler,
+    targetGain,
+  ]);
+
+  useEffect(() => {
+    if (isEditSuccess) {
+      onClose();
+    }
+
+    if (isEditError) {
+      // TODO toast
+    }
+  }, [isEditSuccess, isEditError, onClose]);
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
