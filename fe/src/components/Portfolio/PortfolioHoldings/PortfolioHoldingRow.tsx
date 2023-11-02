@@ -1,8 +1,10 @@
 import { PortfolioHolding } from "@api/portfolio";
 import usePortfolioHoldingDeleteMutation from "@api/portfolio/queries/usePortfolioHoldingDeleteMutation";
+import ConfirmAlert from "@components/ConfirmAlert";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
+  Button,
   Collapse,
   IconButton,
   TableCell,
@@ -41,9 +43,14 @@ export default function PortfolioHoldingRow({
   const { mutate: portfolioHoldingDeleteMutate } =
     usePortfolioHoldingDeleteMutation(portfolioId);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isRowOpen, setIsRowOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const onDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const onConfirmDelete = () => {
     portfolioHoldingDeleteMutate({ portfolioId, portfolioHoldingId });
   };
 
@@ -54,8 +61,8 @@ export default function PortfolioHoldingRow({
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
+            onClick={() => setIsRowOpen(!isRowOpen)}>
+            {isRowOpen ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
           </IconButton>
         </HoldingTableCell>
         <HoldingTableCell component="th" scope="row">
@@ -94,18 +101,15 @@ export default function PortfolioHoldingRow({
           <Typography>{annualDividendYield}%</Typography>
           <Typography>{annualDividend}</Typography>
         </HoldingTableCell>
-        {/* TODO: 종목 삭제 버튼 */}
-        <div
-          onClick={onDeleteClick}
-          style={{ border: "1px solid black", cursor: "pointer" }}>
-          삭제
-        </div>
+        <TableCell style={{ border: "1px solid black", cursor: "pointer" }}>
+          <Button onClick={onDeleteClick}>삭제</Button>
+        </TableCell>
       </HoldingTableRow>
       <HoldingLotRow>
         <TableCell
           style={{ padding: "0 0 0 68.5px", border: "none" }}
           colSpan={9}>
-          <Collapse in={isOpen} timeout="auto" unmountOnExit>
+          <Collapse in={isRowOpen} timeout="auto" unmountOnExit>
             <PortfolioHoldingLots
               portfolioId={portfolioId}
               portfolioHoldingId={portfolioHoldingId}
@@ -114,6 +118,14 @@ export default function PortfolioHoldingRow({
           </Collapse>
         </TableCell>
       </HoldingLotRow>
+
+      <ConfirmAlert
+        isOpen={isDeleteModalOpen}
+        title="종목 삭제"
+        content="종목을 삭제하시겠습니까?"
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={onConfirmDelete}
+      />
     </>
   );
 }
