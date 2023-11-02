@@ -14,5 +14,9 @@ export default function usePortfolioHoldingAddMutation(portfolioId: number) {
         queryKey: portfolioKeys.details(portfolioId).queryKey,
       });
     },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    },
   });
 }

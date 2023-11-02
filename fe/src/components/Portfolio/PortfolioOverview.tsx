@@ -1,5 +1,6 @@
 import { PortfolioDetails } from "@api/portfolio";
 import usePortfolioDeleteMutation from "@api/portfolio/queries/usePortfolioDeleteMutation";
+import tossLogo from "@assets/images/Toss_Symbol_Primary.png";
 import ConfirmAlert from "@components/ConfirmAlert";
 import PortfolioModal from "@components/Portfolio/PortfolioModal";
 import ToggleSwitch from "@components/ToggleSwitch";
@@ -70,12 +71,10 @@ export default function PortfolioOverview({ data }: Props) {
         />
       )}
       <Header>
-        <FirmImage
-          src={
-            "https://framerusercontent.com/images/y7135TGP0TiQ7gtLbQ0IrWOzww.jpg"
-          }
-        />
-        <Title>{data.name}</Title>
+        <TitleWrapper>
+          <FirmImage src={tossLogo} />
+          <Title>{data.name}</Title>
+        </TitleWrapper>
         <ButtonWrapper>
           <Button onClick={onPortfolioEdit}>수정</Button>
           <Button onClick={onPortfolioRemove}>삭제</Button>
@@ -83,55 +82,79 @@ export default function PortfolioOverview({ data }: Props) {
       </Header>
       <Body>
         <LeftPanel>
-          <div>예산 {data.budget} KRW</div>
-          <div>투자 금액 {data.investedAmount} KRW</div>
-          <div>잔고 {data.balance} KRW</div>
-          <div>잠정 손실잔고 {data.provisionalLossBalance} KRW</div>
+          <OverviewWrapper>
+            <OverviewTitle>예산</OverviewTitle>
+            <OverviewTitle>투자 금액</OverviewTitle>
+            <OverviewTitle>잔고</OverviewTitle>
+            <OverviewTitle>잠정 손실잔고</OverviewTitle>
+          </OverviewWrapper>
+          <OverviewWrapper>
+            <OverviewValue>{data.budget} KRW</OverviewValue>
+            <OverviewValue>{data.investedAmount} KRW</OverviewValue>
+            <OverviewValue>{data.balance} KRW</OverviewValue>
+            <OverviewValue>{data.provisionalLossBalance} KRW</OverviewValue>
+          </OverviewWrapper>
         </LeftPanel>
         <RightPanel>
-          <OverviewWrapper>
-            <div>
-              <span>목표 수익률</span>
-              <span>{data.targetGain} KRW</span>
-              <span>{data.targetReturnRate}%</span>
-              <ToggleSwitch
-                isChecked={isTargetSwitchChecked}
-                onToggle={onTargetSwitchToggle}
-              />
-            </div>
-            <div>
-              <span>최대 손실율 </span>
-              <span>{data.maximumLoss} KRW</span>
-              <span>{data.maximumLossRate} %</span>
+          <OverviewPanel>
+            <OverviewWrapper>
+              <OverviewTitle>목표 수익률</OverviewTitle>
+              <OverviewTitle>총 손익</OverviewTitle>
+              <OverviewTitle>총 연배당금</OverviewTitle>
+            </OverviewWrapper>
+            <OverviewWrapper>
+              <OverviewValue>{data.targetGain} KRW</OverviewValue>
+              <OverviewValue>{data.totalGain} KRW</OverviewValue>
+              <OverviewValue>{data.totalAnnualDividend} KRW</OverviewValue>
+            </OverviewWrapper>
+            <OverviewWrapper>
+              <OverviewPercent $isUp={data.targetReturnRate > 0}>
+                {data.targetReturnRate}%
+              </OverviewPercent>
+              <OverviewPercent $isUp={data.totalGainRate > 0}>
+                {data.totalGainRate} %
+              </OverviewPercent>
+              <OverviewPercent $isUp={data.totalAnnualDividendYield > 0}>
+                {data.totalAnnualDividendYield} %
+              </OverviewPercent>
+            </OverviewWrapper>
+            <ToggleSwitch
+              isChecked={isTargetSwitchChecked}
+              onToggle={onTargetSwitchToggle}
+            />
+            <OverviewWrapper />
+          </OverviewPanel>
+          <OverviewPanel>
+            <OverviewWrapper>
+              <OverviewTitle>최대 손실율 </OverviewTitle>
+              <OverviewTitle>당일 손익 </OverviewTitle>
+              <OverviewTitle>투자 연배당률</OverviewTitle>
+            </OverviewWrapper>
+
+            <OverviewWrapper>
+              <OverviewValue>{data.maximumLoss} KRW</OverviewValue>
+              <OverviewValue>{data.dailyGain} KRW</OverviewValue>
+            </OverviewWrapper>
+
+            <OverviewWrapper>
+              <OverviewPercent $isUp={data.maximumLossRate > 0}>
+                {data.maximumLossRate} %
+              </OverviewPercent>
+              <OverviewPercent $isUp={data.dailyGainRate > 0}>
+                {data.dailyGainRate} %
+              </OverviewPercent>
+              <OverviewPercent $isUp={data.annualInvestmentDividendYield > 0}>
+                {data.annualInvestmentDividendYield} %
+              </OverviewPercent>
+            </OverviewWrapper>
+
+            <OverviewWrapper>
               <ToggleSwitch
                 isChecked={isLossSwitchChecked}
                 onToggle={onLossSwitchToggle}
               />
-            </div>
-          </OverviewWrapper>
-          <OverviewWrapper>
-            <div>
-              <span>총 손익</span>
-              <span>{data.totalGain} KRW</span>
-              <span> {data.totalGainRate} %</span>
-            </div>
-            <div>
-              <span>당일 손익 </span>
-              <span>{data.dailyGain} KRW</span>
-              <span>{data.dailyGainRate} %</span>
-            </div>
-          </OverviewWrapper>
-          <OverviewWrapper>
-            <div>
-              <span>총 연배당금</span>
-              <span>{data.totalAnnualDividend} KRW</span>
-              <span>{data.totalAnnualDividendYield} %</span>
-            </div>
-            <div>
-              <span>투자 연배당률</span>
-              <span>{data.annualInvestmentDividendYield} %</span>
-            </div>
-          </OverviewWrapper>
+            </OverviewWrapper>
+          </OverviewPanel>
         </RightPanel>
       </Body>
     </StyledPortfolioOverview>
@@ -139,21 +162,35 @@ export default function PortfolioOverview({ data }: Props) {
 }
 
 const StyledPortfolioOverview = styled.div`
-  height: 100%;
+  width: 988px;
+  // height: 244px;
+  background-color: #ffffff;
+  border-radius: 8px;
+
+  box-shadow: 0px 0px 12px 0px #00000014;
 `;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
+  padding: 12px 24px 8px 24px;
+  border-bottom: 1px solid #d8d8dc;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 `;
 
 const FirmImage = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 `;
 
 const Title = styled.span`
-  font-size: 16px;
+  font-size: 20px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -168,34 +205,49 @@ const ButtonWrapper = styled.div`
 const Body = styled.div`
   width: 100%;
   display: flex;
+  gap: 16px;
+  padding: 24px;
 `;
 
 const LeftPanel = styled.div`
-  width: 35%;
   display: flex;
-  flex-direction: column;
   gap: 8px;
   justify-content: center;
-  border: 1px solid black;
-  margin: 10px;
 `;
 
 const RightPanel = styled.div`
-  width: 65%;
   display: flex;
-  flex-direction: column;
+`;
+
+const OverviewTitle = styled.div`
+  font-size: 16px;
+`;
+
+const OverviewValue = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const OverviewPercent = styled.div<{ $isUp: boolean }>`
+  font-size: 16px;
+  font-weight: bold;
+  color: ${({ $isUp }) => ($isUp ? "#089981" : "#f23645")};
+`;
+
+const OverviewPanel = styled.div`
+  display: flex;
+
+  width: 360px;
+  gap: 16px;
 `;
 
 const OverviewWrapper = styled.div`
   display: flex;
-  gap: 16px;
-  border: 1px solid black;
-  margin: 10px;
+  flex-direction: column;
 
-  div {
-    width: 50%;
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  gap: 12px;
+
+  > span {
+    color: #8b8b8b;
   }
 `;
