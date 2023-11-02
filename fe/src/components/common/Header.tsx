@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Routes from "router/Routes";
 import styled from "styled-components";
 import { NavBar } from "../NavBar";
-import SearchBar from "../SearchBar";
+import SearchBar from "../SearchBar/SearchBar";
 import TVTickerTapeWidget from "../TradingViewWidgets/TVTickerTape";
 import UserControls from "../common/UserControls";
 import Dropdown from "./Dropdown";
@@ -28,16 +28,20 @@ export default function Header() {
     {
       name: "단타왕",
       onClick: () => {
-        navigate("/portfolio/2");
+        navigate("/portfolio/5");
       },
     },
     {
       name: "물린게아니고장기투자",
       onClick: () => {
-        navigate("/portfolio/3");
+        navigate("/portfolio/6");
       },
     },
   ];
+
+  const moveToStockDetail = (ticker: string) => {
+    navigate(`/stock/${ticker}`);
+  };
 
   return (
     <>
@@ -72,7 +76,10 @@ export default function Header() {
             </NavBar>
           </HeaderLeft>
           <HeaderRight>
-            <SearchBar />
+            <SearchBar>
+              <SearchBar.Input />
+              <SearchBar.SearchList onItemClick={moveToStockDetail} />
+            </SearchBar>
             <UserControls />
           </HeaderRight>
         </HeaderTop>
