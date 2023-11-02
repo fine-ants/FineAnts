@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePortfolioHolding } from "..";
 import { portfolioKeys } from "./queryKeys";
 
-export default function usePortfolioHoldingAddMutation(portfolioId: number) {
+export default function usePortfolioHoldingDeleteMutation(portfolioId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({

@@ -1,21 +1,23 @@
 import { fetcher } from "@api/fetcher";
 import { Response } from "@api/types";
 
-export type PortfolioPieChartDataItem = {
-  portfolios: {
-    id: number;
-    securitiesFirm: string;
-    name: string;
-    budget: number;
-    totalGain: number;
-    totalGainRate: number;
-    dailyGain: number;
-    dailyGainRate: number;
-    expectedMonthlyDividend: number;
-    numShares: number;
-  }[];
+export type PortfolioList = {
+  portfolios: PortfolioItem[];
   hasNext: boolean;
   nextCursor: string | null;
+};
+
+export type PortfolioItem = {
+  id: number;
+  securitiesFirm: string;
+  name: string;
+  budget: number;
+  totalGain: number;
+  totalGainRate: number;
+  dailyGain: number;
+  dailyGainRate: number;
+  expectedMonthlyDividend: number;
+  numShares: number;
 };
 
 export type Portfolio = {
@@ -77,9 +79,8 @@ type PortfolioReqBody = {
   maximumLoss: number;
 };
 
-export const getPortfolioChart = async () => {
-  const res =
-    await fetcher.get<Response<PortfolioPieChartDataItem>>("/portfolios");
+export const getPortfolioList = async () => {
+  const res = await fetcher.get<Response<PortfolioList>>("/portfolios");
   return res.data;
 };
 

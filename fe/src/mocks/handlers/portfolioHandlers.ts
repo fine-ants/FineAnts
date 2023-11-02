@@ -41,6 +41,61 @@ export default [
     );
   }),
 
+  // Add portfolio holding
+  rest.post("/api/portfolio/:portfolioId/holdings", async (req, res, ctx) => {
+    const { tickerSymbol } = await req.json();
+
+    const newPortfolioHoldingId = portfolioHoldings.length + 1;
+    const data = {
+      companyName: "새로추가한주식",
+      tickerSymbol: tickerSymbol,
+      portfolioHoldingId: newPortfolioHoldingId,
+      currentValuation: 600000,
+      currentPrice: 60000,
+      averageCostPerShare: 50000.0,
+      numShares: 10,
+      dailyChange: 10000,
+      dailyChangeRate: 10,
+      totalGain: 100000,
+      totalReturnRate: 16,
+      annualDividend: 6000,
+      annualDividendYield: 10,
+
+      purchaseHistory: [],
+    };
+
+    portfolioHoldings.push(data);
+
+    return res(
+      ctx.status(HTTPSTATUS.success),
+      ctx.json({
+        ...successfulPortfolioAddResponse,
+        data: {
+          portfolioHoldingId: newPortfolioHoldingId, // 새로운 ID 반환
+        },
+      })
+    );
+  }),
+
+  //Delete portfolio holding
+  rest.delete(
+    "/api/portfolio/:portfolioId/holdings/:portfolioHoldingId",
+    async (req, res, ctx) => {
+      const { portfolioHoldingId } = req.params;
+
+      // Mutate portfolio holding data
+      const targetPortfolioHoldingIndex = portfolioHoldings.findIndex(
+        (holding) => holding.portfolioHoldingId === Number(portfolioHoldingId)
+      );
+      portfolioHoldings.splice(targetPortfolioHoldingIndex, 1);
+
+      return res(
+        ctx.status(HTTPSTATUS.success),
+        ctx.json(successfulPortfolioDeleteResponse)
+      );
+    }
+  ),
+
   // Add Portfolio
   rest.post("/api/portfolios", async (req, res, ctx) => {
     const { name, securitiesFirm, budget, targetGain, maximumLoss } =

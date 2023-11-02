@@ -1,14 +1,22 @@
+import { PortfolioItem } from "@api/portfolio";
+import usePortfolioListQuery from "@api/portfolio/queries/usePortfolioListQuery";
+import PortfolioModal from "@components/Portfolio/PortfolioModal";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Routes from "router/Routes";
 import styled from "styled-components";
 import { NavBar } from "../NavBar";
-import SearchBar from "../SearchBar";
+import SearchBar from "../SearchBar/SearchBar";
 import TVTickerTapeWidget from "../TradingViewWidgets/TVTickerTape";
 import UserControls from "../common/UserControls";
 import Dropdown from "./Dropdown";
 
 export default function Header() {
   const navigate = useNavigate();
+
+  const { data: portfolioList } = usePortfolioListQuery();
+
+  const [isPortfolioAddModalOpen, setIsPortfolioAddModalOpen] = useState(false);
 
   const navItems = [
     {
@@ -18,30 +26,54 @@ export default function Header() {
     { name: "indices", path: Routes.INDICES },
   ];
 
-  const dropdownItems = [
-    {
-      name: "내꿈은워렌버핏",
-      onClick: () => {
-        navigate("/portfolio/1");
-      },
-    },
-    {
-      name: "단타왕",
-      onClick: () => {
-        navigate("/portfolio/2");
-      },
-    },
-    {
-      name: "물린게아니고장기투자",
-      onClick: () => {
-        navigate("/portfolio/3");
-      },
-    },
-  ];
+  const dropdownItems = portfolioList?.portfolios?.map(
+    (portfolio: PortfolioItem) => {
+      return {
+        name: portfolio.name,
+        onClick: () => {
+          navigate(`/portfolio/${portfolio.id}`);
+        },
+      };
+    }
+  );
+
+  const onPortfolioAddClick = () => {
+    setIsPortfolioAddModalOpen(true);
+  };
+  // const dropdownItems = [
+  //   {
+  //     name: "내꿈은워렌버핏",
+  //     onClick: () => {
+  //       navigate("/portfolio/1");
+  //     },
+  //   },
+  //   {
+  //     name: "단타왕",
+  //     onClick: () => {
+  //       navigate("/portfolio/5");
+  //     },
+  //   },
+  //   {
+  //     name: "물린게아니고장기투자",
+  //     onClick: () => {
+  //       navigate("/portfolio/6");
+  //     },
+  //   },
+  // ];
+
+  const moveToStockPage = (tickerSymbol: string) => {
+    navigate(`/stock/${tickerSymbol}`);
+  };
 
   return (
     <>
       <StyledHeader>
+        {isPortfolioAddModalOpen && (
+          <PortfolioModal
+            isOpen={isPortfolioAddModalOpen}
+            onClose={() => setIsPortfolioAddModalOpen(false)}
+          />
+        )}
         <HeaderTop>
           <HeaderLeft>
             <StyledBrandIdentity onClick={() => navigate("/dashboard")}>
@@ -51,13 +83,19 @@ export default function Header() {
               <Dropdown>
                 <Dropdown.Toggle>Portfolio</Dropdown.Toggle>
                 <Dropdown.Menu>
-                  {dropdownItems.map((item) => (
+                  {dropdownItems?.map((item) => (
                     <Dropdown.Item key={item.name} item={item} />
                   ))}
                   <Dropdown.Item
                     item={{
                       name: "포트폴리오로 이동",
                       onClick: () => navigate("/profile/portfolio"),
+                    }}
+                  />
+                  <Dropdown.Item
+                    item={{
+                      name: "포트폴리오 추가",
+                      onClick: onPortfolioAddClick,
                     }}
                   />
                 </Dropdown.Menu>
@@ -72,7 +110,10 @@ export default function Header() {
             </NavBar>
           </HeaderLeft>
           <HeaderRight>
-            <SearchBar />
+            <SearchBar>
+              <SearchBar.Input />
+              <SearchBar.SearchList onItemClick={moveToStockPage} />
+            </SearchBar>
             <UserControls />
           </HeaderRight>
         </HeaderTop>
