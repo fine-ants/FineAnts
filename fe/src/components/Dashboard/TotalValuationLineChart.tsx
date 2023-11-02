@@ -34,13 +34,16 @@ export default function TotalValuationLineChart({
       </h1>
       <div style={{ position: "relative" }}>
         <Chart
-          {...options}
-          timeScale={{ barSpacing: barSpacings[currentRangeIndex] }}
+          {...{
+            ...options,
+            timeScale: {
+              barSpacing: barSpacings[currentRangeIndex],
+            },
+          }}
           ref={chartRef}>
           <AreaSeries
             data={data}
             topColor="#2175ec"
-            // bottomColor="rgba(41, 98, 255, 0.28)"
             bottomColor="#8fcbff"
             lineColor="#2175ec"
             lineWidth={2}

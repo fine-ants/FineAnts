@@ -1,21 +1,23 @@
 import { fetcher } from "@api/fetcher";
 import { Response } from "@api/types";
 
-export type PortfolioPieChartDataItem = {
-  portfolios: {
-    id: number;
-    securitiesFirm: string;
-    name: string;
-    budget: number;
-    totalGain: number;
-    totalGainRate: number;
-    dailyGain: number;
-    dailyGainRate: number;
-    expectedMonthlyDividend: number;
-    numShares: number;
-  }[];
+export type PortfolioList = {
+  portfolios: PortfolioItem[];
   hasNext: boolean;
   nextCursor: string | null;
+};
+
+export type PortfolioItem = {
+  id: number;
+  securitiesFirm: string;
+  name: string;
+  budget: number;
+  totalGain: number;
+  totalGainRate: number;
+  dailyGain: number;
+  dailyGainRate: number;
+  expectedMonthlyDividend: number;
+  numShares: number;
 };
 
 export type Portfolio = {
@@ -62,22 +64,58 @@ export type PortfolioHolding = {
 };
 
 export type PurchaseHistoryField = {
-  id: number;
+  purchaseHistoryId: number;
   purchaseDate: string;
   numShares: number;
   purchasePricePerShare: number;
-  memo: string;
+  memo: string | null;
 };
 
-export const getPortfolioChart = async () => {
-  const res =
-    await fetcher.get<Response<PortfolioPieChartDataItem>>("/portfolios");
+type PortfolioReqBody = {
+  name: string;
+  securitiesFirm: string;
+  budget: number;
+  targetGain: number;
+  maximumLoss: number;
+};
+
+export const getPortfolioList = async () => {
+  const res = await fetcher.get<Response<PortfolioList>>("/portfolios");
   return res.data;
 };
 
 export const getPortfolioDetails = async (portfolioId: number) => {
   const res = await fetcher.get<Response<Portfolio>>(
     `/portfolio/${portfolioId}/holdings`
+  );
+  return res.data;
+};
+
+export const postPortfolio = async (body: PortfolioReqBody) => {
+  const res = await fetcher.post<Response<{ portfolioId: number }>>(
+    `/portfolios`,
+    body
+  );
+  return res.data;
+};
+
+export const putPortfolio = async ({
+  portfolioId,
+  body,
+}: {
+  portfolioId: number;
+  body: PortfolioReqBody;
+}) => {
+  const res = await fetcher.put<Response<Portfolio>>(
+    `/portfolios/${portfolioId}`,
+    body
+  );
+  return res.data;
+};
+
+export const deletePortfolio = async (portfolioId: number) => {
+  const res = await fetcher.delete<Response<Portfolio>>(
+    `/portfolios/${portfolioId}`
   );
   return res.data;
 };
@@ -122,6 +160,7 @@ export const postPortfolioHoldingPurchase = async ({
     purchaseDate: string;
     numShares: number;
     purchasePricePerShare: number;
+    memo: string;
   };
 }) => {
   const res = await fetcher.post<Response<null>>(
@@ -144,6 +183,7 @@ export const putPortfolioHoldingPurchase = async ({
     purchaseDate: string;
     numShares: number;
     purchasePricePerShare: number;
+    memo: string;
   };
 }) => {
   const res = await fetcher.put<Response<null>>(

@@ -4,6 +4,9 @@ export const portfolioKeys = createQueryKeys("portfolio", {
   details: (portfolioId: number) => ({
     queryKey: [portfolioId],
   }),
+  addPortfolio: () => ({
+    queryKey: ["addPortfolio"],
+  }),
   chart: () => ({
     queryKey: ["portfolioChart"],
   }),

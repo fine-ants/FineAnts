@@ -22,5 +22,6 @@ module.exports = {
       },
     ],
     "prettier/prettier": "error",
+    "no-console": "error",
   },
 };

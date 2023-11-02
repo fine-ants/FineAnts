@@ -1,4 +1,4 @@
-import useText from "@hooks/useText";
+import useText from "@components/hooks/useText";
 import { Button } from "@mui/material";
 import { validateNickname, validatePassword } from "@utils/authInputValidators";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -13,7 +13,7 @@ export default function ProfileEditPage() {
 
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [imgFile, setImgFile] = useState<File>();
-  const [profileImg, setProfileImg] = useState<String | undefined>(SAMPLE_IMG);
+  const [profileImg, setProfileImg] = useState<string | undefined>(SAMPLE_IMG);
 
   const nickname = useText({
     validators: [validateNickname],
@@ -53,8 +53,6 @@ export default function ProfileEditPage() {
     // TODO : api 추가 예정
 
     if (!imgFile) return;
-
-    console.log(imgFile);
   };
 
   const onNicknameCheck = () => {
@@ -62,7 +60,6 @@ export default function ProfileEditPage() {
 
     if (!nickname.value) return;
 
-    console.log(nickname.value);
     setIsNicknameChecked(true);
   };
 
@@ -70,9 +67,6 @@ export default function ProfileEditPage() {
     // TODO : api 추가 예정
 
     e.preventDefault();
-    console.log(`isCheckedNickname : ${isNicknameChecked}`);
-    console.log(`nickname : ${nickname.value}`);
-    console.log(`password : ${password.value}`);
   };
 
   return (
@@ -87,7 +81,10 @@ export default function ProfileEditPage() {
           onChange={onProfileChange}
         />
         <ButtonWrapper>
-          <Button variant="contained" onClick={onProfileSave}>
+          <Button
+            variant="contained"
+            onClick={onProfileSave}
+            disabled={isNicknameChecked}>
             저장
           </Button>
           <Button variant="contained" onClick={onProfileRemove}>
@@ -164,7 +161,7 @@ const ProfileWrapper = styled.div`
   }
 `;
 
-const ProfileImg = styled.label<{ $profileImgUrl: String | undefined }>`
+const ProfileImg = styled.label<{ $profileImgUrl: string | undefined }>`
   width: 96px;
   height: 96px;
   border-radius: 50%;

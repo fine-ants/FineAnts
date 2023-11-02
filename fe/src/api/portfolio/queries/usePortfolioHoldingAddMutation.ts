@@ -10,9 +10,13 @@ export default function usePortfolioHoldingAddMutation(portfolioId: number) {
     mutationFn: postPortfolioHolding,
     onSuccess: () => {
       // TODO: toast
-      queryClient.invalidateQueries(
-        portfolioKeys.details(portfolioId).queryKey
-      );
+      queryClient.invalidateQueries({
+        queryKey: portfolioKeys.details(portfolioId).queryKey,
+      });
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.error(error);
     },
   });
 }

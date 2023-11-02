@@ -1,11 +1,12 @@
-import useUserInfoQuery from "@api/auth/queries/useUserInfoQuery";
+import { UserContext } from "@context/UserContext";
+import { useContext } from "react";
 import { RouterProvider } from "react-router-dom";
 import router from "router/router";
 import styled, { ThemeProvider } from "styled-components";
 import GlobalStyles from "styles/GlobalStyles";
 
 export default function App() {
-  const { data: user } = useUserInfoQuery();
+  const { user } = useContext(UserContext);
 
   return (
     <ThemeProvider theme={{}}>
