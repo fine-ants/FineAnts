@@ -125,8 +125,8 @@ const renderActiveShape = (props: any) => {
       <Sector
         cx={cx}
         cy={cy}
-        innerRadius={innerRadius + 5}
-        outerRadius={outerRadius + 10}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius + 2}
         startAngle={startAngle}
         endAngle={endAngle}
         fill={fill}
@@ -144,6 +144,8 @@ const StyledHoldingsPieChart = styled.div`
   position: relative;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 12px 0px #00000014;
 `;
 const TotalValue = styled.div`
   display: flex;

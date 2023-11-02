@@ -1,4 +1,5 @@
 export default {
+  LANDING: "/",
   SIGNUP: "/signup",
   SIGNIN: "/signin",
   PROFILE: "/profile",

@@ -22,7 +22,8 @@ export default function SectorBar() {
               width: (d.value / totalValuation) * sectorBarWidth,
               height: "100%",
               backgroundColor: chartColorPalette[index],
-            }}></div>
+            }}
+          />
         ))}
       </Bar>
       <Legend style={legendStyle} pieData={coloredData} />
@@ -43,6 +44,7 @@ const StyledSectorBar = styled.div`
   flex-wrap: wrap;
   position: relative;
   justify-content: space-between;
+  box-shadow: 0px 0px 12px 0px #00000014;
 `;
 
 const Bar = styled.div<{ $sectorBarWidth: number }>`

@@ -12,9 +12,9 @@ export default function usePortfolioHoldingPurchaseAddMutation(
     mutationFn: postPortfolioHoldingPurchase,
     onSuccess: () => {
       // TODO: toast
-      queryClient.invalidateQueries(
-        portfolioKeys.details(portfolioId).queryKey
-      );
+      queryClient.invalidateQueries({
+        queryKey: portfolioKeys.details(portfolioId).queryKey,
+      });
     },
   });
 }

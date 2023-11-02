@@ -16,9 +16,11 @@ type Props = {
 
 export default function PortfolioHoldingsTable({ portfolioId, data }: Props) {
   return (
-    <Table aria-label="collapsible table">
-      <TableHead>
-        <ColumnHeader>
+    <Table
+      style={{ backgroundColor: "#FFFFFF" }}
+      aria-label="collapsible table">
+      <TableHead style={{ backgroundColor: "#FFFFFF" }}>
+        <ColumnHeader style={{ backgroundColor: "#FFFFFF" }}>
           <TableCell />
           <ColumnHeaderCell>종목명</ColumnHeaderCell>
           <ColumnHeaderCell align="right">평가금액</ColumnHeaderCell>
