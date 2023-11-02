@@ -8,7 +8,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { useState } from "react";
 import PortfolioHoldingLotRow from "./PortfolioHoldingLotRow";
+import PortfolioHoldingPurchaseAddModal from "./PortfolioHoldingPurchaseAddModal";
 
 type Props = {
   portfolioId: number;
@@ -21,8 +23,11 @@ export default function PortfolioHoldingLots({
   portfolioHoldingId,
   purchaseHistory,
 }: Props) {
+  const [isAddHoldingPurchaseModalOpen, setIsAddHoldingPurchaseModalOpen] =
+    useState(false);
+
   const onAddPurchaseClick = () => {
-    // TODO: Open modal
+    setIsAddHoldingPurchaseModalOpen(true);
   };
 
   return (
@@ -57,6 +62,13 @@ export default function PortfolioHoldingLots({
           </TableRow>
         </TableFooter>
       </Table>
+
+      <PortfolioHoldingPurchaseAddModal
+        isOpen={isAddHoldingPurchaseModalOpen}
+        onClose={() => setIsAddHoldingPurchaseModalOpen(false)}
+        portfolioId={portfolioId}
+        portfolioHoldingId={portfolioHoldingId}
+      />
     </>
   );
 }

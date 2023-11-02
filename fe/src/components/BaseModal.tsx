@@ -1,10 +1,10 @@
 import { Box, Modal } from "@mui/material";
-import { ReactElement } from "react";
+import { ReactNode } from "react";
 import { CSSProperties } from "styled-components";
 
 type Props = {
   style?: CSSProperties;
-  children: ReactElement;
+  children: ReactNode;
   isOpen: boolean;
   onClose: () => void;
 };

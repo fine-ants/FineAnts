@@ -2,7 +2,7 @@ import usePortfolioDetailsQuery from "@api/portfolio/queries/usePortfolioDetails
 import plusIcon from "@assets/icons/plus.svg";
 import DividendBarChart from "@components/Portfolio/DividendBarChart";
 import HoldingsPieChart from "@components/Portfolio/HoldingsPieChart";
-import PortfolioHoldingAddModal from "@components/Portfolio/PortfolioHoldingAddModal";
+import PortfolioHoldingAddModal from "@components/Portfolio/PortfolioHoldings/PortfolioHoldingAddModal";
 import PortfolioHoldingsTable from "@components/Portfolio/PortfolioHoldings/PortfolioHoldingsTable";
 import PortfolioOverview from "@components/Portfolio/PortfolioOverview";
 import SectorBar from "@components/Portfolio/SectorBar";

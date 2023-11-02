@@ -4,23 +4,17 @@ import {
   portfolioHoldings,
   successfulGetPortfolioDetailsResponse,
   successfulGetPortfolioResponse,
-  successfulPortfolioAddData,
-  successfulPortfolioDeleteData,
-  successfulPortfolioEditData,
+  successfulPortfolioAddResponse,
+  successfulPortfolioDeleteResponse,
+  successfulPortfolioEditResponse,
+  successfulPortfolioHoldingPurchaseAddResponse,
   successfulPortfolioHoldingPurchaseDeleteResponse,
+  successfulPortfolioHoldingPurchaseEditResponse,
 } from "mocks/data/portfolioData";
 import { portfolioDetails } from "mocks/data/portfolioDetailsData";
 import { rest } from "msw";
 
-let portfolioDetailsData = portfolioDetails;
-
-type EditPortfolioReq = {
-  name: string;
-  securitiesFirm: string;
-  budget: number;
-  targetGain: number;
-  maximumLoss: number;
-};
+const portfolioDetailsData = portfolioDetails;
 
 export default [
   // List of portfolios
@@ -35,21 +29,22 @@ export default [
   rest.get("/api/portfolio/:portfolioId/holdings", async (req, res, ctx) => {
     const portfolioId = req.params.portfolioId;
 
-    const resPortfolioDetailsData = {
+    const resPortfolioDetailsResponse = {
       ...successfulGetPortfolioDetailsResponse,
     };
-    resPortfolioDetailsData.data.portfolioDetails =
+    resPortfolioDetailsResponse.data.portfolioDetails =
       portfolioDetailsData[Number(portfolioId) - 1];
 
     return res(
       ctx.status(HTTPSTATUS.success),
-      ctx.json(resPortfolioDetailsData)
+      ctx.json(resPortfolioDetailsResponse)
     );
   }),
+
   // Add Portfolio
   rest.post("/api/portfolios", async (req, res, ctx) => {
     const { name, securitiesFirm, budget, targetGain, maximumLoss } =
-      req.body as EditPortfolioReq;
+      await req.json();
 
     const targetReturnRate = calculateRate(targetGain, budget);
     const maximumLossRate = ((budget - maximumLoss) / budget) * 100;
@@ -81,7 +76,7 @@ export default [
     return res(
       ctx.status(HTTPSTATUS.success),
       ctx.json({
-        ...successfulPortfolioAddData,
+        ...successfulPortfolioAddResponse,
         data: {
           portfolioId: portfolioDetailsData.length,
         },
@@ -92,7 +87,7 @@ export default [
   // Edit Portfolio
   rest.put("/api/portfolios/:portfolioId", async (req, res, ctx) => {
     const portfolioId = Number(req.params.portfolioId);
-    const { budget, targetGain, maximumLoss } = req.body as EditPortfolioReq;
+    const { budget, targetGain, maximumLoss } = await req.json();
 
     const targetReturnRate = calculateRate(targetGain, budget);
     const maximumLossRate = ((budget - maximumLoss) / budget) * 100;
@@ -100,7 +95,9 @@ export default [
     portfolioDetailsData[portfolioId - 1] = {
       ...portfolioDetailsData[portfolioId - 1],
       ...{
-        ...(req.body as EditPortfolioReq),
+        budget,
+        targetGain,
+        maximumLoss,
         targetReturnRate: targetReturnRate,
         maximumLossRate: maximumLossRate,
       },
@@ -108,7 +105,7 @@ export default [
 
     return res(
       ctx.status(HTTPSTATUS.success),
-      ctx.json(successfulPortfolioEditData)
+      ctx.json(successfulPortfolioEditResponse)
     );
   }),
 
@@ -119,9 +116,63 @@ export default [
 
     return res(
       ctx.status(HTTPSTATUS.success),
-      ctx.json(successfulPortfolioDeleteData)
+      ctx.json(successfulPortfolioDeleteResponse)
     );
   }),
+
+  // Add portfolio holding purchase history
+  rest.post(
+    "/api/portfolio/:portfolioId/holdings/:portfolioHoldingId/purchaseHistory",
+    async (req, res, ctx) => {
+      const { portfolioHoldingId } = req.params;
+      const body = await req.json();
+
+      const targetPortfolioHolding = portfolioHoldings.find(
+        (holding) => holding.portfolioHoldingId === Number(portfolioHoldingId)
+      );
+      targetPortfolioHolding?.purchaseHistory.push({
+        purchaseHistoryId: Math.random(),
+        ...body,
+      });
+
+      return res(
+        ctx.status(HTTPSTATUS.success),
+        ctx.json(successfulPortfolioHoldingPurchaseAddResponse)
+      );
+    }
+  ),
+
+  // Edit portfolio holding purchase history
+  rest.put(
+    "/api/portfolio/:portfolioId/holdings/:portfolioHoldingId/purchaseHistory/:purchaseHistoryId",
+    async (req, res, ctx) => {
+      const { portfolioHoldingId } = req.params;
+      const { purchaseDate, numShares, purchasePricePerShare, memo } =
+        await req.json();
+
+      // find portfolio holding purchase history
+      const targetPortfolioHolding = portfolioHoldings.find(
+        (holding) => holding.portfolioHoldingId === Number(portfolioHoldingId)
+      );
+      const targetPurchaseHistory =
+        targetPortfolioHolding?.purchaseHistory.find(
+          (purchase) =>
+            purchase.purchaseHistoryId === Number(req.params.purchaseHistoryId)
+        );
+
+      if (targetPurchaseHistory) {
+        targetPurchaseHistory.purchaseDate = purchaseDate;
+        targetPurchaseHistory.numShares = numShares;
+        targetPurchaseHistory.purchasePricePerShare = purchasePricePerShare;
+        targetPurchaseHistory.memo = memo;
+      }
+
+      return res(
+        ctx.status(HTTPSTATUS.success),
+        ctx.json(successfulPortfolioHoldingPurchaseEditResponse)
+      );
+    }
+  ),
 
   // Delete portfolio holding purchase history
   rest.delete(
