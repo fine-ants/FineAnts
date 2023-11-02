@@ -1,7 +1,9 @@
 import { PortfolioItem } from "@api/portfolio";
 import usePortfolioListQuery from "@api/portfolio/queries/usePortfolioListQuery";
 import PortfolioModal from "@components/Portfolio/PortfolioModal";
-import { useState } from "react";
+import { UserContext } from "@context/UserContext";
+import { Button } from "@mui/material";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Routes from "router/Routes";
 import styled from "styled-components";
@@ -13,6 +15,8 @@ import Dropdown from "./Dropdown";
 
 export default function Header() {
   const navigate = useNavigate();
+
+  const { user } = useContext(UserContext);
 
   const { data: portfolioList } = usePortfolioListQuery();
 
@@ -65,6 +69,14 @@ export default function Header() {
     navigate(`/stock/${tickerSymbol}`);
   };
 
+  const moveToSignInPage = () => {
+    navigate(Routes.SIGNIN);
+  };
+
+  const moveToSignUpPage = () => {
+    navigate(Routes.SIGNUP);
+  };
+
   return (
     <>
       <StyledHeader>
@@ -114,7 +126,14 @@ export default function Header() {
               <SearchBar.Input />
               <SearchBar.SearchList onItemClick={moveToStockPage} />
             </SearchBar>
-            <UserControls />
+            {user ? (
+              <UserControls />
+            ) : (
+              <>
+                <Button onClick={moveToSignInPage}>로그인</Button>
+                <Button onClick={moveToSignUpPage}>회원가입</Button>
+              </>
+            )}
           </HeaderRight>
         </HeaderTop>
         <TVTickerTapeWidget />

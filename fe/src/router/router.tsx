@@ -2,10 +2,12 @@ import { User } from "@api/auth";
 import { GOOGLE_CLIENT_ID } from "@constants/config";
 import { WindowProvider } from "@context/WindowContext";
 import DashboardPage from "@pages/DashboardPage";
+import LandingPage from "@pages/LandingPage";
 import PortfolioPage from "@pages/PortfolioPage";
 import MyProfilePage from "@pages/ProfilePage/MyProfilePage";
 import SignInPage from "@pages/SignInPage";
 import SignUpPage from "@pages/SignUpPage/SignUpPage";
+import StockPage from "@pages/StockPage";
 import WatchlistPage from "@pages/WatchlistPage";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import {
@@ -47,12 +49,13 @@ const router = (user: User | null) =>
               </GoogleOAuthProvider>
             </WindowProvider>
           }>
-          <Route index path={Routes.SIGNIN} element={<SignInPage />} />
+          <Route index path={Routes.LANDING} element={<LandingPage />} />
+          <Route path={Routes.SIGNIN} element={<SignInPage />} />
           <Route path={Routes.SIGNUP} element={<SignUpPage />} />
         </Route>
 
         {/* <Route path={Routes.INDICES} element={<IndicesPage />}/> */}
-        {/* <Route path={Routes.STOCK} element={<StockPage />}/> */}
+        <Route path={Routes.STOCK} element={<StockPage />} />
         {/* <Route path={Routes.FALLBACK} element={<NotFoundPage />}/> */}
       </Route>
     )
