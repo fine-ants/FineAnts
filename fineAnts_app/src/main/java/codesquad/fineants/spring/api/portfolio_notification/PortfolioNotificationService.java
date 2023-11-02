@@ -1,7 +1,7 @@
 package codesquad.fineants.spring.api.portfolio_notification;
 
+import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -67,7 +67,8 @@ public class PortfolioNotificationService {
 		portfolios.forEach(portfolio -> portfolio.changeCurrentPriceFromHoldings(currentPriceManager));
 
 		List<Portfolio> reachedTargetGainPortfolios = portfolios.stream()
-			.filter(portfolio -> !hasMailSentHistory(portfolio))
+			.filter(portfolio -> !hasMailSentHistoryForTargetGain(portfolio))
+			.filter(Portfolio::getTargetGainIsActive)
 			.filter(Portfolio::reachedTargetGain)
 			.collect(Collectors.toList());
 		log.info("포트폴리오 목표수익금액 도달 포트폴리오 : {}개", reachedTargetGainPortfolios.size());
@@ -75,35 +76,73 @@ public class PortfolioNotificationService {
 		reachedTargetGainPortfolios.forEach(portfolio -> {
 			String to = portfolio.getMember().getEmail();
 			String subject = String.format("%s 포트폴리오 목표수익금액 도달 안내 메일입니다", portfolio.getName());
-			String content = createTargetGainMailContent(portfolio);
+			String content = createMailContent(portfolio);
 			mailService.sendEmail(to, subject, content);
-			setMailSentHistory(portfolio);
+			setMailSentHistoryForTargetGain(portfolio);
 		});
 	}
 
-	private boolean hasMailSentHistory(Portfolio portfolio) {
-		String value = redisTemplate.opsForValue().get(createMailSentHistoryKey(portfolio));
+	private boolean hasMailSentHistoryForTargetGain(Portfolio portfolio) {
+		String value = redisTemplate.opsForValue().get(createMailSentHistoryKeyForTargetGain(portfolio));
 		return value != null;
 	}
 
-	private String createTargetGainMailContent(Portfolio portfolio) {
+	private String createMailSentHistoryKeyForTargetGain(Portfolio portfolio) {
+		return String.format("targetGainMail:%d", portfolio.getId());
+	}
+
+	private boolean hasMailSentHistoryForMaximumLoss(Portfolio portfolio) {
+		String value = redisTemplate.opsForValue().get(createMailSentHistoryKeyForMaximumLoss(portfolio));
+		log.info("hasMailSentHistoryForMaximumLoss value={}", value);
+		return value != null;
+	}
+
+	private String createMailSentHistoryKeyForMaximumLoss(Portfolio portfolio) {
+		return String.format("MaximumLossMail:%d", portfolio.getId());
+	}
+
+	private String createMailContent(Portfolio portfolio) {
 		String title = String.format("%s 포트폴리오 목표 수익 금액 도달 안내", portfolio.getName());
-		String targetGain = String.format("목표 수익금액: %d", portfolio.getTargetGain());
-		String totalGain = String.format("현재 총손익: %d", portfolio.calculateTotalGain());
-		return String.join("\n", title, targetGain, totalGain);
+		String targetGain = String.format("목표 수익금액: %d원", portfolio.getTargetGain());
+		String maximumLoss = String.format("최대 손실금액: %d원", portfolio.getMaximumLoss());
+		String totalGain = String.format("현재 총손익: %d원", portfolio.calculateTotalGain());
+		return String.join("\n", title, targetGain, maximumLoss, totalGain);
 	}
 
-	private void setMailSentHistory(Portfolio portfolio) {
-		redisTemplate.opsForValue().set(createMailSentHistoryKey(portfolio), Boolean.TRUE.toString());
+	private void setMailSentHistoryForTargetGain(Portfolio portfolio) {
+		redisTemplate.opsForValue().set(
+			createMailSentHistoryKeyForTargetGain(portfolio),
+			Boolean.TRUE.toString(),
+			Duration.ofDays(1));
 	}
 
-	private String createMailSentHistoryKey(Portfolio portfolio) {
-		return String.format("mail:%d", portfolio.getId());
+	private void setMailSentHistoryMaximumLoss(Portfolio portfolio) {
+		redisTemplate.opsForValue().set(
+			createMailSentHistoryKeyForMaximumLoss(portfolio),
+			Boolean.TRUE.toString(),
+			Duration.ofDays(1));
 	}
 
 	// 1분마다 포트폴리오를 확인하여 최대손실금액에 도달하면 메일을 보낸다
-	@Scheduled(fixedRate = 1L, timeUnit = TimeUnit.MINUTES)
+	@Scheduled(fixedRate = 120000L, initialDelay = 30000L)
 	public void notifyMaximumLoss() {
-		// TODO: 포트폴리오의 총손익이 최대손실금액에 도달하면 사용자에게 메일 전송한다
+		log.info("notifyMaximumLoss");
+		List<Portfolio> portfolios = portfolioRepository.findAll();
+		portfolios.forEach(portfolio -> portfolio.changeCurrentPriceFromHoldings(currentPriceManager));
+
+		List<Portfolio> reachedMaximumLossPortfolios = portfolios.stream()
+			.filter(portfolio -> !hasMailSentHistoryForMaximumLoss(portfolio))
+			.filter(Portfolio::getMaximumIsActive)
+			.filter(Portfolio::reachedMaximumLoss)
+			.collect(Collectors.toList());
+		log.info("포트폴리오 최대손실금액 도달 포트폴리오 : {}개", reachedMaximumLossPortfolios.size());
+
+		reachedMaximumLossPortfolios.forEach(portfolio -> {
+			String to = portfolio.getMember().getEmail();
+			String subject = String.format("%s 포트폴리오 최대손실금액 도달 안내 메일입니다", portfolio.getName());
+			String content = createMailContent(portfolio);
+			mailService.sendEmail(to, subject, content);
+			setMailSentHistoryMaximumLoss(portfolio);
+		});
 	}
 }

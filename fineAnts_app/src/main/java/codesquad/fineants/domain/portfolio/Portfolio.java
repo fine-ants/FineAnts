@@ -227,6 +227,10 @@ public class Portfolio {
 	}
 
 	public boolean reachedTargetGain() {
-		return calculateTotalGain() >= targetGain;
+		return budget + calculateTotalGain() >= targetGain;
+	}
+
+	public boolean reachedMaximumLoss() {
+		return budget + calculateTotalGain() <= maximumLoss;
 	}
 }
