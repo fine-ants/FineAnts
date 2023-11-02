@@ -56,8 +56,11 @@ export const postOAuthSignIn = async (
   return res.data;
 };
 
-export const deleteSignOut = async () => {
-  const res = await fetcher.delete<Response<null>>("/auth/logout");
+export const postSignOut = async () => {
+  const refreshToken = localStorage.getItem("refreshToken");
+  const res = await fetcher.post<Response<null>>("/auth/logout", {
+    refreshToken,
+  });
   return res.data;
 };
 
