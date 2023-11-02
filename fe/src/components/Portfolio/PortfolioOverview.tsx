@@ -6,7 +6,7 @@ import PortfolioModal from "@components/Portfolio/PortfolioModal";
 import ToggleSwitch from "@components/ToggleSwitch";
 import { Button } from "@mui/material";
 import { useState } from "react";
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 type Props = {

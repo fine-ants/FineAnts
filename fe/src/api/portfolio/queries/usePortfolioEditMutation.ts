@@ -10,9 +10,9 @@ export default function usePortfolioEditMutation(portfolioId: number) {
     mutationFn: putPortfolio,
     onSuccess: () => {
       // TODO: toast
-      queryClient.invalidateQueries(
-        portfolioKeys.details(portfolioId).queryKey
-      );
+      queryClient.invalidateQueries({
+        queryKey: portfolioKeys.details(portfolioId).queryKey,
+      });
     },
   });
 }
