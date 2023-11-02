@@ -6,6 +6,7 @@ import PortfolioPage from "@pages/PortfolioPage";
 import MyProfilePage from "@pages/ProfilePage/MyProfilePage";
 import SignInPage from "@pages/SignInPage";
 import SignUpPage from "@pages/SignUpPage/SignUpPage";
+import StockPage from "@pages/StockPage";
 import WatchlistPage from "@pages/WatchlistPage";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import {
@@ -52,7 +53,7 @@ const router = (user: User | null) =>
         </Route>
 
         {/* <Route path={Routes.INDICES} element={<IndicesPage />}/> */}
-        {/* <Route path={Routes.STOCK} element={<StockPage />}/> */}
+        <Route path={Routes.STOCK} element={<StockPage />} />
         {/* <Route path={Routes.FALLBACK} element={<NotFoundPage />}/> */}
       </Route>
     )

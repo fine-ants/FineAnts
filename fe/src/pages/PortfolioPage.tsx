@@ -6,7 +6,6 @@ import DividendBarChart from "@components/Portfolio/DividendBarChart";
 import HoldingsPieChart from "@components/Portfolio/HoldingsPieChart";
 import PortfolioHoldingAddModal from "@components/Portfolio/PortfolioHoldings/PortfolioHoldingAddModal";
 import PortfolioHoldingsTable from "@components/Portfolio/PortfolioHoldings/PortfolioHoldingsTable";
-import PortfolioModal from "@components/Portfolio/PortfolioModal";
 import PortfolioOverview from "@components/Portfolio/PortfolioOverview";
 import SectorBar from "@components/Portfolio/SectorBar";
 import Footer from "@components/common/Footer";
@@ -65,56 +64,51 @@ export default function PortfolioPage() {
 
   return (
     <StyledPortfolioPage>
-      <BasePage>
-        <Header />
+      <Header />
 
-        <main style={{ display: "flex", padding: "40px 150px", gap: "32px" }}>
-          <PortfolioModal
-            isOpen={isAddHoldingModalOpen}
-            onClose={() => setIsAddHoldingModalOpen(false)}
-          />
-          <PortfolioHoldingAddModal
-            portfolioId={Number(id)}
-            isOpen={isAddHoldingModalOpen}
-            onClose={() => setIsAddHoldingModalOpen(false)}
-          />
-          <LeftPanel>
-            <HoldingsPieChart data={portfolioHoldings} />
-            <DividendBarChart />
-            <SectorBar />
-          </LeftPanel>
+      <main style={{ display: "flex", padding: "40px 150px", gap: "32px" }}>
+        <LeftPanel>
+          <HoldingsPieChart data={portfolioHoldings} />
+          <DividendBarChart />
+          <SectorBar />
+        </LeftPanel>
 
-          <RightPanel>
-            <PortfolioOverviewContainer>
-              <PortfolioOverview data={portfolioDetails} />
-            </PortfolioOverviewContainer>
+        <RightPanel>
+          <PortfolioOverviewContainer>
+            <PortfolioOverview data={portfolioDetails} />
+          </PortfolioOverviewContainer>
 
-            <PortfolioHoldingsContainer>
-              <header>
-                <Typography variant="h6" component="h3">
-                  종목 목록
+          <PortfolioHoldingsContainer>
+            <header>
+              <Typography variant="h6" component="h3">
+                종목 목록
+              </Typography>
+
+              <AddHoldingButton
+                variant="outlined"
+                startIcon={<img src={plusIcon} alt="종목 추가" />}
+                onClick={onAddHoldingButtonClick}>
+                <Typography variant="button" sx={{ color: "#2C2C2E" }}>
+                  종목 추가
                 </Typography>
+              </AddHoldingButton>
+            </header>
 
-                <AddHoldingButton
-                  variant="outlined"
-                  startIcon={<img src={plusIcon} alt="종목 추가" />}
-                  onClick={onAddHoldingButtonClick}>
-                  <Typography variant="button" sx={{ color: "#2C2C2E" }}>
-                    종목 추가
-                  </Typography>
-                </AddHoldingButton>
-              </header>
+            <PortfolioHoldingsTable
+              portfolioId={portfolioDetails.id}
+              data={portfolioHoldings}
+            />
+          </PortfolioHoldingsContainer>
+        </RightPanel>
+      </main>
 
-              <PortfolioHoldingsTable
-                portfolioId={portfolioDetails.id}
-                data={portfolioHoldings}
-              />
-            </PortfolioHoldingsContainer>
-          </RightPanel>
-        </main>
+      <Footer />
 
-        <Footer />
-      </BasePage>
+      <PortfolioHoldingAddModal
+        portfolioId={Number(id)}
+        isOpen={isAddHoldingModalOpen}
+        onClose={() => setIsAddHoldingModalOpen(false)}
+      />
     </StyledPortfolioPage>
   );
 }
