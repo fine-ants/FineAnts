@@ -33,6 +33,7 @@ import codesquad.fineants.domain.stock.StockRepository;
 import codesquad.fineants.domain.stock_dividend.StockDividend;
 import codesquad.fineants.domain.stock_dividend.StockDividendRepository;
 import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
+import codesquad.fineants.spring.api.kis.response.CurrentPriceResponse;
 import codesquad.fineants.spring.api.portfolio_stock.response.PortfolioHoldingsResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -157,7 +158,7 @@ class PortfolioStockServiceTest {
 	void readMyPortfolioStocks() {
 		// given
 		Long portfolioId = portfolio.getId();
-		currentPriceManager.addCurrentPrice("005930", 60000L);
+		currentPriceManager.addCurrentPrice(new CurrentPriceResponse("005930", 60000L));
 
 		// when
 		PortfolioHoldingsResponse response = service.readMyPortfolioStocks(portfolioId);

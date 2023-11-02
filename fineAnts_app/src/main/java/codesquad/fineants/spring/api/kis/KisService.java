@@ -4,12 +4,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -105,40 +103,34 @@ public class KisService {
 	@Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
 	@Transactional(readOnly = true)
 	public void refreshCurrentPrice() {
-		List<Portfolio> portfolios = portfolioRepository.findAll();
-		List<String> tickerSymbols = portfolios.stream()
+		List<String> tickerSymbols = portfolioRepository.findAll().parallelStream()
 			.map(Portfolio::getPortfolioHoldings)
 			.flatMap(Collection::stream)
 			.map(PortfolioHolding::getStock)
 			.map(Stock::getTickerSymbol)
 			.collect(Collectors.toList());
-		int refreshCurrentPriceCount = refreshCurrentPrice(tickerSymbols);
-		log.info("갱신된 주식 현재가 시세 개수 : {}", refreshCurrentPriceCount);
+		refreshCurrentPrice(tickerSymbols);
+		log.info("{}개의 종목 현재가 갱신 완료", tickerSymbols.size());
 	}
 
-	public int refreshCurrentPrice(List<String> tickerSymbols) {
-		int count = 0;
-		for (String tickerSymbol : tickerSymbols) {
-			CompletableFuture<CurrentPriceResponse> future = new CompletableFuture<>();
-			executorService.schedule(createCurrentPriceRequest(tickerSymbol, future), 200, TimeUnit.MILLISECONDS);
-			CurrentPriceResponse response = null;
-			try {
-				response = future.get(10000L, TimeUnit.MILLISECONDS);
-			} catch (InterruptedException | ExecutionException | TimeoutException e) {
-				throw new RuntimeException(e);
-			}
-			log.info("currentPriceResponse : {}", response);
-			currentPriceManager.addCurrentPrice(response.getTickerSymbol(), response.getCurrentPrice());
-			count++;
-		}
-		return count;
+	public void refreshCurrentPrice(List<String> tickerSymbols) {
+		List<CompletableFuture<CurrentPriceResponse>> futures = tickerSymbols.parallelStream()
+			.map(tickerSymbol -> {
+				CompletableFuture<CurrentPriceResponse> future = new CompletableFuture<>();
+				executorService.schedule(createCurrentPriceRequest(tickerSymbol, future), 200, TimeUnit.MILLISECONDS);
+				return future;
+			}).collect(Collectors.toList());
+
+		futures.parallelStream()
+			.map(CompletableFuture::join)
+			.forEach(currentPriceManager::addCurrentPrice);
 	}
 
 	public Runnable createCurrentPriceRequest(final String tickerSymbol,
 		CompletableFuture<CurrentPriceResponse> future) {
 		return () -> {
 			CurrentPriceResponse response = readRealTimeCurrentPrice(tickerSymbol);
-			future.complete(response);
+			future.completeOnTimeout(response, 10, TimeUnit.SECONDS);
 		};
 	}
 }

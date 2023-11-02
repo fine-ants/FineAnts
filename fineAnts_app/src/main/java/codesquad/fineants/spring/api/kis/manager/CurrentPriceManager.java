@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import codesquad.fineants.spring.api.kis.response.CurrentPriceResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -23,8 +24,10 @@ public class CurrentPriceManager {
 		redisTemplate.opsForValue().set(String.format(format, tickerSymbol), "0", duration);
 	}
 
-	public void addCurrentPrice(String tickerSymbol, Long currentPrice) {
-		redisTemplate.opsForValue().set(String.format(format, tickerSymbol), String.valueOf(currentPrice), duration);
+	public void addCurrentPrice(CurrentPriceResponse response) {
+		redisTemplate.opsForValue()
+			.set(String.format(format, response.getTickerSymbol()), String.valueOf(response.getCurrentPrice()),
+				duration);
 	}
 
 	public Long getCurrentPrice(String tickerSymbol) {
