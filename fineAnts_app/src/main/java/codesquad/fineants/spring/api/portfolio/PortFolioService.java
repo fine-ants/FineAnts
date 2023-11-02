@@ -159,7 +159,7 @@ public class PortFolioService {
 			.collect(Collectors.toMap(
 				portfolio -> portfolio,
 				portfolio -> portfolioGainHistoryRepository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
-					portfolio, LocalDateTime.now()).orElseGet(PortfolioGainHistory::empty)
+					portfolio.getId(), LocalDateTime.now()).orElseGet(PortfolioGainHistory::empty)
 			));
 
 		ScrollPaginationCollection<Portfolio> portfoliosCursor = ScrollPaginationCollection.of(

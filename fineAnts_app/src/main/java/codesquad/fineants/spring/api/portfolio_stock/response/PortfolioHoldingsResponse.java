@@ -22,4 +22,8 @@ public class PortfolioHoldingsResponse {
 			.collect(Collectors.toList());
 		return new PortfolioHoldingsResponse(portfolioDetailResponse, portfolioStockItems);
 	}
+
+	public Long getPortfolioId() {
+		return portfolioDetails.getId();
+	}
 }
