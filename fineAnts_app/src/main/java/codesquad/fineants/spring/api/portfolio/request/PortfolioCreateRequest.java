@@ -38,6 +38,8 @@ public class PortfolioCreateRequest {
 			.budget(budget)
 			.targetGain(targetGain)
 			.maximumLoss(maximumLoss)
+			.targetGainIsActive(false)
+			.maximumIsActive(false)
 			.member(member)
 			.build();
 	}

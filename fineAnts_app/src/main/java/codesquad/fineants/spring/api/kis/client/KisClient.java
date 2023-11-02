@@ -76,7 +76,7 @@ public class KisClient {
 
 	public Map<String, Object> readRealTimeCurrentPrice(String tickerSymbol, String authorization) {
 		MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
-		log.info("authorzation : {}", authorization);
+		log.info("authorization : {}", authorization);
 		headerMap.add("authorization", authorization);
 		headerMap.add("appkey", appkey);
 		headerMap.add("appsecret", secretkey);

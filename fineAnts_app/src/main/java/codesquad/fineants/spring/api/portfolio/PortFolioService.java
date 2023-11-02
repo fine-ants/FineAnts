@@ -30,6 +30,7 @@ import codesquad.fineants.spring.api.errors.exception.ConflictException;
 import codesquad.fineants.spring.api.errors.exception.ForBiddenException;
 import codesquad.fineants.spring.api.errors.exception.NotFoundResourceException;
 import codesquad.fineants.spring.api.kis.KisService;
+import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioCreateRequest;
 import codesquad.fineants.spring.api.portfolio.request.PortfolioModifyRequest;
 import codesquad.fineants.spring.api.portfolio.response.PortFolioCreateResponse;
@@ -49,6 +50,7 @@ public class PortFolioService {
 	private final PortFolioHoldingRepository portFolioHoldingRepository;
 	private final PurchaseHistoryRepository purchaseHistoryRepository;
 	private final PortfolioGainHistoryRepository portfolioGainHistoryRepository;
+	private final CurrentPriceManager currentPriceManager;
 	private final KisService kisService;
 
 	@Transactional
@@ -133,12 +135,20 @@ public class PortFolioService {
 		log.info("포트폴리오 삭제 : delPortfolio={}", findPortfolio);
 	}
 
-	private Portfolio findPortfolio(Long portfolioId) {
+	public Portfolio findPortfolio(Long portfolioId) {
 		return portfolioRepository.findById(portfolioId)
 			.orElseThrow(() -> new NotFoundResourceException(PortfolioErrorCode.NOT_FOUND_PORTFOLIO));
 	}
 
 	public PortfoliosResponse readMyAllPortfolio(AuthMember authMember, int size, Long nextCursor) {
+		kisService.refreshCurrentPrice(portfolioRepository.findAllByMemberId(authMember.getMemberId()).stream()
+			.map(Portfolio::getPortfolioHoldings)
+			.flatMap(Collection::stream)
+			.map(PortfolioHolding::getStock)
+			.map(Stock::getTickerSymbol)
+			.filter(tickerSymbol -> !currentPriceManager.hasCurrentPrice(tickerSymbol))
+			.distinct()
+			.collect(Collectors.toList()));
 
 		PageRequest pageRequest = PageRequest.of(0, size + 1);
 		Page<Portfolio> page = portfolioRepository.findAllByMemberIdAndIdLessThanOrderByIdDesc(authMember.getMemberId(),
@@ -155,15 +165,6 @@ public class PortFolioService {
 		ScrollPaginationCollection<Portfolio> portfoliosCursor = ScrollPaginationCollection.of(
 			portfolios, size);
 
-		List<String> tickerSymbols = portfolios.stream()
-			.map(Portfolio::getPortfolioHoldings)
-			.flatMap(Collection::stream)
-			.map(PortfolioHolding::getStock)
-			.map(Stock::getTickerSymbol)
-			.distinct()
-			.collect(Collectors.toList());
-		Map<String, Long> currentPriceMap = kisService.refreshCurrentPriceMap(tickerSymbols);
-
-		return PortfoliosResponse.of(portfoliosCursor, portfolioGainHistoryMap, currentPriceMap);
+		return PortfoliosResponse.of(portfoliosCursor, portfolioGainHistoryMap, currentPriceManager);
 	}
 }

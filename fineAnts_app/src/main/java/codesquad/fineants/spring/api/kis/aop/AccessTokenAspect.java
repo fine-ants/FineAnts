@@ -25,11 +25,15 @@ public class AccessTokenAspect {
 	private final KisClient client;
 	private final KisRedisService redisService;
 
-	@Pointcut("execution(* codesquad.fineants.spring.api.kis.KisService.*(*))")
-	public void readRealTimeCurrentPricePointcut() {
+	@Pointcut("execution(* codesquad.fineants.spring.api.kis.KisService.refreshCurrentPrice())")
+	public void refreshCurrentPrice() {
 	}
 
-	@Before(value = "readRealTimeCurrentPricePointcut()")
+	@Pointcut("execution(* codesquad.fineants.spring.api.kis.KisService.readRealTimeCurrentPrice())")
+	public void readRealTimeCurrentPrice() {
+	}
+
+	@Before(value = "refreshCurrentPrice(), readRealTimeCurrentPrice()")
 	public void checkAccessTokenExpiration() {
 		if (manager.isAccessTokenExpired(LocalDateTime.now())) {
 			final Optional<Map<String, Object>> optionalMap = redisService.getAccessTokenMap();
