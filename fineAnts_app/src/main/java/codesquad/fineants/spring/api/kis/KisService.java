@@ -80,10 +80,8 @@ public class KisService {
 			.forEach(subscription -> {
 				PortfolioHoldingsResponse response = portfolioStockService.readMyPortfolioStocks(
 					subscription.getPortfolioId());
-				subscription.getTickerSymbols().stream()
-					.map(tickerSymbol -> String.format(SUBSCRIBE_PORTFOLIO_HOLDING_FORMAT,
-						subscription.getPortfolioId()))
-					.forEach(destination -> messagingTemplate.convertAndSend(destination, response));
+				messagingTemplate.convertAndSend(
+					String.format(SUBSCRIBE_PORTFOLIO_HOLDING_FORMAT, subscription.getPortfolioId()), response);
 			});
 	}
 
