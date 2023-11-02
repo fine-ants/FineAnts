@@ -1,4 +1,4 @@
-import usePortfoliosQuery from "@api/portfolio/queries/usePortfoliosQuery";
+import usePortfoliosQuery from "@api/portfolio/queries/usePortfolioListQuery";
 import Legend from "@components/common/PieChart/Legend";
 import RechartPieChart from "@components/common/PieChart/RechartPieChart";
 import { CSSProperties } from "react";

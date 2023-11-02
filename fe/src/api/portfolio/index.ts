@@ -1,7 +1,7 @@
 import { fetcher } from "@api/fetcher";
 import { Response } from "@api/types";
 
-export type PortfolioPieChartDataItem = {
+export type PortfolioList = {
   portfolios: {
     id: number;
     securitiesFirm: string;
@@ -77,9 +77,8 @@ type PortfolioReqBody = {
   maximumLoss: number;
 };
 
-export const getPortfolios = async () => {
-  const res =
-    await fetcher.get<Response<PortfolioPieChartDataItem>>("/portfolios");
+export const getPortfolioList = async () => {
+  const res = await fetcher.get<Response<PortfolioList>>("/portfolios");
   return res.data;
 };
 
