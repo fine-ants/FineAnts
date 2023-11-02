@@ -93,7 +93,7 @@ public class PortfolioStockService {
 		log.info("portfolioHoldings : {}", portfolioHoldings);
 
 		PortfolioGainHistory latestHistory = portfolioGainHistoryRepository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
-				portfolio, LocalDateTime.now())
+				portfolio.getId(), LocalDateTime.now())
 			.orElseGet(PortfolioGainHistory::empty);
 		return PortfolioHoldingsResponse.of(portfolio, latestHistory, portfolioHoldings);
 	}

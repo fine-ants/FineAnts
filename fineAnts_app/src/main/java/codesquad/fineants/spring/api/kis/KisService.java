@@ -71,7 +71,7 @@ public class KisService {
 
 	@Scheduled(fixedRate = 5, timeUnit = TimeUnit.SECONDS)
 	public void publishPortfolioDetail() {
-		portfolioSubscriptions.values().stream()
+		portfolioSubscriptionManager.values().stream()
 			.filter(this::hasAllCurrentPrice)
 			.forEach(subscription -> {
 				PortfolioHoldingsResponse response = portfolioStockService.readMyPortfolioStocks(
@@ -79,6 +79,14 @@ public class KisService {
 				messagingTemplate.convertAndSend(
 					String.format(SUBSCRIBE_PORTFOLIO_HOLDING_FORMAT, subscription.getPortfolioId()), response);
 			});
+	}
+
+	public CompletableFuture<PortfolioHoldingsResponse> publishPortfolioDetail(Long portfolioId) {
+		return CompletableFuture.supplyAsync(() ->
+			portfolioSubscriptionManager.getPortfolioSubscription(portfolioId)
+				.map(PortfolioSubscription::getPortfolioId)
+				.map(portfolioStockService::readMyPortfolioStocks)
+				.orElse(null));
 	}
 
 	private boolean hasAllCurrentPrice(PortfolioSubscription subscription) {

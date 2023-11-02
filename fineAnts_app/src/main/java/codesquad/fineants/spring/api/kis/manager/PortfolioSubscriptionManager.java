@@ -1,6 +1,9 @@
 package codesquad.fineants.spring.api.kis.manager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
@@ -24,5 +27,15 @@ public class PortfolioSubscriptionManager {
 	public void removePortfolioSubscription(String sessionId) {
 		PortfolioSubscription delSubscription = portfolioSubscriptions.remove(sessionId);
 		log.info("포트폴리오 구독 삭제 : {}", delSubscription);
+	}
+
+	public Optional<PortfolioSubscription> getPortfolioSubscription(Long portfolioId) {
+		return portfolioSubscriptions.values().stream()
+			.filter(subscription -> subscription.getPortfolioId().equals(portfolioId))
+			.findAny();
+	}
+
+	public List<PortfolioSubscription> values() {
+		return new ArrayList<>(portfolioSubscriptions.values());
 	}
 }
