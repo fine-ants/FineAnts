@@ -4,10 +4,12 @@ import codesquad.fineants.domain.portfolio.Portfolio;
 import codesquad.fineants.domain.portfolio_gain_history.PortfolioGainHistory;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PortfolioDetailResponse {
+	@Getter
 	private Long id;
 	private String securitiesFirm;
 	private String name;
@@ -77,9 +79,10 @@ public class PortfolioDetailResponse {
 			.totalAnnualDividendYield(portfolio.calculateTotalAnnualDividendYield())
 			.annualInvestmentDividendYield(portfolio.calculateAnnualInvestmentDividendYield())
 			.provisionalLossBalance(0L)
-			.targetGainNotification(false)
-			.maxLossNotification(false)
+			.targetGainNotification(portfolio.getTargetGainIsActive())
+			.maxLossNotification(portfolio.getMaximumIsActive())
 			.build();
 	}
+
 }
 

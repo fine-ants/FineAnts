@@ -74,7 +74,7 @@ public class KisClient {
 		);
 	}
 
-	public Map<String, Object> readRealTimeCurrentPrice(String tickerSymbol, String authorization) {
+	public long readRealTimeCurrentPrice(String tickerSymbol, String authorization) {
 		MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
 		log.info("authorization : {}", authorization);
 		headerMap.add("authorization", authorization);
@@ -86,9 +86,9 @@ public class KisClient {
 		queryParamMap.add("fid_cond_mrkt_div_code", "J");
 		queryParamMap.add("fid_input_iscd", tickerSymbol);
 
-		return getPerform(currentPrice,
-			headerMap,
-			queryParamMap);
+		Map<String, Object> responseMap = getPerform(currentPrice, headerMap, queryParamMap);
+		Map<String, String> output = (Map<String, String>)responseMap.get("output");
+		return Long.parseLong(output.get("stck_prpr"));
 	}
 
 	private Map<String, Object> getPerform(String uri, MultiValueMap<String, String> headerMap,
