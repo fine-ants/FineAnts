@@ -69,9 +69,6 @@ export default function PortfolioPage() {
         <Header />
 
         <main style={{ display: "flex", padding: "40px 150px", gap: "32px" }}>
-          <button onClick={() => setIsAddHoldingModalOpen(true)}>
-            Open Modal
-          </button>
           <PortfolioModal
             isOpen={isAddHoldingModalOpen}
             onClose={() => setIsAddHoldingModalOpen(false)}
