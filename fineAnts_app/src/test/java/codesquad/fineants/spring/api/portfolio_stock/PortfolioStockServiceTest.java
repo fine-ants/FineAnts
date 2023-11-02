@@ -95,6 +95,8 @@ class PortfolioStockServiceTest {
 			.targetGain(1500000L)
 			.maximumLoss(900000L)
 			.member(member)
+			.targetGainIsActive(false)
+			.maximumIsActive(false)
 			.build();
 		this.portfolio = portfolioRepository.save(portfolio);
 
