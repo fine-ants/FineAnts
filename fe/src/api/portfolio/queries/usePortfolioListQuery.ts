@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getPortfolioList } from "..";
 import { portfolioKeys } from "./queryKeys";
 
-export default function usePortfoliosQuery() {
+export default function usePortfolioListQuery() {
   return useQuery({
     queryKey: portfolioKeys.chart().queryKey,
     queryFn: getPortfolioList,

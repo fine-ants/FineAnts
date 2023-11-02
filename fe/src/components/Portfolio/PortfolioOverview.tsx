@@ -1,6 +1,6 @@
 import { PortfolioDetails } from "@api/portfolio";
 import usePortfolioDeleteMutation from "@api/portfolio/queries/usePortfolioDeleteMutation";
-import tossSymbol from "@assets/images/Toss_Symbol_Primary.png";
+import tossLogo from "@assets/images/Toss_Symbol_Primary.png";
 import ConfirmAlert from "@components/ConfirmAlert";
 import PortfolioModal from "@components/Portfolio/PortfolioModal";
 import ToggleSwitch from "@components/ToggleSwitch";
@@ -72,7 +72,7 @@ export default function PortfolioOverview({ data }: Props) {
       )}
       <Header>
         <TitleWrapper>
-          <FirmImage src={tossSymbol} />
+          <FirmImage src={tossLogo} />
           <Title>{data.name}</Title>
         </TitleWrapper>
         <ButtonWrapper>

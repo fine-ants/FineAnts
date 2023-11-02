@@ -5,33 +5,23 @@ import styled from "styled-components";
 
 interface SearchBarContextProps {
   value: string;
-  searchResults: StockSearchResponse[];
-  isQuerySearched: boolean;
   onSearchBarChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const SearchBarContext = createContext<SearchBarContextProps>({
   value: "",
-  searchResults: [],
-  isQuerySearched: false,
   onSearchBarChange: () => {},
 });
 
 export default function SearchBar({ children }: { children: React.ReactNode }) {
   const [value, setValue] = useState("");
 
-  const { data: searchResults = [] } = useStockSearchQuery(value);
-
   const onSearchBarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
 
-  // const isQuerySearched = value && searchResults;
-  const isQuerySearched = !!value && searchResults.length > 0;
-
   return (
-    <SearchBarContext.Provider
-      value={{ value, searchResults, isQuerySearched, onSearchBarChange }}>
+    <SearchBarContext.Provider value={{ value, onSearchBarChange }}>
       <StyledSearchBar>{children}</StyledSearchBar>
     </SearchBarContext.Provider>
   );
@@ -78,10 +68,12 @@ function SearchList({
 }: {
   onItemClick: (tickerSymbol: string) => void;
 }) {
-  const { searchResults, isQuerySearched } = useContext(SearchBarContext);
+  const { value } = useContext(SearchBarContext);
+
+  const { data: searchResults } = useStockSearchQuery(value);
 
   return (
-    isQuerySearched && (
+    searchResults && (
       <StyledSearchList>
         {searchResults.map((result) => (
           <SearchItem
