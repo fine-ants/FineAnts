@@ -2,6 +2,7 @@ package codesquad.fineants.spring.api.portfolio_gain_history;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import codesquad.fineants.domain.member.Member;
@@ -26,6 +28,7 @@ import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
+import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import codesquad.fineants.spring.api.portfolio_gain_history.response.PortfolioGainHistoryCreateResponse;
 
 @ActiveProfiles("test")
@@ -52,6 +55,9 @@ class PortfolioGainHistoryServiceTest {
 
 	@Autowired
 	private PurchaseHistoryRepository purchaseHistoryRepository;
+
+	@MockBean
+	private CurrentPriceManager currentPriceManager;
 
 	private Member member;
 
@@ -115,6 +121,9 @@ class PortfolioGainHistoryServiceTest {
 		portfolioHolding.addPurchaseHistory(purchaseHistory);
 		portFolioHoldingRepository.save(portfolioHolding);
 		purchaseHistoryRepository.save(purchaseHistory);
+
+		given(currentPriceManager.hasCurrentPrice("005930")).willReturn(true);
+		given(currentPriceManager.getCurrentPrice("005930")).willReturn(60000L);
 
 		// when
 		PortfolioGainHistoryCreateResponse response = service.addPortfolioGainHistory();
