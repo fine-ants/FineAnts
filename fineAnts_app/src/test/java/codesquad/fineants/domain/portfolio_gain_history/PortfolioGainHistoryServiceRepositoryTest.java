@@ -73,7 +73,7 @@ class PortfolioGainHistoryServiceRepositoryTest {
 
 		// when
 		PortfolioGainHistory result = repository.findFirstByPortfolioAndCreateAtIsLessThanEqualOrderByCreateAtDesc(
-			portfolio, LocalDateTime.now()).orElseThrow();
+			portfolio.getId(), LocalDateTime.now()).orElseThrow();
 
 		// then
 		assertThat(result).extracting("currentValuation").isEqualTo(120000L);

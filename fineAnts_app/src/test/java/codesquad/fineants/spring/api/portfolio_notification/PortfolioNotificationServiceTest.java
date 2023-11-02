@@ -2,6 +2,8 @@ package codesquad.fineants.spring.api.portfolio_notification;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,6 +33,7 @@ import codesquad.fineants.domain.purchase_history.PurchaseHistoryRepository;
 import codesquad.fineants.domain.stock.Market;
 import codesquad.fineants.domain.stock.Stock;
 import codesquad.fineants.domain.stock.StockRepository;
+import codesquad.fineants.spring.api.kis.manager.CurrentPriceManager;
 import codesquad.fineants.spring.api.portfolio_notification.request.PortfolioNotificationModifyRequest;
 import codesquad.fineants.spring.api.portfolio_notification.response.PortfolioNotificationModifyResponse;
 
@@ -60,6 +64,12 @@ class PortfolioNotificationServiceTest {
 
 	@Autowired
 	private PortfolioGainHistoryRepository portfolioGainHistoryRepository;
+
+	@MockBean
+	private CurrentPriceManager currentPriceManager;
+
+	@MockBean
+	private MailService mailService;
 
 	private Member member;
 
@@ -179,6 +189,12 @@ class PortfolioNotificationServiceTest {
 			.memo("추가구매")
 			.portFolioHolding(portfolioHolding)
 			.build());
+
+		given(currentPriceManager.hasCurrentPrice("005930")).willReturn(true);
+		given(currentPriceManager.getCurrentPrice("005930")).willReturn(100000L);
+		doNothing().when(mailService).sendEmail(anyString(),
+			anyString(),
+			anyString());
 		// when
 		service.notifyTargetGain();
 		// then
