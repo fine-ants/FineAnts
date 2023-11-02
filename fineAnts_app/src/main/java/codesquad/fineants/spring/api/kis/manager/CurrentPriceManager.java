@@ -1,10 +1,6 @@
 package codesquad.fineants.spring.api.kis.manager;
 
 import java.time.Duration;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -45,15 +41,5 @@ public class CurrentPriceManager {
 
 	public boolean hasKey(String tickerSymbol) {
 		return Boolean.TRUE.equals(redisTemplate.hasKey(String.format(format, tickerSymbol)));
-	}
-
-	public Set<String> keys() {
-		Set<String> keys = redisTemplate.keys(pattern);
-		if (keys == null) {
-			Collections.emptySet();
-		}
-		return Objects.requireNonNull(keys).stream()
-			.map(key -> key.replace("cp:", ""))
-			.collect(Collectors.toSet());
 	}
 }

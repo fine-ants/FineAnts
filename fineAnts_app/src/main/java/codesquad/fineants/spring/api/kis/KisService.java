@@ -78,7 +78,11 @@ public class KisService {
 			.filter(this::hasAllCurrentPrice)
 			.map(PortfolioSubscription::getPortfolioId)
 			.map(portfolioId -> CompletableFuture.supplyAsync(
-				() -> portfolioStockService.readMyPortfolioStocks(portfolioId), portfolioDetailExecutor))
+					() -> portfolioStockService.readMyPortfolioStocks(portfolioId), portfolioDetailExecutor)
+				.exceptionally(e -> {
+					log.info(e.getMessage(), e);
+					return null;
+				}))
 			.collect(Collectors.toList());
 
 		futures.parallelStream()
@@ -100,7 +104,7 @@ public class KisService {
 			.allMatch(currentPriceManager::hasCurrentPrice);
 	}
 
-	@Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
+	@Scheduled(fixedRate = 5, timeUnit = TimeUnit.SECONDS)
 	@Transactional(readOnly = true)
 	public void refreshCurrentPrice() {
 		List<String> tickerSymbols = portfolioRepository.findAll().parallelStream()
@@ -131,6 +135,10 @@ public class KisService {
 		return () -> {
 			CurrentPriceResponse response = readRealTimeCurrentPrice(tickerSymbol);
 			future.completeOnTimeout(response, 10, TimeUnit.SECONDS);
+			future.exceptionally(e -> {
+				log.info(e.getMessage(), e);
+				return null;
+			});
 		};
 	}
 }
