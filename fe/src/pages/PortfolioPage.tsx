@@ -4,8 +4,10 @@ import DividendBarChart from "@components/Portfolio/DividendBarChart";
 import HoldingsPieChart from "@components/Portfolio/HoldingsPieChart";
 import PortfolioHoldingAddModal from "@components/Portfolio/PortfolioHoldings/PortfolioHoldingAddModal";
 import PortfolioHoldingsTable from "@components/Portfolio/PortfolioHoldings/PortfolioHoldingsTable";
+import PortfolioModal from "@components/Portfolio/PortfolioModal";
 import PortfolioOverview from "@components/Portfolio/PortfolioOverview";
 import SectorBar from "@components/Portfolio/SectorBar";
+import Footer from "@components/common/Footer";
 import Header from "@components/common/Header";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
@@ -20,6 +22,8 @@ export default function PortfolioPage() {
     usePortfolioDetailsQuery(Number(id));
 
   const [isAddHoldingModalOpen, setIsAddHoldingModalOpen] = useState(false);
+
+  const [isModalOpen, setIsModalOPen] = useState(false);
 
   const onAddHoldingButtonClick = () => {
     setIsAddHoldingModalOpen(true);
@@ -42,7 +46,13 @@ export default function PortfolioPage() {
       <BasePage>
         <Header />
         <main style={{ display: "flex", padding: "40px 150px", gap: "32px" }}>
+          <button onClick={() => setIsModalOPen(true)}>Open Modal</button>
+          <PortfolioModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOPen(false)}
+          />
           <PortfolioHoldingAddModal
+            portfolioId={Number(id)}
             isOpen={isAddHoldingModalOpen}
             onClose={() => setIsAddHoldingModalOpen(false)}
           />
@@ -80,7 +90,7 @@ export default function PortfolioPage() {
             </PortfolioHoldingsContainer>
           </RightPanel>
         </main>
-        {/* <Footer /> */}
+        <Footer />
       </BasePage>
     </StyledPortfolioPage>
   );
