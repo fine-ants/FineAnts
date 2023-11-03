@@ -1,4 +1,4 @@
-import usePortfoliosQuery from "@api/portfolio/queries/usePortfolioListQuery";
+import usePortfolioListQuery from "@api/portfolio/queries/usePortfolioListQuery";
 import Legend from "@components/common/PieChart/Legend";
 import RechartPieChart from "@components/common/PieChart/RechartPieChart";
 import { CSSProperties } from "react";
@@ -15,7 +15,7 @@ export default function PortfolioPieChart({
   height,
   legendStyle,
 }: Props) {
-  const { data: pieData } = usePortfoliosQuery();
+  const { data: pieData } = usePortfolioListQuery();
 
   const coloredPieData = pieData?.portfolios.map((item, index) => ({
     name: item.name,

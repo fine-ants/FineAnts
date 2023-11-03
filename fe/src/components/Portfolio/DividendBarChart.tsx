@@ -3,7 +3,7 @@ import { Bar, BarChart, Cell, ResponsiveContainer, XAxis } from "recharts";
 import styled from "styled-components";
 
 export default function DividendBarChart() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(new Date().getMonth());
 
   const selectBar = (index: number) => {
     setActiveIndex(index);

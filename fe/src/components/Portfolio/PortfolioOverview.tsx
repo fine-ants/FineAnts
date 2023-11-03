@@ -108,9 +108,7 @@ export default function PortfolioOverview({ data }: Props) {
               <OverviewValue>{data.totalAnnualDividend} KRW</OverviewValue>
             </OverviewWrapper>
             <OverviewWrapper>
-              <OverviewPercent $isUp={data.targetReturnRate > 0}>
-                {data.targetReturnRate}%
-              </OverviewPercent>
+              <OverviewValue>{data.targetReturnRate}%</OverviewValue>
               <OverviewPercent $isUp={data.totalGainRate > 0}>
                 {data.totalGainRate} %
               </OverviewPercent>
@@ -137,9 +135,7 @@ export default function PortfolioOverview({ data }: Props) {
             </OverviewWrapper>
 
             <OverviewWrapper>
-              <OverviewPercent $isUp={data.maximumLossRate > 0}>
-                {data.maximumLossRate} %
-              </OverviewPercent>
+              <OverviewValue>{data.maximumLossRate} %</OverviewValue>
               <OverviewPercent $isUp={data.dailyGainRate > 0}>
                 {data.dailyGainRate} %
               </OverviewPercent>
@@ -237,14 +233,12 @@ const OverviewPercent = styled.div<{ $isUp: boolean }>`
 const OverviewPanel = styled.div`
   display: flex;
 
-  width: 360px;
   gap: 16px;
 `;
 
 const OverviewWrapper = styled.div`
   display: flex;
   flex-direction: column;
-
   gap: 12px;
 
   > span {
