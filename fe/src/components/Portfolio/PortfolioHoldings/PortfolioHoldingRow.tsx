@@ -54,6 +54,10 @@ export default function PortfolioHoldingRow({
     portfolioHoldingDeleteMutate({ portfolioId, portfolioHoldingId });
   };
 
+  const onExpandRowClick = () => {
+    setIsRowOpen(!isRowOpen);
+  };
+
   return (
     <>
       <HoldingTableRow>
@@ -61,7 +65,7 @@ export default function PortfolioHoldingRow({
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setIsRowOpen(!isRowOpen)}>
+            onClick={onExpandRowClick}>
             {isRowOpen ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
           </IconButton>
         </HoldingTableCell>
