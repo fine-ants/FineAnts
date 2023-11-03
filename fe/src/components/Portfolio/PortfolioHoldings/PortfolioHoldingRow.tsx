@@ -66,7 +66,6 @@ export default function PortfolioHoldingRow({
             aria-label="expand row"
             size="small"
             onClick={onExpandRowClick}>
-            onClick={() => setIsRowOpen(!isRowOpen)}>
             {isRowOpen ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
           </IconButton>
         </HoldingTableCell>
