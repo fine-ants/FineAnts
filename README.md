@@ -141,7 +141,7 @@ ex.
 
 ## ERD
 
-- 추가 예정
+<img width="811" alt="erd" src="https://github.com/fine-ants/FineAnts/assets/33227831/312b0e7a-6afc-4ccc-a89c-1934ef74bda1">
 
 ## 데모 영상
 
