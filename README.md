@@ -143,6 +143,9 @@ ex.
 
 <img width="811" alt="erd" src="https://github.com/fine-ants/FineAnts/assets/33227831/312b0e7a-6afc-4ccc-a89c-1934ef74bda1">
 
+## 아키텍처
+<img width="810" alt="fineAnts_architecture_v2" src="https://github.com/fine-ants/FineAnts/assets/33227831/a6e48d4c-6afa-49a3-9188-e311ae899a3f">
+
 ## 데모 영상
 
 - 추가 예정
