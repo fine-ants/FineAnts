@@ -2,7 +2,7 @@
 
 ## 배포 주소
 
-- 추가 예정
+- [fineants](https://release.d3qzqon2e82ro5.amplifyapp.com/)
 
 ## 팀원 소개
 
@@ -134,16 +134,17 @@ ex.
 
 ## 관련 링크
 
-- 기획 및 디자인
-- API 명세서
-- FE 스프린트
-- 회의록
-- 이슈
-- 위키
+- [기획 및 디자인](https://www.figma.com/file/5hirTzTfhhaEl0K8B3RvIj/FineAnts?type=design&node-id=0-1&mode=design&t=uNazI9abfMLNWF09-0)
+- [API 명세서](https://documenter.getpostman.com/view/30547529/2s9YR9YsEg)
+- [BE WBS](https://github.com/orgs/fine-ants/projects/1/views/2)
+- [스크럼](https://github.com/fine-ants/obsidian/tree/main/%EC%8A%A4%ED%81%AC%EB%9F%BC)
 
 ## ERD
 
-- 추가 예정
+<img width="811" alt="erd" src="https://github.com/fine-ants/FineAnts/assets/33227831/312b0e7a-6afc-4ccc-a89c-1934ef74bda1">
+
+## 아키텍처
+<img width="810" alt="fineAnts_architecture_v2" src="https://github.com/fine-ants/FineAnts/assets/33227831/a6e48d4c-6afa-49a3-9188-e311ae899a3f">
 
 ## 데모 영상
 

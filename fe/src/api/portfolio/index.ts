@@ -17,7 +17,7 @@ export type PortfolioItem = {
   dailyGain: number;
   dailyGainRate: number;
   expectedMonthlyDividend: number;
-  numShares: number;
+  totalNumShares: number;
 };
 
 export type Portfolio = {
