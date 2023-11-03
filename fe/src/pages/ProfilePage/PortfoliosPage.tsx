@@ -54,7 +54,7 @@ function Portfolio({ portfolio }: Props) {
         <div>{thousandsDelimiter(portfolio.dailyGainRate)}</div>
       </td>
       <td>{thousandsDelimiter(portfolio.expectedMonthlyDividend)}</td>
-      <td>{thousandsDelimiter(portfolio.numShares)}</td>
+      <td>{thousandsDelimiter(portfolio.totalNumShares)}</td>
     </tr>
   );
 }
