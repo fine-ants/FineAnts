@@ -1,4 +1,4 @@
-# stock_n_go
+# FineAnts
 
 ## 배포 주소
 
