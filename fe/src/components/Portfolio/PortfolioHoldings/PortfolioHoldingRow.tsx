@@ -54,6 +54,10 @@ export default function PortfolioHoldingRow({
     portfolioHoldingDeleteMutate({ portfolioId, portfolioHoldingId });
   };
 
+  const onExpandRowClick = () => {
+    setIsRowOpen(!isRowOpen);
+  };
+
   return (
     <>
       <HoldingTableRow>
@@ -61,7 +65,7 @@ export default function PortfolioHoldingRow({
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setIsRowOpen(!isRowOpen)}>
+            onClick={onExpandRowClick}>
             {isRowOpen ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
           </IconButton>
         </HoldingTableCell>
@@ -79,7 +83,9 @@ export default function PortfolioHoldingRow({
           <Currency>KRW</Currency>
         </HoldingTableCell>
         <HoldingTableCell align="right">
-          <Amount>{currentPrice}</Amount>
+          <ChangeableAmount $isProfit={currentPrice > averageCostPerShare}>
+            {currentPrice}
+          </ChangeableAmount>
           <Currency>KRW</Currency>
         </HoldingTableCell>
         <HoldingTableCell align="right">
@@ -90,16 +96,28 @@ export default function PortfolioHoldingRow({
           <Typography>{numShares}</Typography>
         </HoldingTableCell>
         <HoldingTableCell align="right">
-          <Typography>{dailyChangeRate}%</Typography>
-          <Typography>{dailyChange}</Typography>
+          <ChangeableTypography $isProfit={!(dailyChangeRate < 0)}>
+            {dailyChangeRate}%
+          </ChangeableTypography>
+          <ChangeableTypography $isProfit={!(dailyChange < 0)}>
+            {dailyChange}
+          </ChangeableTypography>
         </HoldingTableCell>
         <HoldingTableCell align="right">
-          <Typography>{totalReturnRate}%</Typography>
-          <Typography>{totalGain}</Typography>
+          <ChangeableTypography $isProfit={!(totalReturnRate < 0)}>
+            {totalReturnRate}%
+          </ChangeableTypography>
+          <ChangeableTypography $isProfit={!(totalGain < 0)}>
+            {totalGain}
+          </ChangeableTypography>
         </HoldingTableCell>
         <HoldingTableCell align="right">
-          <Typography>{annualDividendYield}%</Typography>
-          <Typography>{annualDividend}</Typography>
+          <ChangeableTypography $isProfit={!(annualDividendYield < 0)}>
+            {annualDividendYield}%
+          </ChangeableTypography>
+          <ChangeableTypography $isProfit={!(annualDividend < 0)}>
+            {annualDividend}
+          </ChangeableTypography>
         </HoldingTableCell>
         <TableCell style={{ border: "1px solid black", cursor: "pointer" }}>
           <Button onClick={onDeleteClick}>삭제</Button>
@@ -154,3 +172,13 @@ const Currency = styled(Typography)`
 `;
 
 const HoldingLotRow = styled(TableRow)``;
+
+const ChangeableTypography = styled(Typography)<{ $isProfit: boolean }>`
+  color: ${({ $isProfit }) =>
+    $isProfit ? "rgb(8, 153, 129)" : "rgb(242, 54, 69)"};
+`;
+
+const ChangeableAmount = styled(Amount)<{ $isProfit: boolean }>`
+  color: ${({ $isProfit }) =>
+    $isProfit ? "rgb(8, 153, 129)" : "rgb(242, 54, 69)"};
+`;
